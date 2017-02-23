@@ -36,7 +36,8 @@ variables like <envar>LANG</envar>, <envar>PATH</envar> or <envar>HOME</envar>.
 
   <para>
 
-This environment variable can be set to a colon-separated list of paths.
+This environment variable can be set to a colon-separated list of paths (or
+semicolon-separated list on Windows).
 If this variable is not set, GStreamer will fill in this list for you
 with
 <itemizedlist>
@@ -87,7 +88,8 @@ uninstalled (for development purposes) or while running testsuites.
   <title><envar>GST_PLUGIN_PATH</envar>, <envar>GST_PLUGIN_PATH_1_0</envar></title>
 
   <para>
-This environment variable can be set to a colon-separated list of paths.
+This environment variable can be set to a colon-separated list of paths (or a
+semicolon-separated list on Windows).
 GStreamer will scan these paths for GStreamer plug-ins.  These plug-ins will
 be loaded in addition to, and before, the plug-ins in the system paths.
   </para>
@@ -361,6 +363,11 @@ from the graphviz set of tools, like this:
   <command>dot foo.dot -Tpng -o foo.png</command> or
   <command>dot foo.dot -Tjpg -o foo.jpg</command>.
   </para>
+  <para>
+There is also a utility called <command>xdot</command> which allows you to
+view the dot file directly without converting it first.
+  </para>
+
 
 </formalpara>
 
@@ -493,7 +500,7 @@ See the GLib API reference for more details.
   <title><envar>GST_TAG_ENCODING</envar></title>
   <para>
 Try this character encoding first for tag-related strings where the encoding
-is not defined and which are not UTF-8 already. By defaul the current locale
+is not defined and which are not UTF-8 already. By default the current locale
 will be tried (if not UTF-8).
   </para>
 </formalpara>
@@ -502,7 +509,7 @@ will be tried (if not UTF-8).
   <title><envar>GST_TAG_ID3_ENCODING</envar></title>
   <para>
 Try this character encoding first for ID3 tag-related strings where the
-encoding is not defined and which are not UTF-8 already. By defaul the current
+encoding is not defined and which are not UTF-8 already. By default the current
 locale will be tried (if not UTF-8).
   </para>
 </formalpara>
@@ -514,6 +521,31 @@ Try this character encoding first for ID3v1 tag-related strings where the
 encoding does not look like UTF-8.
   </para>
 </formalpara>
+
+<formalpara id="GST_GL_WINDOW">
+  <title><envar>GST_GL_WINDOW</envar></title>
+  <para>
+Influences the window system to use by the GStreamer OpenGL library.
+Common values are 'x11', 'wayland', 'win32' or 'cocoa'.
+  </para>
+</formalpara>
+
+<formalpara id="GST_GL_PLATFORM">
+  <title><envar>GST_GL_PLATFORM</envar></title>
+  <para>
+Influences the OpenGL platform to use by the GStreamer OpenGL library.
+Common values are 'egl', 'glx', 'wgl' or 'cgl'.
+  </para>
+</formalpara>
+
+<formalpara id="GST_GL_API">
+  <title><envar>GST_GL_API</envar></title>
+  <para>
+Influences the OpenGL API requested by the OpenGL platform.
+Common values are 'opengl' or 'gles2'.
+  </para>
+</formalpara>
+
 </refsect2>
 
 </refsect1>

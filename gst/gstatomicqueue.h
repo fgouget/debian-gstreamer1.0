@@ -21,6 +21,7 @@
  */
 
 #include <glib.h>
+#include <glib-object.h>
 
 #ifndef __GST_ATOMIC_QUEUE_H__
 #define __GST_ATOMIC_QUEUE_H__
@@ -51,6 +52,10 @@ gpointer           gst_atomic_queue_pop         (GstAtomicQueue* queue);
 gpointer           gst_atomic_queue_peek        (GstAtomicQueue* queue);
 
 guint              gst_atomic_queue_length      (GstAtomicQueue * queue);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstAtomicQueue, gst_atomic_queue_unref)
+#endif
 
 G_END_DECLS
 

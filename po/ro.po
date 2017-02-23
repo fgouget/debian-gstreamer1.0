@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.10.29.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2014-11-06 12:20+0100\n"
+"POT-Creation-Date: 2017-02-23 15:12+0200\n"
 "PO-Revision-Date: 2010-08-16 01:10+0300\n"
 "Last-Translator: Lucian Adrian Grijincu <lucian.grijincu@gmail.com>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -463,6 +463,12 @@ msgstr "compozitor"
 msgid "person(s) who composed the recording"
 msgstr "persoana care a compus înregistrarea"
 
+msgid "conductor"
+msgstr ""
+
+msgid "conductor/performer refinement"
+msgstr ""
+
 msgid "duration"
 msgstr "durata"
 
@@ -841,6 +847,12 @@ msgstr ""
 msgid "Midi note number of the audio track."
 msgstr ""
 
+msgid "private-data"
+msgstr ""
+
+msgid "Private data"
+msgstr ""
+
 msgid ", "
 msgstr ", "
 
@@ -881,6 +893,9 @@ msgid "could not set property \"%s\" in element \"%s\" to \"%s\""
 msgstr ""
 "nu se poate stabili proprietatea „%s” în elementul „%s” la valoarea „%s”"
 
+msgid "Delayed linking failed."
+msgstr ""
+
 #, c-format
 msgid "could not link %s to %s"
 msgstr "nu se poate lega %s la %s"
@@ -912,9 +927,6 @@ msgstr "niciun element sursă pentru URI „%s”"
 msgid "syntax error"
 msgstr ""
 
-msgid "bin"
-msgstr ""
-
 #, c-format
 msgid "specified empty bin \"%s\", not allowed"
 msgstr "containerul gol „%s” specificat, nu este permis"
@@ -931,9 +943,6 @@ msgstr "Multe zone de memorie tampon sunt abandonate."
 
 msgid "Internal data flow problem."
 msgstr "Problemă internă de flux al datelor."
-
-msgid "Internal data stream error."
-msgstr "Eroare internă a fluxului de date."
 
 msgid "Internal data flow error."
 msgstr "Eroare internă de flux al datelor."
@@ -953,6 +962,12 @@ msgid ""
 msgstr ""
 "Restricționează capacitățile permise (NULL înseamnă ORICE). Definirea "
 "acestei proprietăți preia o referință către obiectul GstCaps furnizat."
+
+msgid "Caps Change Mode"
+msgstr ""
+
+msgid "Filter caps change behaviour"
+msgstr ""
 
 msgid "No Temp directory specified."
 msgstr "Niciun director temporar specificat."
@@ -1020,6 +1035,10 @@ msgstr "forțează caps"
 msgid "force caps without doing a typefind"
 msgstr "forțează caps fără a efectua un typefind"
 
+#, fuzzy
+msgid "Stream doesn't contain enough data."
+msgstr "Fluxul nu conține date."
+
 msgid "Stream contains no data."
 msgstr "Fluxul nu conține date."
 
@@ -1031,6 +1050,9 @@ msgstr "se poate citi"
 
 msgid "writable"
 msgstr "se poate scrie"
+
+msgid "deprecated"
+msgstr ""
 
 msgid "controllable"
 msgstr "se poate controla"
@@ -1233,11 +1255,13 @@ msgstr "Nu tipări niciun fel de informații de progres"
 msgid "Output messages"
 msgstr "Mesaje de ieșire"
 
-msgid "Do not output status information of TYPE"
-msgstr "Nu scoate informații despre stările de TIPUL"
+msgid ""
+"Do not output status information for the specified property if verbose "
+"output is enabled (can be used multiple times)"
+msgstr ""
 
-msgid "TYPE1,TYPE2,..."
-msgstr "TIP1,TIP2,..."
+msgid "PROPERTY-NAME"
+msgstr ""
 
 msgid "Do not install a fault handler"
 msgstr "Nu instala un gestionar de erori"
@@ -1317,6 +1341,15 @@ msgstr "Se setează linia de asamblare pe NULL ...\n"
 
 msgid "Freeing pipeline ...\n"
 msgstr "Se eliberează linia de asamblare...\n"
+
+#~ msgid "Internal data stream error."
+#~ msgstr "Eroare internă a fluxului de date."
+
+#~ msgid "Do not output status information of TYPE"
+#~ msgstr "Nu scoate informații despre stările de TIPUL"
+
+#~ msgid "TYPE1,TYPE2,..."
+#~ msgstr "TIP1,TIP2,..."
 
 #~ msgid "link without source element"
 #~ msgstr "legătură fără un element sursă"

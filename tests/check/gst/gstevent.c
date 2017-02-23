@@ -52,6 +52,48 @@ GST_START_TEST (create_events)
     fail_unless (reset_time == TRUE);
     gst_event_unref (event);
   }
+
+  /* SELECT_STREAMS */
+  {
+    GList *streams = NULL;
+    GList *res = NULL;
+    GList *tmp;
+    streams = g_list_append (streams, (gpointer) "stream1");
+    streams = g_list_append (streams, (gpointer) "stream2");
+    event = gst_event_new_select_streams (streams);
+    fail_if (event == NULL);
+    fail_unless (GST_EVENT_TYPE (event) == GST_EVENT_SELECT_STREAMS);
+    fail_unless (GST_EVENT_IS_UPSTREAM (event));
+
+    gst_event_parse_select_streams (event, &res);
+    fail_if (res == NULL);
+    fail_unless_equals_int (g_list_length (res), 2);
+    tmp = res;
+    fail_unless_equals_string (tmp->data, "stream1");
+    tmp = tmp->next;
+    fail_unless_equals_string (tmp->data, "stream2");
+
+    gst_event_unref (event);
+
+    g_list_free (streams);
+    g_list_free_full (res, g_free);
+  }
+
+  /* STREAM_GROUP_DONE */
+  {
+    guint group_id = 0;
+
+    event = gst_event_new_stream_group_done (0x42);
+    fail_if (event == NULL);
+    fail_unless (GST_EVENT_TYPE (event) == GST_EVENT_STREAM_GROUP_DONE);
+    fail_if (GST_EVENT_IS_UPSTREAM (event));
+    fail_unless (GST_EVENT_IS_DOWNSTREAM (event));
+    fail_unless (GST_EVENT_IS_SERIALIZED (event));
+    gst_event_parse_stream_group_done (event, &group_id);
+    fail_unless (group_id == 0x42);
+    gst_event_unref (event);
+  }
+
   /* EOS */
   {
     event = gst_event_new_eos ();
@@ -219,6 +261,37 @@ GST_START_TEST (create_events)
     gst_event_unref (event);
   }
 
+  /* STREAM_COLLECTION */
+  {
+    GstStreamCollection *collection, *res = NULL;
+    GstStream *stream1, *stream2;
+    GstCaps *caps1, *caps2;
+
+    /* Create a collection of two streams */
+    caps1 = gst_caps_from_string ("some/caps");
+    caps2 = gst_caps_from_string ("some/other-string");
+
+    stream1 = gst_stream_new ("stream-1", caps1, GST_STREAM_TYPE_AUDIO, 0);
+    stream2 = gst_stream_new ("stream-2", caps2, GST_STREAM_TYPE_VIDEO, 0);
+
+    collection = gst_stream_collection_new ("something");
+    fail_unless (gst_stream_collection_add_stream (collection, stream1));
+    fail_unless (gst_stream_collection_add_stream (collection, stream2));
+
+    event = gst_event_new_stream_collection (collection);
+    fail_unless (event != NULL);
+
+    gst_event_parse_stream_collection (event, &res);
+    fail_unless (res != NULL);
+    fail_unless (res == collection);
+
+    gst_event_unref (event);
+    gst_object_unref (res);
+    gst_object_unref (collection);
+    gst_caps_unref (caps1);
+    gst_caps_unref (caps2);
+  }
+
   /* NAVIGATION */
   {
     structure = gst_structure_new ("application/x-gst-navigation", "event",
@@ -233,6 +306,43 @@ GST_START_TEST (create_events)
 
     fail_unless (gst_event_get_structure (event) == structure);
     gst_event_unref (event);
+  }
+
+  /* Protection */
+  {
+    GstBuffer *data;
+    GstMemory *mem;
+    const gchar *parsed_origin;
+    const gchar *parsed_id;
+    GstBuffer *parsed_data;
+    const gchar clearkey_sys_id[] = "78f32170-d883-11e0-9572-0800200c9a66";
+    gsize offset;
+
+    data = gst_buffer_new ();
+    mem = gst_allocator_alloc (NULL, 40, NULL);
+    gst_buffer_insert_memory (data, -1, mem);
+    for (offset = 0; offset < 40; offset += 4) {
+      gst_buffer_fill (data, offset, "pssi", 4);
+    }
+    ASSERT_MINI_OBJECT_REFCOUNT (data, "data", 1);
+    event = gst_event_new_protection (clearkey_sys_id, data, "test");
+    fail_if (event == NULL);
+    ASSERT_MINI_OBJECT_REFCOUNT (data, "data", 2);
+    fail_unless (GST_EVENT_TYPE (event) == GST_EVENT_PROTECTION);
+    fail_unless (GST_EVENT_IS_DOWNSTREAM (event));
+    fail_unless (GST_EVENT_IS_SERIALIZED (event));
+    gst_event_parse_protection (event, &parsed_id, &parsed_data,
+        &parsed_origin);
+    fail_if (parsed_id == NULL);
+    fail_unless (g_strcmp0 (clearkey_sys_id, parsed_id) == 0);
+    fail_if (parsed_data == NULL);
+    fail_if (parsed_data != data);
+    ASSERT_MINI_OBJECT_REFCOUNT (data, "data", 2);
+    fail_if (parsed_origin == NULL);
+    fail_unless (g_strcmp0 ("test", parsed_origin) == 0);
+    gst_event_unref (event);
+    ASSERT_MINI_OBJECT_REFCOUNT (data, "data", 1);
+    gst_buffer_unref (data);
   }
 
   /* Custom event types */

@@ -314,6 +314,105 @@ GST_START_TEST (test_sticky_caps_unlinked)
 
 GST_END_TEST;
 
+static gboolean
+check_if_caps_is_accepted (GstPad * sink, const gchar * str)
+{
+  GstCaps *caps;
+  gboolean ret;
+
+  caps = gst_caps_from_string (str);
+  ASSERT_CAPS_REFCOUNT (caps, "caps", 1);
+  ret = gst_pad_query_accept_caps (sink, caps);
+  gst_caps_unref (caps);
+
+  return ret;
+}
+
+static gboolean
+sink_query_caps (GstPad * pad, GstObject * object, GstQuery * q)
+{
+  gboolean ret;
+  GstCaps *caps;
+
+  switch (GST_QUERY_TYPE (q)) {
+    case GST_QUERY_CAPS:
+      ret = TRUE;
+      caps =
+          gst_caps_from_string ("foo/bar, dummy=(int)1,"
+          " query-only-field=(int)1");
+      gst_query_set_caps_result (q, caps);
+      gst_caps_unref (caps);
+    default:
+      ret = gst_pad_query_default (pad, object, q);
+      break;
+  }
+
+  return ret;
+}
+
+/* Tests whether acceptcaps default handler works properly
+   with all 4 possible flag combinations */
+GST_START_TEST (test_default_accept_caps)
+{
+  GstCaps *caps;
+  GstPadTemplate *sink_template;
+  GstPad *sink;
+
+  caps = gst_caps_from_string ("foo/bar, dummy=(int){1, 2}");
+  sink_template = gst_pad_template_new ("sink", GST_PAD_SINK,
+      GST_PAD_ALWAYS, caps);
+  gst_caps_unref (caps);
+
+  sink = gst_pad_new_from_template (sink_template, "sink");
+  fail_if (sink == NULL);
+  gst_pad_set_query_function (sink, sink_query_caps);
+
+  gst_object_unref (sink_template);
+
+  gst_pad_set_active (sink, TRUE);
+
+  /* 1. Check with caps query, subset check */
+  GST_PAD_UNSET_ACCEPT_INTERSECT (sink);
+  GST_PAD_UNSET_ACCEPT_TEMPLATE (sink);
+  fail_unless (check_if_caps_is_accepted (sink, "foo/bar, dummy=(int)1"));
+  fail_if (check_if_caps_is_accepted (sink, "foo/bar, dummy=(int)3"));
+  fail_unless (check_if_caps_is_accepted (sink,
+          "foo/bar, dummy=(int)1, query-only-field=(int)1"));
+  fail_if (check_if_caps_is_accepted (sink, "foo/bar, extra-field=(int)1"));
+
+  /* 2. Check with caps query, intersect check */
+  GST_PAD_SET_ACCEPT_INTERSECT (sink);
+  GST_PAD_UNSET_ACCEPT_TEMPLATE (sink);
+  fail_unless (check_if_caps_is_accepted (sink, "foo/bar, dummy=(int)1"));
+  fail_if (check_if_caps_is_accepted (sink, "foo/bar, dummy=(int)3"));
+  fail_unless (check_if_caps_is_accepted (sink,
+          "foo/bar, dummy=(int)1, query-only-field=(int)1"));
+  fail_unless (check_if_caps_is_accepted (sink, "foo/bar, extra-field=(int)1"));
+
+  /* 3. Check with template caps, subset check */
+  GST_PAD_UNSET_ACCEPT_INTERSECT (sink);
+  GST_PAD_SET_ACCEPT_TEMPLATE (sink);
+  fail_unless (check_if_caps_is_accepted (sink, "foo/bar, dummy=(int)1"));
+  fail_if (check_if_caps_is_accepted (sink, "foo/bar, dummy=(int)3"));
+  fail_unless (check_if_caps_is_accepted (sink,
+          "foo/bar, dummy=(int)1, query-only-field=(int)1"));
+  fail_if (check_if_caps_is_accepted (sink, "foo/bar, extra-field=(int)1"));
+
+  /* 3. Check with template caps, intersect check */
+  GST_PAD_SET_ACCEPT_INTERSECT (sink);
+  GST_PAD_SET_ACCEPT_TEMPLATE (sink);
+  fail_unless (check_if_caps_is_accepted (sink, "foo/bar, dummy=(int)1"));
+  fail_if (check_if_caps_is_accepted (sink, "foo/bar, dummy=(int)3"));
+  fail_unless (check_if_caps_is_accepted (sink,
+          "foo/bar, dummy=(int)1, query-only-field=(int)1"));
+  fail_unless (check_if_caps_is_accepted (sink, "foo/bar, extra-field=(int)1"));
+
+  ASSERT_OBJECT_REFCOUNT (sink, "sink", 1);
+  gst_object_unref (sink);
+}
+
+GST_END_TEST;
+
 /* Same as test_sticky_caps_unlinked except that the source pad
  * has a template of ANY and we will attempt to push
  * incompatible caps */
@@ -496,13 +595,103 @@ GST_END_TEST;
 static GstPadProbeReturn
 _probe_handler (GstPad * pad, GstPadProbeInfo * info, gpointer userdata)
 {
-  gint ret = GPOINTER_TO_INT (userdata);
+  GstPadProbeReturn ret = (GstPadProbeReturn) GPOINTER_TO_INT (userdata);
 
-  if (ret == 1)
-    return GST_PAD_PROBE_OK;
-
-  return GST_PAD_PROBE_DROP;
+  /* If we are handling the data, we unref it */
+  if (ret == GST_PAD_PROBE_HANDLED
+      && !(GST_PAD_PROBE_INFO_TYPE (info) & GST_PAD_PROBE_TYPE_QUERY_BOTH)) {
+    GST_DEBUG_OBJECT (pad, "Unreffing data");
+    gst_mini_object_unref (info->data);
+  }
+  return ret;
 }
+
+static GstPadProbeReturn
+_handled_probe_handler (GstPad * pad, GstPadProbeInfo * info, gpointer userdata)
+{
+  GstFlowReturn customflow = (GstFlowReturn) GPOINTER_TO_INT (userdata);
+
+  /* We are handling the data, we unref it */
+  if (!(GST_PAD_PROBE_INFO_TYPE (info) & GST_PAD_PROBE_TYPE_QUERY_BOTH))
+    gst_mini_object_unref (info->data);
+  GST_PAD_PROBE_INFO_FLOW_RETURN (info) = customflow;
+
+  return GST_PAD_PROBE_HANDLED;
+}
+
+
+
+GST_START_TEST (test_events_query_unlinked)
+{
+  GstPad *src;
+  GstCaps *caps;
+  gulong id;
+  GstQuery *query;
+
+  src = gst_pad_new ("src", GST_PAD_SRC);
+  fail_if (src == NULL);
+  caps = gst_pad_get_allowed_caps (src);
+  fail_unless (caps == NULL);
+
+  caps = gst_caps_from_string ("foo/bar");
+
+  gst_pad_set_active (src, TRUE);
+  fail_unless (gst_pad_push_event (src,
+          gst_event_new_stream_start ("test")) == TRUE);
+  gst_pad_set_caps (src, caps);
+  ASSERT_CAPS_REFCOUNT (caps, "caps", 2);
+  fail_unless (gst_pad_push_event (src,
+          gst_event_new_segment (&dummy_segment)) == TRUE);
+  ASSERT_CAPS_REFCOUNT (caps, "caps", 2);
+
+  /* Doing a query on an unlinked pad will return FALSE */
+  query = gst_query_new_duration (GST_FORMAT_TIME);
+  fail_unless (gst_pad_peer_query (src, query) == FALSE);
+  ASSERT_MINI_OBJECT_REFCOUNT (query, "query", 1);
+  gst_query_unref (query);
+
+  /* Add a probe that returns _DROP will make the event push return TRUE
+   * even if not linked */
+  GST_DEBUG ("event/query DROP");
+  id = gst_pad_add_probe (src,
+      GST_PAD_PROBE_TYPE_EVENT_BOTH | GST_PAD_PROBE_TYPE_QUERY_BOTH,
+      _probe_handler, GINT_TO_POINTER (GST_PAD_PROBE_DROP), NULL);
+  fail_unless (gst_pad_push_event (src,
+          gst_event_new_segment (&dummy_segment)) == TRUE);
+  /* Queries should stil fail */
+  query = gst_query_new_duration (GST_FORMAT_TIME);
+  fail_unless (gst_pad_peer_query (src, query) == FALSE);
+  ASSERT_MINI_OBJECT_REFCOUNT (query, "query", 1);
+  gst_query_unref (query);
+  gst_pad_remove_probe (src, id);
+
+  /* Add a probe that returns _HANDLED will make the event push return TRUE
+   * even if not linked */
+  GST_DEBUG ("event/query HANDLED");
+  id = gst_pad_add_probe (src,
+      GST_PAD_PROBE_TYPE_EVENT_BOTH | GST_PAD_PROBE_TYPE_QUERY_BOTH,
+      _probe_handler, GINT_TO_POINTER (GST_PAD_PROBE_HANDLED), NULL);
+  fail_unless (gst_pad_push_event (src,
+          gst_event_new_segment (&dummy_segment)) == TRUE);
+
+  /* Queries will succeed */
+  query = gst_query_new_duration (GST_FORMAT_TIME);
+  fail_unless (gst_pad_peer_query (src, query) == TRUE);
+  ASSERT_MINI_OBJECT_REFCOUNT (query, "query", 1);
+  gst_query_unref (query);
+  gst_pad_remove_probe (src, id);
+
+  /* cleanup */
+  ASSERT_CAPS_REFCOUNT (caps, "caps", 2);
+  ASSERT_OBJECT_REFCOUNT (src, "src", 1);
+
+  gst_object_unref (src);
+
+  ASSERT_CAPS_REFCOUNT (caps, "caps", 1);
+  gst_caps_unref (caps);
+}
+
+GST_END_TEST;
 
 GST_START_TEST (test_push_unlinked)
 {
@@ -510,6 +699,7 @@ GST_START_TEST (test_push_unlinked)
   GstCaps *caps;
   GstBuffer *buffer;
   gulong id;
+  GstFlowReturn fl;
 
   src = gst_pad_new ("src", GST_PAD_SRC);
   fail_if (src == NULL);
@@ -547,7 +737,19 @@ GST_START_TEST (test_push_unlinked)
    * to chain */
   GST_DEBUG ("push buffer drop");
   id = gst_pad_add_probe (src, GST_PAD_PROBE_TYPE_BUFFER,
-      _probe_handler, GINT_TO_POINTER (0), NULL);
+      _probe_handler, GINT_TO_POINTER (GST_PAD_PROBE_DROP), NULL);
+  buffer = gst_buffer_new ();
+  gst_buffer_ref (buffer);
+  fail_unless (gst_pad_push (src, buffer) == GST_FLOW_OK);
+  ASSERT_MINI_OBJECT_REFCOUNT (buffer, "buffer", 1);
+  gst_buffer_unref (buffer);
+  gst_pad_remove_probe (src, id);
+
+  /* adding a probe that returns _HANDLED will drop the buffer without trying
+   * to chain */
+  GST_DEBUG ("push buffer handled");
+  id = gst_pad_add_probe (src, GST_PAD_PROBE_TYPE_BUFFER,
+      _probe_handler, GINT_TO_POINTER (GST_PAD_PROBE_HANDLED), NULL);
   buffer = gst_buffer_new ();
   gst_buffer_ref (buffer);
   fail_unless (gst_pad_push (src, buffer) == GST_FLOW_OK);
@@ -559,13 +761,27 @@ GST_START_TEST (test_push_unlinked)
    * and hence drop because pad is unlinked */
   GST_DEBUG ("push buffer ok");
   id = gst_pad_add_probe (src, GST_PAD_PROBE_TYPE_BUFFER,
-      _probe_handler, GINT_TO_POINTER (1), NULL);
+      _probe_handler, GINT_TO_POINTER (GST_PAD_PROBE_OK), NULL);
   buffer = gst_buffer_new ();
   gst_buffer_ref (buffer);
   fail_unless (gst_pad_push (src, buffer) == GST_FLOW_NOT_LINKED);
   ASSERT_MINI_OBJECT_REFCOUNT (buffer, "buffer", 1);
   gst_buffer_unref (buffer);
   gst_pad_remove_probe (src, id);
+
+  GST_DEBUG ("push buffer handled and custom return");
+  for (fl = GST_FLOW_NOT_SUPPORTED; fl <= GST_FLOW_OK; fl += 1) {
+    GST_DEBUG ("Testing with %s", gst_flow_get_name (fl));
+    id = gst_pad_add_probe (src, GST_PAD_PROBE_TYPE_BUFFER,
+        _handled_probe_handler, GINT_TO_POINTER (fl), NULL);
+    buffer = gst_buffer_new ();
+    gst_buffer_ref (buffer);
+    fail_unless (gst_pad_push (src, buffer) == fl);
+    ASSERT_MINI_OBJECT_REFCOUNT (buffer, "buffer", 1);
+    gst_buffer_unref (buffer);
+    gst_pad_remove_probe (src, id);
+
+  }
 
 
   /* cleanup */
@@ -633,10 +849,10 @@ GST_START_TEST (test_push_linked)
   g_list_free (buffers);
   buffers = NULL;
 
-  /* adding a probe that returns FALSE will drop the buffer without trying
+  /* adding a probe that returns _DROP will drop the buffer without trying
    * to chain */
   id = gst_pad_add_probe (src, GST_PAD_PROBE_TYPE_BUFFER,
-      _probe_handler, GINT_TO_POINTER (0), NULL);
+      _probe_handler, GINT_TO_POINTER (GST_PAD_PROBE_DROP), NULL);
   buffer = gst_buffer_new ();
   gst_buffer_ref (buffer);
   fail_unless (gst_pad_push (src, buffer) == GST_FLOW_OK);
@@ -645,9 +861,9 @@ GST_START_TEST (test_push_linked)
   gst_pad_remove_probe (src, id);
   fail_unless_equals_int (g_list_length (buffers), 0);
 
-  /* adding a probe that returns TRUE will still chain the buffer */
+  /* adding a probe that returns _OK will still chain the buffer */
   id = gst_pad_add_probe (src, GST_PAD_PROBE_TYPE_BUFFER,
-      _probe_handler, GINT_TO_POINTER (1), NULL);
+      _probe_handler, GINT_TO_POINTER (GST_PAD_PROBE_OK), NULL);
   buffer = gst_buffer_new ();
   gst_buffer_ref (buffer);
   fail_unless (gst_pad_push (src, buffer) == GST_FLOW_OK);
@@ -662,7 +878,22 @@ GST_START_TEST (test_push_linked)
   g_list_free (buffers);
   buffers = NULL;
 
+  /* adding a probe that returns _HANDLED will not chain the buffer */
+  id = gst_pad_add_probe (src, GST_PAD_PROBE_TYPE_BUFFER,
+      _probe_handler, GINT_TO_POINTER (GST_PAD_PROBE_HANDLED), NULL);
+  buffer = gst_buffer_new ();
+  gst_buffer_ref (buffer);
+  fail_unless (gst_pad_push (src, buffer) == GST_FLOW_OK);
+  gst_pad_remove_probe (src, id);
+
+  ASSERT_MINI_OBJECT_REFCOUNT (buffer, "buffer", 1);
+  gst_buffer_unref (buffer);
+  fail_unless_equals_int (g_list_length (buffers), 0);
+  g_list_free (buffers);
+  buffers = NULL;
+
   /* teardown */
+  gst_check_drop_buffers ();
   gst_pad_unlink (src, sink);
   ASSERT_CAPS_REFCOUNT (caps, "caps", 2);
   gst_object_unref (src);
@@ -733,10 +964,10 @@ GST_START_TEST (test_push_linked_flushing)
   gst_pad_set_caps (src, caps);
   fail_unless (gst_pad_push_event (src,
           gst_event_new_segment (&dummy_segment)) == TRUE);
-  /* adding a probe that returns FALSE will drop the buffer without trying
+  /* adding a probe that returns _DROP will drop the buffer without trying
    * to chain */
   id = gst_pad_add_probe (src, GST_PAD_PROBE_TYPE_BUFFER, _probe_handler,
-      GINT_TO_POINTER (0), NULL);
+      GINT_TO_POINTER (GST_PAD_PROBE_DROP), NULL);
   buffer = gst_buffer_new ();
   gst_buffer_ref (buffer);
   fail_unless (gst_pad_push (src, buffer) == GST_FLOW_FLUSHING);
@@ -745,10 +976,10 @@ GST_START_TEST (test_push_linked_flushing)
   gst_buffer_unref (buffer);
   gst_pad_remove_probe (src, id);
 
-  /* adding a probe that returns TRUE will still chain the buffer,
+  /* adding a probe that returns _OK will still chain the buffer,
    * and hence drop because pad is flushing */
   id = gst_pad_add_probe (src, GST_PAD_PROBE_TYPE_BUFFER, _probe_handler,
-      GINT_TO_POINTER (1), NULL);
+      GINT_TO_POINTER (GST_PAD_PROBE_OK), NULL);
   buffer = gst_buffer_new ();
   gst_buffer_ref (buffer);
   fail_unless (gst_pad_push (src, buffer) == GST_FLOW_FLUSHING);
@@ -758,6 +989,7 @@ GST_START_TEST (test_push_linked_flushing)
   gst_pad_remove_probe (src, id);
 
   /* cleanup */
+  gst_check_drop_buffers ();
   ASSERT_CAPS_REFCOUNT (caps, "caps", 2);
   ASSERT_OBJECT_REFCOUNT (src, "src", 1);
   gst_pad_link (src, sink);
@@ -791,7 +1023,9 @@ buffer_compare (GstBuffer * buf, const gchar * str, gsize size)
 
   fail_unless (gst_buffer_map (buf, &info, GST_MAP_READ));
   res = memcmp (info.data, str, size) == 0;
-  GST_DEBUG ("%s <-> %s: %d", (gchar *) info.data, str, res);
+  GST_MEMDUMP ("buffer  data", info.data, size);
+  GST_MEMDUMP ("compare data", (guint8 *) str, size);
+  GST_DEBUG ("buffers match: %s", res ? "yes" : "no");
   gst_buffer_unmap (buf, &info);
 
   return res;
@@ -853,6 +1087,7 @@ GST_START_TEST (test_push_buffer_list_compat)
   fail_unless (buffers == NULL);
 
   /* teardown */
+  gst_check_drop_buffers ();
   gst_pad_unlink (src, sink);
   gst_object_unref (src);
   gst_object_unref (sink);
@@ -945,6 +1180,7 @@ GST_START_TEST (test_push_negotiation)
   fail_unless (gst_pad_set_caps (sink, caps) == FALSE);
 
   /* teardown */
+  gst_check_drop_buffers ();
   gst_pad_unlink (src, sink);
   gst_object_unref (src);
   gst_object_unref (sink);
@@ -1144,6 +1380,309 @@ GST_START_TEST (test_pad_blocking_with_probe_type_blocking)
 
 GST_END_TEST;
 
+static gboolean idle_probe_running;
+
+static GstFlowReturn
+idletest_sink_pad_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
+{
+  if (idle_probe_running)
+    fail ("Should not be reached");
+  gst_buffer_unref (buf);
+  return GST_FLOW_OK;
+}
+
+static GstPadProbeReturn
+idle_probe_wait (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
+{
+  /* it is ok to have a probe called multiple times but it is not
+   * acceptable in our scenario */
+  fail_if (idle_probe_running);
+
+  idle_probe_running = TRUE;
+  while (idle_probe_running) {
+    g_usleep (10000);
+  }
+
+  return GST_PAD_PROBE_REMOVE;
+}
+
+static gpointer
+add_idle_probe_async (GstPad * pad)
+{
+  gst_pad_add_probe (pad, GST_PAD_PROBE_TYPE_IDLE, idle_probe_wait, NULL, NULL);
+
+  return NULL;
+}
+
+GST_START_TEST (test_pad_blocking_with_probe_type_idle)
+{
+  GstPad *srcpad, *sinkpad;
+  GThread *idle_thread, *thread;
+
+  srcpad = gst_pad_new ("src", GST_PAD_SRC);
+  fail_unless (srcpad != NULL);
+  sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
+  fail_unless (sinkpad != NULL);
+
+  gst_pad_set_chain_function (sinkpad, idletest_sink_pad_chain);
+
+  fail_unless (gst_pad_link (srcpad, sinkpad) == GST_PAD_LINK_OK);
+
+  gst_pad_set_active (sinkpad, TRUE);
+  gst_pad_set_active (srcpad, TRUE);
+
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_stream_start ("test")) == TRUE);
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_segment (&dummy_segment)) == TRUE);
+
+  idle_probe_running = FALSE;
+  idle_thread =
+      g_thread_try_new ("gst-check", (GThreadFunc) add_idle_probe_async, srcpad,
+      NULL);
+
+  /* wait for the idle function to signal it is being called */
+  while (!idle_probe_running) {
+    g_usleep (10000);
+  }
+
+  thread = g_thread_try_new ("gst-check", (GThreadFunc) push_buffer_async,
+      srcpad, NULL);
+
+  while (!gst_pad_is_blocking (srcpad)) {
+    g_usleep (10000);
+  }
+
+  idle_probe_running = FALSE;
+
+  g_thread_join (idle_thread);
+  g_thread_join (thread);
+  gst_object_unref (srcpad);
+  gst_object_unref (sinkpad);
+}
+
+GST_END_TEST;
+
+static gboolean pull_probe_called;
+static gboolean pull_probe_called_with_bad_type;
+static gboolean pull_probe_called_with_bad_data;
+
+static GstPadProbeReturn
+probe_pull_buffer_cb_check_buffer_return_ok (GstPad * pad,
+    GstPadProbeInfo * info, gpointer user_data)
+{
+  if (info->type & GST_PAD_PROBE_TYPE_BUFFER) {
+    if (GST_IS_BUFFER (info->data))
+      pull_probe_called = TRUE;
+    else
+      pull_probe_called_with_bad_data = TRUE;
+  } else {
+    /* shouldn't be called */
+    pull_probe_called_with_bad_type = TRUE;
+  }
+  return GST_PAD_PROBE_OK;
+}
+
+static GstFlowReturn
+test_probe_pull_getrange (GstPad * pad, GstObject * parent, guint64 offset,
+    guint length, GstBuffer ** buf)
+{
+  *buf = gst_buffer_new ();
+  return GST_FLOW_OK;
+}
+
+static gboolean
+test_probe_pull_activate_pull (GstPad * pad, GstObject * object)
+{
+  return gst_pad_activate_mode (pad, GST_PAD_MODE_PULL, TRUE);
+}
+
+static gpointer
+pull_range_async (GstPad * pad)
+{
+  GstBuffer *buf = NULL;
+  GstFlowReturn res = gst_pad_pull_range (pad, 0, 100, &buf);
+  if (buf)
+    gst_buffer_unref (buf);
+  return GINT_TO_POINTER (res);
+}
+
+GST_START_TEST (test_pad_probe_pull)
+{
+  GstPad *srcpad, *sinkpad;
+  GThread *thread;
+  GstFlowReturn ret;
+
+  srcpad = gst_pad_new ("src", GST_PAD_SRC);
+  fail_unless (srcpad != NULL);
+  sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
+  fail_unless (sinkpad != NULL);
+
+  gst_pad_set_getrange_function (srcpad, test_probe_pull_getrange);
+  gst_pad_set_activate_function (sinkpad, test_probe_pull_activate_pull);
+  gst_pad_link (srcpad, sinkpad);
+
+  gst_pad_set_active (sinkpad, TRUE);
+  gst_pad_set_active (srcpad, TRUE);
+
+  id = gst_pad_add_probe (sinkpad,
+      GST_PAD_PROBE_TYPE_BLOCK | GST_PAD_PROBE_TYPE_PULL,
+      block_async_cb_return_ok, NULL, NULL);
+
+  thread = g_thread_try_new ("gst-check", (GThreadFunc) pull_range_async,
+      sinkpad, NULL);
+
+  /* wait for the block */
+  while (!gst_pad_is_blocking (sinkpad)) {
+    g_usleep (10000);
+  }
+
+  /* stop with flushing */
+  gst_pad_push_event (srcpad, gst_event_new_flush_start ());
+
+  /* get return value from push */
+  ret = GPOINTER_TO_INT (g_thread_join (thread));
+  /* unflush now */
+  gst_pad_push_event (srcpad, gst_event_new_flush_stop (FALSE));
+  /* must be wrong state */
+  fail_unless (ret == GST_FLOW_FLUSHING);
+
+  gst_object_unref (srcpad);
+  gst_object_unref (sinkpad);
+}
+
+GST_END_TEST;
+
+static gboolean idle_probe_called;
+static gboolean get_range_wait;
+static gboolean getrange_waiting;
+
+static GstPadProbeReturn
+idle_cb_return_ok (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
+{
+  idle_probe_called = TRUE;
+  return GST_PAD_PROBE_OK;
+}
+
+static GstFlowReturn
+test_probe_pull_getrange_wait (GstPad * pad, GstObject * parent, guint64 offset,
+    guint length, GstBuffer ** buf)
+{
+  getrange_waiting = TRUE;
+
+  *buf = gst_buffer_new ();
+  while (get_range_wait) {
+    g_usleep (10000);
+  }
+
+  getrange_waiting = FALSE;
+  return GST_FLOW_OK;
+}
+
+GST_START_TEST (test_pad_probe_pull_idle)
+{
+  GstPad *srcpad, *sinkpad;
+  GThread *thread;
+  GstFlowReturn ret;
+
+  srcpad = gst_pad_new ("src", GST_PAD_SRC);
+  fail_unless (srcpad != NULL);
+  sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
+  fail_unless (sinkpad != NULL);
+
+  gst_pad_set_getrange_function (srcpad, test_probe_pull_getrange_wait);
+  gst_pad_set_activate_function (sinkpad, test_probe_pull_activate_pull);
+  gst_pad_link (srcpad, sinkpad);
+
+  gst_pad_set_active (sinkpad, TRUE);
+  gst_pad_set_active (srcpad, TRUE);
+
+  idle_probe_called = FALSE;
+  get_range_wait = TRUE;
+  thread = g_thread_try_new ("gst-check", (GThreadFunc) pull_range_async,
+      sinkpad, NULL);
+
+  /* wait for the block */
+  while (!getrange_waiting) {
+    g_usleep (10000);
+  }
+
+  id = gst_pad_add_probe (sinkpad,
+      GST_PAD_PROBE_TYPE_IDLE | GST_PAD_PROBE_TYPE_PULL,
+      idle_cb_return_ok, NULL, NULL);
+
+  fail_if (idle_probe_called);
+
+  get_range_wait = FALSE;
+  while (getrange_waiting) {
+    g_usleep (10000);
+  }
+  while (!idle_probe_called) {
+    g_usleep (10000);
+  }
+
+  ret = GPOINTER_TO_INT (g_thread_join (thread));
+  fail_unless (ret == GST_FLOW_OK);
+  gst_pad_set_active (srcpad, FALSE);
+  gst_pad_set_active (sinkpad, FALSE);
+  gst_object_unref (srcpad);
+  gst_object_unref (sinkpad);
+}
+
+GST_END_TEST;
+
+
+GST_START_TEST (test_pad_probe_pull_buffer)
+{
+  GstPad *srcpad, *sinkpad;
+  GThread *thread;
+  GstFlowReturn ret;
+
+  srcpad = gst_pad_new ("src", GST_PAD_SRC);
+  fail_unless (srcpad != NULL);
+  sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
+  fail_unless (sinkpad != NULL);
+
+  gst_pad_set_getrange_function (srcpad, test_probe_pull_getrange);
+  gst_pad_set_activate_function (sinkpad, test_probe_pull_activate_pull);
+  gst_pad_link (srcpad, sinkpad);
+
+  gst_pad_set_active (sinkpad, TRUE);
+  gst_pad_set_active (srcpad, TRUE);
+
+  id = gst_pad_add_probe (sinkpad,
+      GST_PAD_PROBE_TYPE_BUFFER | GST_PAD_PROBE_TYPE_PULL,
+      probe_pull_buffer_cb_check_buffer_return_ok, NULL, NULL);
+
+  pull_probe_called = FALSE;
+  pull_probe_called_with_bad_type = FALSE;
+  pull_probe_called_with_bad_data = FALSE;
+
+  thread = g_thread_try_new ("gst-check", (GThreadFunc) pull_range_async,
+      sinkpad, NULL);
+
+  /* wait for the block */
+  while (!pull_probe_called && !pull_probe_called_with_bad_data
+      && !pull_probe_called_with_bad_type) {
+    g_usleep (10000);
+  }
+
+  fail_unless (pull_probe_called);
+  fail_if (pull_probe_called_with_bad_data);
+  fail_if (pull_probe_called_with_bad_type);
+
+  /* get return value from push */
+  ret = GPOINTER_TO_INT (g_thread_join (thread));
+  fail_unless (ret == GST_FLOW_OK);
+
+  gst_pad_set_active (sinkpad, FALSE);
+  gst_pad_set_active (srcpad, FALSE);
+  gst_object_unref (srcpad);
+  gst_object_unref (sinkpad);
+}
+
+GST_END_TEST;
+
 static gboolean pad_probe_remove_notifiy_called = FALSE;
 
 static GstPadProbeReturn
@@ -1187,6 +1726,84 @@ GST_START_TEST (test_pad_probe_remove)
   fail_unless (pad->num_blocked == 0);
 
   gst_object_unref (pad);
+}
+
+GST_END_TEST;
+
+typedef struct
+{
+  gulong probe_id;
+  GstPad *probe_pad;
+  GThread *thread;
+} BlockReplaceProbeHelper;
+
+static gpointer
+unblock_probe_thread (gpointer user_data)
+{
+  BlockReplaceProbeHelper *helper = user_data;
+
+  GST_INFO_OBJECT (helper->probe_pad, "removing probe to unblock pad");
+  gst_pad_remove_probe (helper->probe_pad, helper->probe_id);
+  return NULL;
+}
+
+static GstPadProbeReturn
+block_and_replace_buffer_probe_cb (GstPad * pad, GstPadProbeInfo * info,
+    gpointer user_data)
+{
+  BlockReplaceProbeHelper *helper = user_data;
+
+  GST_INFO_OBJECT (pad, "about to block pad, replacing buffer");
+
+  /* we want to block, but also drop this buffer */
+  gst_buffer_unref (GST_BUFFER (info->data));
+  info->data = NULL;
+
+  helper->thread =
+      g_thread_new ("gst-pad-test-thread", unblock_probe_thread, helper);
+
+  return GST_PAD_PROBE_OK;
+}
+
+GST_START_TEST (test_pad_probe_block_and_drop_buffer)
+{
+  BlockReplaceProbeHelper helper;
+  GstFlowReturn flow;
+  GstPad *src, *sink;
+
+  src = gst_pad_new ("src", GST_PAD_SRC);
+  gst_pad_set_active (src, TRUE);
+  sink = gst_pad_new ("sink", GST_PAD_SINK);
+  gst_pad_set_chain_function (sink, gst_check_chain_func);
+  gst_pad_set_active (sink, TRUE);
+
+  fail_unless (gst_pad_push_event (src,
+          gst_event_new_stream_start ("test")) == TRUE);
+  fail_unless (gst_pad_push_event (src,
+          gst_event_new_segment (&dummy_segment)) == TRUE);
+
+  fail_unless_equals_int (gst_pad_link (src, sink), GST_PAD_LINK_OK);
+
+  helper.probe_id = gst_pad_add_probe (src,
+      GST_PAD_PROBE_TYPE_BLOCK | GST_PAD_PROBE_TYPE_BUFFER,
+      block_and_replace_buffer_probe_cb, &helper, NULL);
+  helper.probe_pad = src;
+
+  /* push a buffer so the events are propagated downstream */
+  flow = gst_pad_push (src, gst_buffer_new ());
+
+  g_thread_join (helper.thread);
+
+  fail_unless_equals_int (flow, GST_FLOW_OK);
+
+  /* no buffer should have made it through to the sink pad, and especially
+   * not a NULL pointer buffer */
+  fail_if (buffers && buffers->data == NULL);
+  fail_unless (buffers == NULL);
+
+  gst_check_drop_buffers ();
+  gst_object_unref (src);
+  gst_object_unref (sink);
 }
 
 GST_END_TEST;
@@ -1364,6 +1981,110 @@ GST_START_TEST (test_pad_probe_flush_events)
   fail_unless (sink_flush_start_probe_called);
   fail_unless (sink_flush_stop_probe_called);
 
+  gst_check_drop_buffers ();
+  gst_object_unref (src);
+  gst_object_unref (sink);
+}
+
+GST_END_TEST;
+
+static gboolean probe_was_called;
+
+static GstPadProbeReturn
+flush_events_only_probe (GstPad * pad, GstPadProbeInfo * info, gpointer data)
+{
+  GST_LOG_OBJECT (pad, "%" GST_PTR_FORMAT, GST_PAD_PROBE_INFO_DATA (info));
+
+  probe_was_called = TRUE;
+
+  return GST_PAD_PROBE_OK;
+}
+
+GST_START_TEST (test_pad_probe_flush_events_only)
+{
+  GstPad *src, *sink;
+
+  src = gst_pad_new ("src", GST_PAD_SRC);
+  sink = gst_pad_new ("sink", GST_PAD_SINK);
+  gst_pad_set_chain_function (sink, gst_check_chain_func);
+  gst_pad_set_active (src, TRUE);
+  gst_pad_set_active (sink, TRUE);
+
+  fail_unless (gst_pad_link (src, sink) == GST_PAD_LINK_OK);
+
+  fail_unless (gst_pad_push_event (src,
+          gst_event_new_stream_start ("test")) == TRUE);
+
+  gst_pad_add_probe (src, GST_PAD_PROBE_TYPE_EVENT_FLUSH,
+      flush_events_only_probe, NULL, NULL);
+
+  probe_was_called = FALSE;
+  fail_unless (gst_pad_push_event (src,
+          gst_event_new_segment (&dummy_segment)) == TRUE);
+  fail_if (probe_was_called);
+
+  fail_unless_equals_int (gst_pad_push (src, gst_buffer_new ()), GST_FLOW_OK);
+  fail_if (probe_was_called);
+
+  gst_pad_push_event (src, gst_event_new_flush_start ());
+  fail_unless (probe_was_called);
+
+  probe_was_called = FALSE;
+  gst_pad_push_event (src, gst_event_new_flush_stop (TRUE));
+  fail_unless (probe_was_called);
+
+  gst_check_drop_buffers ();
+  gst_object_unref (src);
+  gst_object_unref (sink);
+}
+
+GST_END_TEST;
+
+#define NUM_PROBES 4
+static guint count;
+
+static GstPadProbeReturn
+order_others_probe_cb (GstPad * pad, GstPadProbeInfo * info, gpointer user_data)
+{
+  *(guint *) (user_data) = ++count;
+
+  return GST_PAD_PROBE_REMOVE;
+}
+
+GST_START_TEST (test_pad_probe_call_order)
+{
+  GstFlowReturn flow;
+  GstPad *src, *sink;
+  guint counters[NUM_PROBES];
+  guint i;
+
+  src = gst_pad_new ("src", GST_PAD_SRC);
+  gst_pad_set_active (src, TRUE);
+  sink = gst_pad_new ("sink", GST_PAD_SINK);
+  gst_pad_set_chain_function (sink, gst_check_chain_func);
+  gst_pad_set_active (sink, TRUE);
+
+  fail_unless (gst_pad_push_event (src,
+          gst_event_new_stream_start ("test")) == TRUE);
+  fail_unless (gst_pad_push_event (src,
+          gst_event_new_segment (&dummy_segment)) == TRUE);
+
+  fail_unless_equals_int (gst_pad_link (src, sink), GST_PAD_LINK_OK);
+
+  for (i = 0; i < NUM_PROBES; i++) {
+    gst_pad_add_probe (src,
+        GST_PAD_PROBE_TYPE_BUFFER, order_others_probe_cb, &(counters[i]), NULL);
+  }
+
+  /* push a buffer so the events are propagated downstream */
+  flow = gst_pad_push (src, gst_buffer_new ());
+  fail_unless_equals_int (flow, GST_FLOW_OK);
+
+  for (i = 0; i < NUM_PROBES; i++) {
+    fail_unless (counters[i] == i + 1);
+  }
+
+  gst_check_drop_buffers ();
   gst_object_unref (src);
   gst_object_unref (sink);
 }
@@ -1976,6 +2697,520 @@ GST_START_TEST (test_last_flow_return_pull)
 
 GST_END_TEST;
 
+GST_START_TEST (test_flush_stop_inactive)
+{
+  GstPad *sinkpad, *srcpad;
+
+  sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
+  fail_unless (sinkpad != NULL);
+
+  /* new pads are inactive and flushing */
+  fail_if (GST_PAD_IS_ACTIVE (sinkpad));
+  fail_unless (GST_PAD_IS_FLUSHING (sinkpad));
+
+  /* this should fail, pad is inactive */
+  fail_if (gst_pad_send_event (sinkpad, gst_event_new_flush_stop (FALSE)));
+
+  /* nothing should have changed */
+  fail_if (GST_PAD_IS_ACTIVE (sinkpad));
+  fail_unless (GST_PAD_IS_FLUSHING (sinkpad));
+
+  gst_pad_set_active (sinkpad, TRUE);
+
+  /* pad is now active an not flushing anymore */
+  fail_unless (GST_PAD_IS_ACTIVE (sinkpad));
+  fail_if (GST_PAD_IS_FLUSHING (sinkpad));
+
+  /* do flush, does not deactivate the pad */
+  fail_unless (gst_pad_send_event (sinkpad, gst_event_new_flush_start ()));
+  fail_unless (GST_PAD_IS_ACTIVE (sinkpad));
+  fail_unless (GST_PAD_IS_FLUSHING (sinkpad));
+
+  fail_unless (gst_pad_send_event (sinkpad, gst_event_new_flush_stop (FALSE)));
+  fail_unless (GST_PAD_IS_ACTIVE (sinkpad));
+  fail_if (GST_PAD_IS_FLUSHING (sinkpad));
+
+  gst_pad_set_active (sinkpad, FALSE);
+  fail_if (GST_PAD_IS_ACTIVE (sinkpad));
+  fail_unless (GST_PAD_IS_FLUSHING (sinkpad));
+
+  gst_object_unref (sinkpad);
+
+  /* we should not be able to push on an inactive srcpad */
+  srcpad = gst_pad_new ("src", GST_PAD_SRC);
+  fail_unless (srcpad != NULL);
+
+  fail_if (GST_PAD_IS_ACTIVE (srcpad));
+  fail_unless (GST_PAD_IS_FLUSHING (srcpad));
+
+  fail_if (gst_pad_push_event (srcpad, gst_event_new_flush_stop (FALSE)));
+
+  /* should still be inactive and flushing */
+  fail_if (GST_PAD_IS_ACTIVE (srcpad));
+  fail_unless (GST_PAD_IS_FLUSHING (srcpad));
+
+  gst_pad_set_active (srcpad, TRUE);
+
+  /* pad is now active an not flushing anymore */
+  fail_unless (GST_PAD_IS_ACTIVE (srcpad));
+  fail_if (GST_PAD_IS_FLUSHING (srcpad));
+
+  /* do flush, does not deactivate the pad */
+  fail_if (gst_pad_push_event (srcpad, gst_event_new_flush_start ()));
+  fail_unless (GST_PAD_IS_ACTIVE (srcpad));
+  fail_unless (GST_PAD_IS_FLUSHING (srcpad));
+
+  fail_if (gst_pad_push_event (srcpad, gst_event_new_flush_stop (FALSE)));
+  fail_unless (GST_PAD_IS_ACTIVE (srcpad));
+  fail_if (GST_PAD_IS_FLUSHING (srcpad));
+
+  gst_pad_set_active (srcpad, FALSE);
+  fail_if (GST_PAD_IS_ACTIVE (srcpad));
+  fail_unless (GST_PAD_IS_FLUSHING (srcpad));
+
+  gst_object_unref (srcpad);
+}
+
+GST_END_TEST;
+
+/* For proxy caps flag tests */
+
+typedef struct _GstProxyTestElement GstProxyTestElement;
+typedef struct _GstProxyTestElementClass GstProxyTestElementClass;
+
+struct _GstProxyTestElement
+{
+  GstElement element;
+};
+
+struct _GstProxyTestElementClass
+{
+  GstElementClass parent_class;
+};
+
+G_GNUC_INTERNAL GType gst_proxytestelement_get_type (void);
+
+static GstStaticPadTemplate proxytestelement_peer_template =
+GST_STATIC_PAD_TEMPLATE ("sink",
+    GST_PAD_SINK,
+    GST_PAD_ALWAYS,
+    GST_STATIC_CAPS ("test/proxy, option=(int)1"));
+
+static GstStaticPadTemplate proxytestelement_peer_incompatible_template =
+GST_STATIC_PAD_TEMPLATE ("sink",
+    GST_PAD_SINK,
+    GST_PAD_ALWAYS,
+    GST_STATIC_CAPS ("test/proxy-incompatible"));
+
+static GstStaticPadTemplate proxytestelement_sink_template =
+GST_STATIC_PAD_TEMPLATE ("sink",
+    GST_PAD_SINK,
+    GST_PAD_ALWAYS,
+    GST_STATIC_CAPS ("test/proxy"));
+
+static GstStaticPadTemplate proxytestelement_src_template =
+GST_STATIC_PAD_TEMPLATE ("src",
+    GST_PAD_SRC,
+    GST_PAD_ALWAYS,
+    GST_STATIC_CAPS_ANY);
+
+G_DEFINE_TYPE (GstProxyTestElement, gst_proxytestelement, GST_TYPE_ELEMENT);
+
+static void
+gst_proxytestelement_class_init (GstProxyTestElementClass * klass)
+{
+  GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
+
+  gst_element_class_set_static_metadata (gstelement_class,
+      "Proxy Test Element", "Test", "Proxy test element",
+      "Thiago Santos <thiagoss@osg.samsung.com>");
+
+  gst_element_class_add_static_pad_template (gstelement_class,
+      &proxytestelement_sink_template);
+}
+
+static void
+gst_proxytestelement_init (GstProxyTestElement * element)
+{
+  GstPad *sinkpad;
+  sinkpad =
+      gst_pad_new_from_static_template (&proxytestelement_sink_template,
+      "sink");
+  GST_PAD_SET_PROXY_CAPS (sinkpad);
+  gst_element_add_pad (GST_ELEMENT_CAST (element), sinkpad);
+}
+
+GST_START_TEST (test_proxy_accept_caps_no_proxy)
+{
+  GstElement *element;
+  GstPad *sinkpad;
+  GstCaps *caps;
+
+  gst_element_register (NULL, "proxytestelement", GST_RANK_NONE,
+      gst_proxytestelement_get_type ());
+  element = gst_element_factory_make ("proxytestelement", NULL);
+  sinkpad = gst_element_get_static_pad (element, "sink");
+
+  gst_element_set_state (element, GST_STATE_PLAYING);
+
+  caps = gst_caps_from_string ("test/proxy");
+  fail_unless (gst_pad_query_accept_caps (sinkpad, caps));
+  gst_caps_unref (caps);
+
+  caps = gst_caps_from_string ("test/bad");
+  fail_if (gst_pad_query_accept_caps (sinkpad, caps));
+  gst_caps_unref (caps);
+
+  gst_object_unref (sinkpad);
+  gst_element_set_state (element, GST_STATE_NULL);
+  gst_object_unref (element);
+}
+
+GST_END_TEST;
+
+
+GST_START_TEST (test_proxy_accept_caps_with_proxy)
+{
+  GstElement *element;
+  GstPad *sinkpad, *srcpad;
+  GstPad *peerpad;
+  GstCaps *caps;
+
+  gst_element_register (NULL, "proxytestelement", GST_RANK_NONE,
+      gst_proxytestelement_get_type ());
+  element = gst_element_factory_make ("proxytestelement", NULL);
+
+  srcpad =
+      gst_pad_new_from_static_template (&proxytestelement_src_template, "src");
+  gst_element_add_pad (GST_ELEMENT_CAST (element), srcpad);
+
+  sinkpad = gst_element_get_static_pad (element, "sink");
+  srcpad = gst_element_get_static_pad (element, "src");
+
+  peerpad =
+      gst_pad_new_from_static_template (&proxytestelement_peer_template,
+      "sink");
+  fail_unless (gst_pad_link (srcpad, peerpad) == GST_PAD_LINK_OK);
+  gst_pad_set_active (peerpad, TRUE);
+
+  gst_element_set_state (element, GST_STATE_PLAYING);
+
+  caps = gst_caps_from_string ("test/bad");
+  fail_if (gst_pad_query_accept_caps (sinkpad, caps));
+  gst_caps_unref (caps);
+
+  caps = gst_caps_from_string ("test/proxy, option=(int)1");
+  fail_unless (gst_pad_query_accept_caps (sinkpad, caps));
+  gst_caps_unref (caps);
+
+  caps = gst_caps_from_string ("test/proxy, option=(int)2");
+  fail_if (gst_pad_query_accept_caps (sinkpad, caps));
+  gst_caps_unref (caps);
+
+  gst_object_unref (sinkpad);
+  gst_object_unref (srcpad);
+  gst_pad_set_active (peerpad, FALSE);
+  gst_object_unref (peerpad);
+  gst_element_set_state (element, GST_STATE_NULL);
+  gst_object_unref (element);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_proxy_accept_caps_with_incompatible_proxy)
+{
+  GstElement *element;
+  GstPad *sinkpad, *srcpad;
+  GstPad *peerpad;
+  GstCaps *caps;
+
+  gst_element_register (NULL, "proxytestelement", GST_RANK_NONE,
+      gst_proxytestelement_get_type ());
+  element = gst_element_factory_make ("proxytestelement", NULL);
+
+  srcpad =
+      gst_pad_new_from_static_template (&proxytestelement_src_template, "src");
+  gst_element_add_pad (GST_ELEMENT_CAST (element), srcpad);
+
+  sinkpad = gst_element_get_static_pad (element, "sink");
+  srcpad = gst_element_get_static_pad (element, "src");
+
+  peerpad =
+      gst_pad_new_from_static_template
+      (&proxytestelement_peer_incompatible_template, "sink");
+  fail_unless (gst_pad_link (srcpad, peerpad) == GST_PAD_LINK_OK);
+
+  gst_element_set_state (element, GST_STATE_PLAYING);
+
+  caps = gst_caps_from_string ("test/bad");
+  fail_if (gst_pad_query_accept_caps (sinkpad, caps));
+  gst_caps_unref (caps);
+
+  caps = gst_caps_from_string ("test/proxy");
+  fail_if (gst_pad_query_accept_caps (sinkpad, caps));
+  gst_caps_unref (caps);
+
+  caps = gst_caps_from_string ("test/proxy-incompatible");
+  fail_if (gst_pad_query_accept_caps (sinkpad, caps));
+  gst_caps_unref (caps);
+
+  gst_object_unref (sinkpad);
+  gst_object_unref (srcpad);
+  gst_pad_set_active (peerpad, FALSE);
+  gst_object_unref (peerpad);
+  gst_element_set_state (element, GST_STATE_NULL);
+  gst_object_unref (element);
+}
+
+GST_END_TEST;
+
+static GstSegment sink_segment;
+static gint sink_segment_counter;
+
+static gboolean
+segment_event_func (GstPad * pad, GstObject * parent, GstEvent * event)
+{
+  switch (GST_EVENT_TYPE (event)) {
+    case GST_EVENT_SEGMENT:
+      gst_event_copy_segment (event, &sink_segment);
+      sink_segment_counter++;
+      break;
+    default:
+      break;
+  }
+
+  gst_event_unref (event);
+  return TRUE;
+}
+
+static void
+test_pad_offset (gboolean on_srcpad)
+{
+  GstPad *srcpad, *sinkpad, *offset_pad;
+  GstSegment segment;
+  GstBuffer *buffer;
+  GstQuery *query;
+
+  srcpad = gst_pad_new ("src", GST_PAD_SRC);
+  fail_unless (srcpad != NULL);
+  sinkpad = gst_pad_new ("sink", GST_PAD_SINK);
+
+  offset_pad = on_srcpad ? srcpad : sinkpad;
+
+  gst_segment_init (&sink_segment, GST_FORMAT_UNDEFINED);
+  sink_segment_counter = 0;
+  gst_pad_set_chain_function (sinkpad, gst_check_chain_func);
+  gst_pad_set_event_function (sinkpad, segment_event_func);
+
+  fail_unless (sinkpad != NULL);
+  fail_unless_equals_int (gst_pad_link (srcpad, sinkpad), GST_PAD_LINK_OK);
+  fail_unless (gst_pad_set_active (sinkpad, TRUE));
+  fail_unless (gst_pad_set_active (srcpad, TRUE));
+
+  /* Set an offset of 5s, meaning:
+   * segment position 0 gives running time 5s, stream time 0s
+   * segment start of 0 should stay 0
+   */
+  gst_pad_set_offset (offset_pad, 5 * GST_SECOND);
+
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_stream_start ("test")) == TRUE);
+  /* We should have no segment event yet */
+  fail_if (sink_segment.format != GST_FORMAT_UNDEFINED);
+  fail_unless_equals_int (sink_segment_counter, 0);
+
+  /* Send segment event, expect it to arrive with a modified start running time */
+  gst_segment_init (&segment, GST_FORMAT_TIME);
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_segment (&segment)) == TRUE);
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 1);
+
+  /* Send a buffer and check if all timestamps are as expected, and especially
+   * if the buffer timestamp was not changed */
+  buffer = gst_buffer_new ();
+  GST_BUFFER_PTS (buffer) = 0 * GST_SECOND;
+  fail_unless_equals_int (gst_pad_push (srcpad, buffer), GST_FLOW_OK);
+
+  fail_unless_equals_int (g_list_length (buffers), 1);
+  buffer = buffers->data;
+  buffers = g_list_delete_link (buffers, buffers);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (GST_BUFFER_PTS (buffer), 0 * GST_SECOND);
+  gst_buffer_unref (buffer);
+
+  fail_unless_equals_int (sink_segment_counter, 1);
+
+  /* Set a negative offset of -5s, meaning:
+   * segment position 5s gives running time 0s, stream time 5s
+   * segment start would have a negative running time!
+   */
+  gst_pad_set_offset (offset_pad, -5 * GST_SECOND);
+
+  /* Segment should still be the same as before */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 1);
+
+  /* Send segment event, expect it to arrive with a modified start running time */
+  gst_segment_init (&segment, GST_FORMAT_TIME);
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_segment (&segment)) == TRUE);
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start + 5 * GST_SECOND),
+      0 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start + 5 * GST_SECOND),
+      5 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 2);
+
+  /* Send a buffer and check if all timestamps are as expected, and especially
+   * if the buffer timestamp was not changed */
+  buffer = gst_buffer_new ();
+  GST_BUFFER_PTS (buffer) = 5 * GST_SECOND;
+  fail_unless_equals_int (gst_pad_push (srcpad, buffer), GST_FLOW_OK);
+
+  fail_unless_equals_int (g_list_length (buffers), 1);
+  buffer = buffers->data;
+  buffers = g_list_delete_link (buffers, buffers);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (GST_BUFFER_PTS (buffer), 5 * GST_SECOND);
+  gst_buffer_unref (buffer);
+
+  fail_unless_equals_int (sink_segment_counter, 2);
+
+  /* Set offset to 5s again, same situation as above but don't send a new
+   * segment event. The segment should be adjusted *before* the buffer comes
+   * out of the srcpad */
+  gst_pad_set_offset (offset_pad, 5 * GST_SECOND);
+
+  /* Segment should still be the same as before */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start + 5 * GST_SECOND),
+      0 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start + 5 * GST_SECOND),
+      5 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 2);
+
+  /* Send a buffer and check if a new segment event was sent and all buffer
+   * timestamps are as expected */
+  buffer = gst_buffer_new ();
+  GST_BUFFER_PTS (buffer) = 0 * GST_SECOND;
+  fail_unless_equals_int (gst_pad_push (srcpad, buffer), GST_FLOW_OK);
+
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 3);
+
+  fail_unless_equals_int (g_list_length (buffers), 1);
+  buffer = buffers->data;
+  buffers = g_list_delete_link (buffers, buffers);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, GST_BUFFER_PTS (buffer)), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (GST_BUFFER_PTS (buffer), 0 * GST_SECOND);
+  gst_buffer_unref (buffer);
+
+  fail_unless_equals_int (sink_segment_counter, 3);
+
+  /* Set offset to 10s and send another sticky event. In between a new
+   * segment event should've been sent */
+  gst_pad_set_offset (offset_pad, 10 * GST_SECOND);
+
+  /* Segment should still be the same as before */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 5 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+  fail_unless_equals_int (sink_segment_counter, 3);
+
+  fail_unless (gst_pad_push_event (srcpad,
+          gst_event_new_tag (gst_tag_list_new_empty ())) == TRUE);
+
+  /* Segment should be updated */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 10 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 4);
+
+  /* Set offset to 15s and do a serialized query. In between a new
+   * segment event should've been sent */
+  gst_pad_set_offset (offset_pad, 15 * GST_SECOND);
+
+  /* Segment should still be the same as before */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 10 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+  fail_unless_equals_int (sink_segment_counter, 4);
+
+  query = gst_query_new_drain ();
+  gst_pad_peer_query (srcpad, query);
+  gst_query_unref (query);
+
+  /* Segment should be updated */
+  fail_if (sink_segment.format == GST_FORMAT_UNDEFINED);
+  fail_unless_equals_uint64 (gst_segment_to_running_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 15 * GST_SECOND);
+  fail_unless_equals_uint64 (gst_segment_to_stream_time (&sink_segment,
+          GST_FORMAT_TIME, sink_segment.start), 0 * GST_SECOND);
+  fail_unless_equals_uint64 (sink_segment.start, 0 * GST_SECOND);
+
+  fail_unless_equals_int (sink_segment_counter, 5);
+
+  gst_check_drop_buffers ();
+
+  fail_unless (gst_pad_set_active (sinkpad, FALSE));
+  fail_unless (gst_pad_set_active (srcpad, FALSE));
+  gst_object_unref (sinkpad);
+  gst_object_unref (srcpad);
+}
+
+GST_START_TEST (test_pad_offset_src)
+{
+  test_pad_offset (TRUE);
+}
+
+GST_END_TEST;
+
 static Suite *
 gst_pad_suite (void)
 {
@@ -1994,6 +3229,7 @@ gst_pad_suite (void)
   tcase_add_test (tc_chain, test_sticky_caps_unlinked);
   tcase_add_test (tc_chain, test_sticky_caps_unlinked_incompatible);
   tcase_add_test (tc_chain, test_sticky_caps_flushing);
+  tcase_add_test (tc_chain, test_default_accept_caps);
   tcase_add_test (tc_chain, test_link_unlink_threaded);
   tcase_add_test (tc_chain, test_name_is_valid);
   tcase_add_test (tc_chain, test_push_unlinked);
@@ -2007,9 +3243,17 @@ gst_pad_suite (void)
   tcase_add_test (tc_chain, test_block_async);
   tcase_add_test (tc_chain, test_pad_blocking_with_probe_type_block);
   tcase_add_test (tc_chain, test_pad_blocking_with_probe_type_blocking);
+  tcase_add_test (tc_chain, test_pad_blocking_with_probe_type_idle);
+  tcase_add_test (tc_chain, test_pad_probe_pull);
+  tcase_add_test (tc_chain, test_pad_probe_pull_idle);
+  tcase_add_test (tc_chain, test_pad_probe_pull_buffer);
   tcase_add_test (tc_chain, test_pad_probe_remove);
   tcase_add_test (tc_chain, test_pad_probe_block_add_remove);
+  tcase_add_test (tc_chain, test_pad_probe_block_and_drop_buffer);
   tcase_add_test (tc_chain, test_pad_probe_flush_events);
+  tcase_add_test (tc_chain, test_pad_probe_flush_events_only);
+  tcase_add_test (tc_chain, test_pad_probe_call_order);
+  tcase_add_test (tc_chain, test_events_query_unlinked);
   tcase_add_test (tc_chain, test_queue_src_caps_notify_linked);
   tcase_add_test (tc_chain, test_queue_src_caps_notify_not_linked);
 #if 0
@@ -2021,6 +3265,11 @@ gst_pad_suite (void)
   tcase_add_test (tc_chain, test_sticky_events);
   tcase_add_test (tc_chain, test_last_flow_return_push);
   tcase_add_test (tc_chain, test_last_flow_return_pull);
+  tcase_add_test (tc_chain, test_flush_stop_inactive);
+  tcase_add_test (tc_chain, test_proxy_accept_caps_no_proxy);
+  tcase_add_test (tc_chain, test_proxy_accept_caps_with_proxy);
+  tcase_add_test (tc_chain, test_proxy_accept_caps_with_incompatible_proxy);
+  tcase_add_test (tc_chain, test_pad_offset_src);
 
   return s;
 }

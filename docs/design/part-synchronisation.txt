@@ -87,7 +87,7 @@ The following notation is used:
              timestamp.
   - S.stop: stop field in the SEGMENT event. This is the highers allowed
             timestamp.
-  - S.rate: rate field of SEGMENT event. This is the desired playback rate.
+  - S.rate: rate field of SEGMENT event. This is the playback rate.
   - S.base: a base time for the time. This is the total elapsed running_time of any
             previous segments.
   - S.offset: an offset to apply to S.start or S.stop. This is the amount that
@@ -101,8 +101,13 @@ The following transformation to running_time exist:
 
   if (S.rate > 0.0)
     B.running_time = (B.timestamp - (S.start + S.offset)) / ABS (S.rate) + S.base
+    =>
+    B.timestamp = (B.running_time - S.base) * ABS (S.rate) + S.start + S.offset
   else
     B.running_time = ((S.stop - S.offset) - B.timestamp) / ABS (S.rate) + S.base
+    =>
+    B.timestamp = S.stop - S.offset - ((B.running_time - S.base) * ABS (S.rate))
+
 
 We write B.running_time as the running_time obtained from the SEGMENT event
 and the buffers of that segment.
@@ -114,8 +119,8 @@ For S.rate > 1.0, the timestamps will be scaled down to increase the playback
 rate. Likewise, a rate between 0.0 and 1.0 will slow down playback.
 
 For negative rates, timestamps are received stop S.stop to S.start so that the
-first buffer received will be transformed into B.running_time of 0 (B.timestamp ==
-S.stop and S.accum == 0).
+first buffer received will be transformed into B.running_time of 0
+(B.timestamp == S.stop and S.base == 0).
 
 This makes it so that B.running_time is always monotonically increasing
 starting from 0 with both positive and negative rates.
@@ -185,15 +190,19 @@ It is the stream time that is used for:
 Additional fields in the SEGMENT are used:
 
   - S.time: time field in the SEGMENT event. This the stream-time of S.start
-  - S.applied_rate: The rate already applied to the stream.
+  - S.applied_rate: The rate already applied to the segment.
 
 Stream time is calculated using the buffer times and the preceding SEGMENT
 event as follows:
 
     stream_time = (B.timestamp - S.start) * ABS (S.applied_rate) + S.time
- 
+    => B.timestamp = (stream_time - S.time) / ABS(S.applied_rate) + S.start
+
 For negative rates, B.timestamp will go backwards from S.stop to S.start,
-making the stream time go backwards.
+making the stream time go backwards:
+
+    stream_time = (S.stop - B.timestamp) * ABS(S.applied_rate) + S.time
+    => B.timestamp = S.stop - (stream_time - S.time) / ABS(S.applied_rate)
 
 In the PLAYING state, it is also possible to use the pipeline clock to derive
 the current stream_time.
@@ -219,7 +228,7 @@ allows us to rewrite the above formula for stream_time (and for positive rates).
   filling (B.timestamp - S.start) in the above formule for stream time
 
   =>
-    stream_time = (S.offset + (absolute_time - base_time - S.base) * ABS (S.rate)) * S.abs_applied_rate + S.time
+    stream_time = (S.offset + (absolute_time - base_time - S.base) * ABS (S.rate)) * ABS (S.applied_rate) + S.time
 
 This last formula is typically used in sinks to report the current position in
 an accurate and efficient way.

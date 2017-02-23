@@ -10,15 +10,15 @@ Build-Depends: debhelper (>= 9),
                cdbs (>= 0.4.93~),
                gnome-pkg-tools (>= 0.7),
                autotools-dev,
-               automake (>= 1.11),
-               autoconf (>= 2.62),
+               automake (>= 1.14),
+               autoconf (>= 2.69),
                libtool (>= 2.2.6),
                dh-autoreconf,
                autopoint (>= 0.17),
                zlib1g-dev (>= 1:1.1.4),
-               libglib2.0-dev (>= 2.32),
+               libglib2.0-dev (>= 2.40),
                libgmp3-dev,
-               libgsl0-dev,
+               libgsl-dev | libgsl0-dev,
                pkg-config (>= 0.11.0),
                bison (>= 1:2.4),
                flex (>= 2.5.34),
@@ -27,10 +27,11 @@ Build-Depends: debhelper (>= 9),
                libgirepository1.0-dev (>= 0.9.12-4~),
                gobject-introspection (>= 0.9.12-4~),
                gir1.2-glib-2.0,
-               gir1.2-freedesktop
+               gir1.2-freedesktop,
+               libcap-dev [linux-any]
 Build-Depends-Indep: python (>= 2.2),
                      gtk-doc-tools (>= 1.12),
-                     jade (>= 1.2.1),
+                     texlive-generic-recommended,
                      transfig (>= 3.2.3.c),
                      docbook-utils (>= 0.6.9),
                      docbook-xml,
@@ -49,9 +50,10 @@ Multi-Arch: same
 Section: libs
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends},
-         ${misc:Depends}
+         ${misc:Depends},
+         libcap2-bin [linux-any]
 Suggests: gstreamer1.0-tools,
-          gstreamer1.0-plugins-base
+Breaks: gstreamer1.0-plugins-base (<< 1.8.0)
 Description: Core GStreamer libraries and elements
  GStreamer is a streaming media framework, based on graphs of filters
  which operate on media data.  Applications using this library can do
@@ -107,6 +109,7 @@ Description: GStreamer core development files
 
 Package: gstreamer1.0-doc
 Architecture: all
+Multi-Arch: foreign
 Section: doc
 Depends: ${misc:Depends},
          libglib2.0-doc
@@ -131,7 +134,7 @@ Section: utils
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          pkg-config,
-         libgstreamer1.0-0 (>= 1.4.3)
+         libgstreamer1.0-0 (>= 1.10.3)
 Suggests: gstreamer1.0-plugins-base
 Description: Tools for use with GStreamer
  GStreamer is a streaming media framework, based on graphs of filters
@@ -150,7 +153,7 @@ Depends: ${gir:Depends},
          ${shlibs:Depends},
          ${misc:Depends},
          ${gir:Depends}
-Description: Description: GObject introspection data for the GStreamer library
+Description: GObject introspection data for the GStreamer library
  This package contains introspection data for the GStreamer streaming media
  framework.
  .

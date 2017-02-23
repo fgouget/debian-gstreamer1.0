@@ -1,19 +1,20 @@
 # Polish translation for gstreamer.
 # This file is distributed under the same license as the gstreamer package.
-# Jakub Bogusz <qboosh@pld-linux.org>, 2007-2014.
+# Jakub Bogusz <qboosh@pld-linux.org>, 2007-2016.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gstreamer 1.3.2\n"
+"Project-Id-Version: gstreamer 1.10.0\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2014-11-06 12:20+0100\n"
-"PO-Revision-Date: 2014-05-22 18:22+0200\n"
+"POT-Creation-Date: 2017-02-23 15:12+0200\n"
+"PO-Revision-Date: 2016-11-01 20:41+0100\n"
 "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -453,6 +454,12 @@ msgstr "kompozytor"
 msgid "person(s) who composed the recording"
 msgstr "osoba lub osoby, które skomponowały to nagranie"
 
+msgid "conductor"
+msgstr "dyrygent"
+
+msgid "conductor/performer refinement"
+msgstr "wyszczególnienie dyrygenta/wykonawcy"
+
 msgid "duration"
 msgstr "czas trwania"
 
@@ -820,6 +827,12 @@ msgstr "dźwięk-podstawowy-midi"
 msgid "Midi note number of the audio track."
 msgstr "Numer dźwięku MIDI ścieżki dźwiękowej."
 
+msgid "private-data"
+msgstr "dane-prywatne"
+
+msgid "Private data"
+msgstr "Dane prywatne"
+
 msgid ", "
 msgstr ", "
 
@@ -859,6 +872,9 @@ msgstr "brak właściwości \"%s\" w elemencie \"%s\""
 msgid "could not set property \"%s\" in element \"%s\" to \"%s\""
 msgstr "nie udało się ustawić właściwości \"%s\" w elemencie \"%s\" na \"%s\""
 
+msgid "Delayed linking failed."
+msgstr "Opóźnione dowiązanie nie powiodło się."
+
 #, c-format
 msgid "could not link %s to %s"
 msgstr "nie udało się dowiązać %s do %s"
@@ -890,9 +906,6 @@ msgstr "brak elementu źródłowego dla URI \"%s\""
 msgid "syntax error"
 msgstr "błąd składni"
 
-msgid "bin"
-msgstr "kontener"
-
 #, c-format
 msgid "specified empty bin \"%s\", not allowed"
 msgstr "podano pusty kontener \"%s\", nie jest to dozwolone"
@@ -909,9 +922,6 @@ msgstr "Wiele buforów zostało zgubionych."
 
 msgid "Internal data flow problem."
 msgstr "Wewnętrzny problem przepływu danych."
-
-msgid "Internal data stream error."
-msgstr "Wewnętrzny błąd strumienia danych."
 
 msgid "Internal data flow error."
 msgstr "Wewnętrzny błąd przepływu danych."
@@ -931,6 +941,12 @@ msgid ""
 msgstr ""
 "Ograniczenie możliwych dozwolonych możliwości (NULL oznacza WSZYSTKIE). "
 "Ustawienie tej właściwości odwołuje się do przekazanego obiektu GstCaps."
+
+msgid "Caps Change Mode"
+msgstr "Tryb zmiany możliwości"
+
+msgid "Filter caps change behaviour"
+msgstr "Filtrowanie zachowania zmiany możliwości"
 
 msgid "No Temp directory specified."
 msgstr "Nie podano katalogu tymczasowego."
@@ -998,6 +1014,9 @@ msgstr "wymuszenie możliwości"
 msgid "force caps without doing a typefind"
 msgstr "wymuszenie możliwości bez sprawdzania"
 
+msgid "Stream doesn't contain enough data."
+msgstr "Strumień nie zawiera wystarczająco dużo danych."
+
 msgid "Stream contains no data."
 msgstr "Strumień nie zawiera danych."
 
@@ -1009,6 +1028,9 @@ msgstr "odczyt"
 
 msgid "writable"
 msgstr "zapis"
+
+msgid "deprecated"
+msgstr "przestarzałe"
 
 msgid "controllable"
 msgstr "sterowanie"
@@ -1211,11 +1233,15 @@ msgstr "Nie wypisywanie żadnej informacji o postępie"
 msgid "Output messages"
 msgstr "Wypisywanie komunikatów"
 
-msgid "Do not output status information of TYPE"
-msgstr "Nie wypisywanie informacji o stanie tego RODZAJU"
+msgid ""
+"Do not output status information for the specified property if verbose "
+"output is enabled (can be used multiple times)"
+msgstr ""
+"Bez wypisywania informacji o stanie określonej własności, jeśli szczegółowe "
+"wyjście jest włączone (może być użyte wielokrotnie)"
 
-msgid "TYPE1,TYPE2,..."
-msgstr "RODZAJ1,RODZAJ2,..."
+msgid "PROPERTY-NAME"
+msgstr "NAZWA-WŁASNOŚCI"
 
 msgid "Do not install a fault handler"
 msgstr "Nie instalowanie obsługi błędów"
@@ -1293,3 +1319,6 @@ msgstr "Ustawianie potoku na NULL...\n"
 
 msgid "Freeing pipeline ...\n"
 msgstr "Zwalnianie potoku...\n"
+
+#~ msgid "bin"
+#~ msgstr "kontener"

@@ -1,17 +1,17 @@
-# translation of gstreamer-1.3.2.po to Dutch
+# translation of gstreamer.po to Dutch
 # Dutch translation of gstreamer
 # Copyright (C) 2003-2006, 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gstreamer package.
 #
 # Thomas Vander Stichele <thomas@apestaart.org>, 2004.
 # Taco Witte <tcwitte@cs.uu.nl>, 2006.
-# Freek de Kruijf <f.de.kruijf@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014.
+# Freek de Kruijf <f.de.kruijf@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016.
 msgid ""
 msgstr ""
-"Project-Id-Version: gstreamer 1.3.2\n"
+"Project-Id-Version: gstreamer 1.7.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2014-11-06 12:20+0100\n"
-"PO-Revision-Date: 2014-05-22 00:46+0200\n"
+"POT-Creation-Date: 2017-02-23 15:12+0200\n"
+"PO-Revision-Date: 2016-02-20 16:42+0100\n"
 "Last-Translator: Freek de Kruijf <f.de.kruijf@gmail.com>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "Language: nl\n"
@@ -460,6 +460,12 @@ msgstr "componist"
 msgid "person(s) who composed the recording"
 msgstr "perso(o)n(en) die de opname gecomponeerd hebben"
 
+msgid "conductor"
+msgstr ""
+
+msgid "conductor/performer refinement"
+msgstr ""
+
 msgid "duration"
 msgstr "duur"
 
@@ -827,6 +833,12 @@ msgstr "midi-base-note"
 msgid "Midi note number of the audio track."
 msgstr "Midi notitienummer van de geluidstrack"
 
+msgid "private-data"
+msgstr "privégegevens"
+
+msgid "Private data"
+msgstr "Privégegevens"
+
 msgid ", "
 msgstr ", "
 
@@ -866,6 +878,9 @@ msgstr "geen eigenschap \"%s\" in element \"%s\""
 msgid "could not set property \"%s\" in element \"%s\" to \"%s\""
 msgstr "kon eigenschap \"%s\" in element \"%s\" niet op \"%s\" instellen"
 
+msgid "Delayed linking failed."
+msgstr "Vertraagd koppelen is mislukt."
+
 #, c-format
 msgid "could not link %s to %s"
 msgstr "kon %s niet verbinden met %s"
@@ -897,9 +912,6 @@ msgstr "geen bronelement voor URI \"%s\""
 msgid "syntax error"
 msgstr "syntaxisfout"
 
-msgid "bin"
-msgstr "bin"
-
 #, c-format
 msgid "specified empty bin \"%s\", not allowed"
 msgstr "lege ton \"%s\" opgegeven, niet toegelaten"
@@ -916,9 +928,6 @@ msgstr "Er worden veel buffers gedropt."
 
 msgid "Internal data flow problem."
 msgstr "Intern probleem met gegevensdoorvoer."
-
-msgid "Internal data stream error."
-msgstr "Interne fout in gegevensstroom."
 
 msgid "Internal data flow error."
 msgstr "Interne fout met gegevensdoorvoer."
@@ -939,6 +948,12 @@ msgstr ""
 "Beperk het aantal toegestane mogelijkheden (NUL betekent alle). Het "
 "instellen  van deze eigenschap vereist een referentie naar het gegeven "
 "GstCaps-object."
+
+msgid "Caps Change Mode"
+msgstr "Modus hoofd- kleine letters veranderen"
+
+msgid "Filter caps change behaviour"
+msgstr "Gedrag van hoofd- kleine letters veranderen filteren"
 
 msgid "No Temp directory specified."
 msgstr "Geen tijdelijke map opgegeven."
@@ -1006,6 +1021,9 @@ msgstr "forceer mogelijkheden"
 msgid "force caps without doing a typefind"
 msgstr "forceer mogelijkheden zonder een \"typefind\" te doen"
 
+msgid "Stream doesn't contain enough data."
+msgstr "Stream bevat niet genoeg gegevens."
+
 msgid "Stream contains no data."
 msgstr "Stroom zonder gegevens."
 
@@ -1017,6 +1035,9 @@ msgstr "leesbaar"
 
 msgid "writable"
 msgstr "schrijfbaar"
+
+msgid "deprecated"
+msgstr "verouderd"
 
 msgid "controllable"
 msgstr "controleerbaar"
@@ -1215,11 +1236,15 @@ msgstr "Geen voortgangsinformatie afdrukken"
 msgid "Output messages"
 msgstr "Uitvoer"
 
-msgid "Do not output status information of TYPE"
-msgstr "Statusinformatie van soort SOORT niet weergeven"
+msgid ""
+"Do not output status information for the specified property if verbose "
+"output is enabled (can be used multiple times)"
+msgstr ""
+"Statusinformatie voor de gespecificeerde eigenschap niet uitvoeren als "
+"verbose-uitvoer is ingeschakeld (kan meerdere keren worden gebruikt)"
 
-msgid "TYPE1,TYPE2,..."
-msgstr "SOORT1,SOORT2,..."
+msgid "PROPERTY-NAME"
+msgstr "NAAM-EIGENSCHAP"
 
 msgid "Do not install a fault handler"
 msgstr "Geen foutafhandelaar installeren"
@@ -1297,6 +1322,18 @@ msgstr "Pijplijn gezet op NULL ...\n"
 
 msgid "Freeing pipeline ...\n"
 msgstr "Pijplijn wordt vrijgemaakt ...\n"
+
+#~ msgid "bin"
+#~ msgstr "bin"
+
+#~ msgid "Internal data stream error."
+#~ msgstr "Interne fout in gegevensstroom."
+
+#~ msgid "Do not output status information of TYPE"
+#~ msgstr "Statusinformatie van soort SOORT niet weergeven"
+
+#~ msgid "TYPE1,TYPE2,..."
+#~ msgstr "SOORT1,SOORT2,..."
 
 #~ msgid "link without source element"
 #~ msgstr "verbinding zonder bronelement"

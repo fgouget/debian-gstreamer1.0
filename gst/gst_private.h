@@ -38,6 +38,9 @@ extern const char             g_log_domain_gstreamer[];
 #include <stdlib.h>
 #include <string.h>
 
+/* Needed for GST_EXPORT */
+#include "gst/gstconfig.h"
+
 /* Needed for GstRegistry * */
 #include "gstregistry.h"
 #include "gststructure.h"
@@ -61,6 +64,8 @@ extern const char             g_log_domain_gstreamer[];
 #include "gsttoc.h"
 
 #include "gstdatetime.h"
+
+#include "gsttracerutils.h"
 
 G_BEGIN_DECLS
 
@@ -125,6 +130,14 @@ G_GNUC_INTERNAL  void  _priv_gst_context_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_toc_initialize (void);
 G_GNUC_INTERNAL  void  _priv_gst_date_time_initialize (void);
 
+/* cleanup functions called from gst_deinit(). */
+G_GNUC_INTERNAL  void  _priv_gst_allocator_cleanup (void);
+G_GNUC_INTERNAL  void  _priv_gst_caps_features_cleanup (void);
+G_GNUC_INTERNAL  void  _priv_gst_caps_cleanup (void);
+
+/* called from gst_task_cleanup_all(). */
+G_GNUC_INTERNAL  void  _priv_gst_element_cleanup (void);
+
 /* Private registry functions */
 G_GNUC_INTERNAL
 gboolean _priv_gst_registry_remove_cache_plugins (GstRegistry *registry);
@@ -132,6 +145,10 @@ gboolean _priv_gst_registry_remove_cache_plugins (GstRegistry *registry);
 G_GNUC_INTERNAL  void _priv_gst_registry_cleanup (void);
 
 gboolean _gst_plugin_loader_client_run (void);
+
+G_GNUC_INTERNAL  GstPlugin * _priv_gst_plugin_load_file_for_registry (const gchar *filename,
+                                                                      GstRegistry * registry,
+                                                                      GError** error);
 
 /* Used in GstBin for manual state handling */
 G_GNUC_INTERNAL  void _priv_gst_element_state_changed (GstElement *element,
@@ -145,12 +162,24 @@ G_GNUC_INTERNAL
 gboolean  priv_gst_structure_append_to_gstring (const GstStructure * structure,
                                                 GString            * s);
 G_GNUC_INTERNAL
+gboolean priv__gst_structure_append_template_to_gstring (GQuark field_id,
+                                                        const GValue *value,
+                                                        gpointer user_data);
+
+G_GNUC_INTERNAL
 void priv_gst_caps_features_append_to_gstring (const GstCapsFeatures * features, GString *s);
 
 G_GNUC_INTERNAL
 gboolean priv_gst_structure_parse_name (gchar * str, gchar **start, gchar ** end, gchar ** next);
 G_GNUC_INTERNAL
 gboolean priv_gst_structure_parse_fields (gchar *str, gchar ** end, GstStructure *structure);
+
+/* used in gstvalue.c and gststructure.c */
+
+#define GST_WRAPPED_PTR_FORMAT     "p\aa"
+
+G_GNUC_INTERNAL
+gchar *priv_gst_string_take_and_wrap (gchar * s);
 
 /* registry cache backends */
 G_GNUC_INTERNAL
@@ -179,6 +208,16 @@ gint __gst_date_time_compare (const GstDateTime * dt1, const GstDateTime * dt2);
 
 G_GNUC_INTERNAL
 gchar * __gst_date_time_serialize (GstDateTime * datetime, gboolean with_usecs);
+
+/* Non-static, for access from the testsuite, but not for external use */
+gboolean
+_priv_gst_do_linear_regression (GstClockTime *times, guint n,
+    GstClockTime * m_num, GstClockTime * m_denom, GstClockTime * b,
+    GstClockTime * xbase, gdouble * r_squared);
+
+/* For use in gstdebugutils */
+G_GNUC_INTERNAL
+GstCapsFeatures * __gst_caps_get_features_unchecked (const GstCaps * caps, guint idx);
 
 #ifndef GST_DISABLE_REGISTRY
 /* Secret variable to initialise gst without registry cache */
@@ -244,6 +283,11 @@ GST_EXPORT GstDebugCategory *GST_CAT_CONTEXT;
 #define GST_CAT_POLL _priv_GST_CAT_POLL
 extern GstDebugCategory *_priv_GST_CAT_POLL;
 
+#define GST_CAT_PROTECTION _priv_GST_CAT_PROTECTION
+extern GstDebugCategory *_priv_GST_CAT_PROTECTION;
+
+extern GstClockTime _priv_gst_start_time;
+
 #else
 
 #define GST_CAT_GST_INIT         NULL
@@ -281,6 +325,7 @@ extern GstDebugCategory *_priv_GST_CAT_POLL;
 #define GST_CAT_META             NULL
 #define GST_CAT_LOCKING          NULL
 #define GST_CAT_CONTEXT          NULL
+#define GST_CAT_PROTECTION       NULL
 
 #endif
 
@@ -373,6 +418,27 @@ struct _GstTypeFindFactoryClass {
   gpointer _gst_reserved[GST_PADDING];
 };
 
+struct _GstTracerFactory {
+  GstPluginFeature              feature;
+  /* <private> */
+
+  GType                         type;
+
+  /*
+  gpointer                      user_data;
+  GDestroyNotify                user_data_notify;
+  */
+
+  gpointer _gst_reserved[GST_PADDING];
+};
+
+struct _GstTracerFactoryClass {
+  GstPluginFeatureClass         parent;
+  /* <private> */
+
+  gpointer _gst_reserved[GST_PADDING];
+};
+
 struct _GstElementFactory {
   GstPluginFeature      parent;
 
@@ -417,6 +483,9 @@ struct _GstDeviceProviderFactoryClass {
 
   gpointer _gst_reserved[GST_PADDING];
 };
+
+/* privat flag used by GstBus / GstMessage */
+#define GST_MESSAGE_FLAG_ASYNC_DELIVERY (GST_MINI_OBJECT_FLAG_LAST << 0)
 
 G_END_DECLS
 #endif /* __GST_PRIVATE_H__ */

@@ -63,6 +63,11 @@ gpointer                gst_adapter_take                (GstAdapter *adapter, gs
 GstBuffer*              gst_adapter_take_buffer         (GstAdapter *adapter, gsize nbytes);
 GList*                  gst_adapter_take_list           (GstAdapter *adapter, gsize nbytes);
 GstBuffer *             gst_adapter_take_buffer_fast    (GstAdapter *adapter, gsize nbytes);
+GstBufferList *         gst_adapter_take_buffer_list    (GstAdapter *adapter, gsize nbytes);
+GstBuffer*              gst_adapter_get_buffer          (GstAdapter *adapter, gsize nbytes);
+GList*                  gst_adapter_get_list            (GstAdapter *adapter, gsize nbytes);
+GstBuffer *             gst_adapter_get_buffer_fast     (GstAdapter *adapter, gsize nbytes);
+GstBufferList *         gst_adapter_get_buffer_list     (GstAdapter *adapter, gsize nbytes);
 gsize                   gst_adapter_available           (GstAdapter *adapter);
 gsize                   gst_adapter_available_fast      (GstAdapter *adapter);
 
@@ -70,12 +75,23 @@ GstClockTime            gst_adapter_prev_pts            (GstAdapter *adapter, gu
 GstClockTime            gst_adapter_prev_dts            (GstAdapter *adapter, guint64 *distance);
 GstClockTime            gst_adapter_prev_pts_at_offset  (GstAdapter * adapter, gsize offset, guint64 * distance);
 GstClockTime            gst_adapter_prev_dts_at_offset  (GstAdapter * adapter, gsize offset, guint64 * distance);
+guint64                 gst_adapter_prev_offset         (GstAdapter *adapter, guint64 *distance);
+
+GstClockTime            gst_adapter_pts_at_discont      (GstAdapter *adapter);
+GstClockTime            gst_adapter_dts_at_discont      (GstAdapter *adapter);
+guint64                 gst_adapter_offset_at_discont   (GstAdapter *adapter);
+
+guint64                 gst_adapter_distance_from_discont (GstAdapter *adapter);
 
 gssize                  gst_adapter_masked_scan_uint32  (GstAdapter * adapter, guint32 mask,
                                                          guint32 pattern, gsize offset, gsize size);
 
 gssize                  gst_adapter_masked_scan_uint32_peek  (GstAdapter * adapter, guint32 mask,
                                                          guint32 pattern, gsize offset, gsize size, guint32 * value);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstAdapter, gst_object_unref)
+#endif
 
 G_END_DECLS
 

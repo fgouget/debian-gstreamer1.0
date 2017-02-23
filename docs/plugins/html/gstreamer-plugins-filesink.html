@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer Core Plugins 1.0 Plugins Reference Manual: filesink</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<title>filesink: GStreamer Core Plugins 1.0 Plugins Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer Core Plugins 1.0 Plugins Reference Manual">
 <link rel="up" href="ch01.html" title="gstreamer Elements">
-<link rel="prev" href="gstreamer-plugins-filesrc.html" title="filesrc">
-<link rel="next" href="gstreamer-plugins-funnel.html" title="funnel">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<link rel="prev" href="gstreamer-plugins-fdsrc.html" title="fdsrc">
+<link rel="next" href="gstreamer-plugins-filesrc.html" title="filesrc">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -22,21 +22,21 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gstreamer-plugins-filesrc.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-plugins-funnel.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="p" href="gstreamer-plugins-fdsrc.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="n" href="gstreamer-plugins-filesrc.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gstreamer-plugins-filesink"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="gstreamer-plugins-filesink.top_of_page"></a>filesink</span></h2>
-<p>filesink — Write stream to a file</p>
+<p>filesink</p>
 </td>
 <td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
 <a name="gstreamer-plugins-filesink.properties"></a><h2>Properties</h2>
-<div class="informaltable"><table border="0">
+<div class="informaltable"><table class="informaltable" border="0">
 <colgroup>
 <col width="150px" class="properties_type">
 <col width="300px" class="properties_name">
@@ -44,23 +44,23 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSink--append" title="The “append” property">append</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><span class="type">GstFileSinkBufferMode</span></td>
+<td class="property_type"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSinkBufferMode" title="enum GstFileSinkBufferMode"><span class="type">GstFileSinkBufferMode</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSink--buffer-mode" title="The “buffer-mode” property">buffer-mode</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
+<td class="property_type"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a></td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSink--buffer-size" title="The “buffer-size” property">buffer-size</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
 <td class="property_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</td>
 <td class="property_name"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSink--location" title="The “location” property">location</a></td>
 <td class="property_flags">Read / Write</td>
 </tr>
@@ -69,24 +69,30 @@
 </div>
 <a name="GstFileSink"></a><div class="refsect1">
 <a name="gstreamer-plugins-filesink.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
 </colgroup>
-<tbody><tr>
+<tbody>
+<tr>
 <td class="datatype_keyword">struct</td>
 <td class="function_name"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSink-struct" title="struct GstFileSink">GstFileSink</a></td>
-</tr></tbody>
+</tr>
+<tr>
+<td class="datatype_keyword">enum</td>
+<td class="function_name"><a class="link" href="gstreamer-plugins-filesink.html#GstFileSinkBufferMode" title="enum GstFileSinkBufferMode">GstFileSinkBufferMode</a></td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-filesink.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-        <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
-            <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
-                <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-libs/html/GstBaseSink.html">GstBaseSink</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="../html/GstObject.html#GstObject-struct">GstObject</a>
+            <span class="lineart">╰──</span> <a href="../html/GstElement.html#GstElement-struct">GstElement</a>
+                <span class="lineart">╰──</span> <a href="../html/GstBaseSink.html#GstBaseSink-struct">GstBaseSink</a>
                     <span class="lineart">╰──</span> GstFileSink
 </pre>
 </div>
@@ -94,7 +100,7 @@
 <a name="gstreamer-plugins-filesink.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 GstFileSink implements
- <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstUriHandler.html#GstURIHandler">GstURIHandler</a>.</p>
+ <a href="../html/gstreamer-GstUriHandler.html#GstURIHandler-struct">GstURIHandler</a>.</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-filesink.description"></a><h2>Description</h2>
@@ -106,7 +112,7 @@ GstFileSink implements
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch v4l2src num<span class="gtkdoc opt">-</span>buffers<span class="gtkdoc opt">=</span><span class="number">1</span> <span class="gtkdoc opt">!</span> jpegenc <span class="gtkdoc opt">!</span> filesink location<span class="gtkdoc opt">=</span>capture1<span class="gtkdoc opt">.</span>jpeg</pre></td>
+        <td class="listing_code"><pre class="programlisting">gst<span class="gtkdoc opt">-</span>launch<span class="gtkdoc opt">-</span><span class="number">1.0</span> v4l2src num<span class="gtkdoc opt">-</span>buffers<span class="gtkdoc opt">=</span><span class="number">1</span> <span class="gtkdoc opt">!</span> jpegenc <span class="gtkdoc opt">!</span> filesink location<span class="gtkdoc opt">=</span>capture1<span class="gtkdoc opt">.</span>jpeg</pre></td>
       </tr>
     </tbody>
   </table>
@@ -169,11 +175,10 @@ GstFileSink implements
 </table></div>
 </div>
 </div>
-<p>
-</p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-filesink.functions_details"></a><h2>Functions</h2>
+<p></p>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-filesink.other_details"></a><h2>Types and Values</h2>
@@ -182,12 +187,57 @@ GstFileSink implements
 <pre class="programlisting">struct GstFileSink;</pre>
 <p>Opaque <a class="link" href="gstreamer-plugins-filesink.html#GstFileSink"><span class="type">GstFileSink</span></a> structure.</p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GstFileSinkBufferMode"></a><h3>enum GstFileSinkBufferMode</h3>
+<p>File read buffering mode.</p>
+<div class="refsect3">
+<a name="GstFileSinkBufferMode.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="enum_members_name">
+<col class="enum_members_description">
+<col width="200px" class="enum_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="enum_member_name"><p><a name="GST-FILE-SINK-BUFFER-MODE-DEFAULT:CAPS"></a>GST_FILE_SINK_BUFFER_MODE_DEFAULT</p></td>
+<td class="enum_member_description">
+<p>Default buffering</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-FILE-SINK-BUFFER-MODE-FULL:CAPS"></a>GST_FILE_SINK_BUFFER_MODE_FULL</p></td>
+<td class="enum_member_description">
+<p>Fully buffered</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-FILE-SINK-BUFFER-MODE-LINE:CAPS"></a>GST_FILE_SINK_BUFFER_MODE_LINE</p></td>
+<td class="enum_member_description">
+<p>Line buffered</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-FILE-SINK-BUFFER-MODE-UNBUFFERED:CAPS"></a>GST_FILE_SINK_BUFFER_MODE_UNBUFFERED</p></td>
+<td class="enum_member_description">
+<p>Unbuffered</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-plugins-filesink.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="GstFileSink--append"></a><h3>The <code class="literal">“append”</code> property</h3>
-<pre class="programlisting">  “append”                   <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
+<pre class="programlisting">  “append”                   <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a></pre>
 <p>Append to an already existing file.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: FALSE</p>
@@ -195,7 +245,7 @@ GstFileSink implements
 <hr>
 <div class="refsect2">
 <a name="GstFileSink--buffer-mode"></a><h3>The <code class="literal">“buffer-mode”</code> property</h3>
-<pre class="programlisting">  “buffer-mode”              <span class="type">GstFileSinkBufferMode</span></pre>
+<pre class="programlisting">  “buffer-mode”              <a class="link" href="gstreamer-plugins-filesink.html#GstFileSinkBufferMode" title="enum GstFileSinkBufferMode"><span class="type">GstFileSinkBufferMode</span></a></pre>
 <p>The buffering mode to use.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: Default buffering</p>
@@ -203,7 +253,7 @@ GstFileSink implements
 <hr>
 <div class="refsect2">
 <a name="GstFileSink--buffer-size"></a><h3>The <code class="literal">“buffer-size”</code> property</h3>
-<pre class="programlisting">  “buffer-size”              <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
+<pre class="programlisting">  “buffer-size”              <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a></pre>
 <p>Size of buffer in number of bytes for line or full buffer-mode.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: 65536</p>
@@ -211,7 +261,7 @@ GstFileSink implements
 <hr>
 <div class="refsect2">
 <a name="GstFileSink--location"></a><h3>The <code class="literal">“location”</code> property</h3>
-<pre class="programlisting">  “location”                 <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
+<pre class="programlisting">  “location”                 <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *</pre>
 <p>Location of the file to write.</p>
 <p>Flags: Read / Write</p>
 <p>Default value: NULL</p>
@@ -223,7 +273,6 @@ GstFileSink implements
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>

@@ -90,6 +90,7 @@
 #include "gstutils.h"
 #include "gstinfo.h"
 #include "gstquark.h"
+#include "gsttracerutils.h"
 #include "gstvalue.h"
 #include "gst-i18n-lib.h"
 #include "glib-compat-private.h"
@@ -117,8 +118,8 @@ enum
 static void gst_element_class_init (GstElementClass * klass);
 static void gst_element_init (GstElement * element);
 static void gst_element_base_class_init (gpointer g_class);
-static void gst_element_base_class_finalize (gpointer g_class);
 
+static void gst_element_constructed (GObject * object);
 static void gst_element_dispose (GObject * object);
 static void gst_element_finalize (GObject * object);
 
@@ -133,6 +134,8 @@ static gboolean gst_element_set_clock_func (GstElement * element,
 static void gst_element_set_bus_func (GstElement * element, GstBus * bus);
 static gboolean gst_element_post_message_default (GstElement * element,
     GstMessage * message);
+static void gst_element_set_context_default (GstElement * element,
+    GstContext * context);
 
 static gboolean gst_element_default_send_event (GstElement * element,
     GstEvent * event);
@@ -143,8 +146,12 @@ static GstPadTemplate
     * gst_element_class_get_request_pad_template (GstElementClass *
     element_class, const gchar * name);
 
+static void gst_element_call_async_func (gpointer data, gpointer user_data);
+
 static GstObjectClass *parent_class = NULL;
 static guint gst_element_signals[LAST_SIGNAL] = { 0 };
+
+static GThreadPool *gst_element_pool = NULL;
 
 /* this is used in gstelementfactory.c:gst_element_register() */
 GQuark __gst_elementclass_factory = 0;
@@ -159,7 +166,7 @@ gst_element_get_type (void)
     static const GTypeInfo element_info = {
       sizeof (GstElementClass),
       gst_element_base_class_init,
-      gst_element_base_class_finalize,
+      NULL,                     /* base_class_finalize */
       (GClassInitFunc) gst_element_class_init,
       NULL,
       NULL,
@@ -177,6 +184,21 @@ gst_element_get_type (void)
     g_once_init_leave (&gst_element_type, _type);
   }
   return gst_element_type;
+}
+
+static void
+gst_element_setup_thread_pool (void)
+{
+  GError *err = NULL;
+
+  GST_DEBUG ("creating element thread pool");
+  gst_element_pool =
+      g_thread_pool_new ((GFunc) gst_element_call_async_func, NULL, -1, FALSE,
+      &err);
+  if (err != NULL) {
+    g_critical ("could not alloc threadpool %s", err->message);
+    g_clear_error (&err);
+  }
 }
 
 static void
@@ -229,6 +251,7 @@ gst_element_class_init (GstElementClass * klass)
 
   gobject_class->dispose = gst_element_dispose;
   gobject_class->finalize = gst_element_finalize;
+  gobject_class->constructed = gst_element_constructed;
 
   klass->change_state = GST_DEBUG_FUNCPTR (gst_element_change_state_func);
   klass->set_state = GST_DEBUG_FUNCPTR (gst_element_set_state_func);
@@ -239,8 +262,11 @@ gst_element_class_init (GstElementClass * klass)
   klass->send_event = GST_DEBUG_FUNCPTR (gst_element_default_send_event);
   klass->numpadtemplates = 0;
   klass->post_message = GST_DEBUG_FUNCPTR (gst_element_post_message_default);
+  klass->set_context = GST_DEBUG_FUNCPTR (gst_element_set_context_default);
 
   klass->elementfactory = NULL;
+
+  gst_element_setup_thread_pool ();
 }
 
 static void
@@ -276,17 +302,6 @@ gst_element_base_class_init (gpointer g_class)
 }
 
 static void
-gst_element_base_class_finalize (gpointer g_class)
-{
-  GstElementClass *klass = GST_ELEMENT_CLASS (g_class);
-
-  g_list_foreach (klass->padtemplates, (GFunc) gst_object_unref, NULL);
-  g_list_free (klass->padtemplates);
-
-  gst_structure_free (klass->metadata);
-}
-
-static void
 gst_element_init (GstElement * element)
 {
   GST_STATE (element) = GST_STATE_NULL;
@@ -297,6 +312,13 @@ gst_element_init (GstElement * element)
 
   g_rec_mutex_init (&element->state_lock);
   g_cond_init (&element->state_cond);
+}
+
+static void
+gst_element_constructed (GObject * object)
+{
+  GST_TRACER_ELEMENT_NEW (GST_ELEMENT_CAST (object));
+  G_OBJECT_CLASS (parent_class)->constructed (object);
 }
 
 /**
@@ -416,6 +438,9 @@ gst_element_set_clock (GstElement * element, GstClock * clock)
  *
  * Gets the currently configured clock of the element. This is the clock as was
  * last set with gst_element_set_clock().
+ *
+ * Elements in a pipeline will only have their clock set when the
+ * pipeline is in the PLAYING state.
  *
  * Returns: (transfer full): the #GstClock of the element. unref after usage.
  *
@@ -631,7 +656,7 @@ gboolean
 gst_element_add_pad (GstElement * element, GstPad * pad)
 {
   gchar *pad_name;
-  gboolean flushing;
+  gboolean active;
 
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
   g_return_val_if_fail (GST_IS_PAD (pad), FALSE);
@@ -641,7 +666,7 @@ gst_element_add_pad (GstElement * element, GstPad * pad)
   pad_name = g_strdup (GST_PAD_NAME (pad));
   GST_CAT_INFO_OBJECT (GST_CAT_ELEMENT_PADS, element, "adding pad '%s'",
       GST_STR_NULL (pad_name));
-  flushing = GST_PAD_IS_FLUSHING (pad);
+  active = GST_PAD_IS_ACTIVE (pad);
   GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_NEED_PARENT);
   GST_OBJECT_UNLOCK (pad);
 
@@ -655,16 +680,13 @@ gst_element_add_pad (GstElement * element, GstPad * pad)
               GST_OBJECT_CAST (element))))
     goto had_parent;
 
-  /* check for flushing pads */
-  if (flushing && (GST_STATE (element) > GST_STATE_READY ||
+  /* check for active pads */
+  if (!active && (GST_STATE (element) > GST_STATE_READY ||
           GST_STATE_NEXT (element) == GST_STATE_PAUSED)) {
-    g_warning ("adding flushing pad '%s' to running element '%s', you need to "
+    g_warning ("adding inactive pad '%s' to running element '%s', you need to "
         "use gst_pad_set_active(pad,TRUE) before adding it.",
         GST_STR_NULL (pad_name), GST_ELEMENT_NAME (element));
-    /* unset flushing */
-    GST_OBJECT_LOCK (pad);
-    GST_PAD_UNSET_FLUSHING (pad);
-    GST_OBJECT_UNLOCK (pad);
+    gst_pad_set_active (pad, TRUE);
   }
 
   g_free (pad_name);
@@ -689,7 +711,7 @@ gst_element_add_pad (GstElement * element, GstPad * pad)
 
   /* emit the PAD_ADDED signal */
   g_signal_emit (element, gst_element_signals[PAD_ADDED], 0, pad);
-
+  GST_TRACER_ELEMENT_ADD_PAD (element, pad);
   return TRUE;
 
   /* ERROR cases */
@@ -795,14 +817,13 @@ gst_element_remove_pad (GstElement * element, GstPad * pad)
       break;
   }
   element->pads = g_list_remove (element->pads, pad);
-  GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_NEED_PARENT);
   element->numpads--;
   element->pads_cookie++;
   GST_OBJECT_UNLOCK (element);
 
   /* emit the PAD_REMOVED signal before unparenting and losing the last ref. */
   g_signal_emit (element, gst_element_signals[PAD_REMOVED], 0, pad);
-
+  GST_TRACER_ELEMENT_REMOVE_PAD (element, pad);
   gst_object_unparent (GST_OBJECT_CAST (pad));
 
   return TRUE;
@@ -949,7 +970,7 @@ _gst_element_request_pad (GstElement * element, GstPadTemplate * templ,
     pad = gst_element_get_static_pad (element, name);
     if (pad) {
       gst_object_unref (pad);
-      /* FIXME 0.11: Change this to g_return_val_if_fail() */
+      /* FIXME 2.0: Change this to g_return_val_if_fail() */
       g_critical ("Element %s already has a pad named %s, the behaviour of "
           " gst_element_get_request_pad() for existing pads is undefined!",
           GST_ELEMENT_NAME (element), name);
@@ -977,7 +998,7 @@ _gst_element_request_pad (GstElement * element, GstPadTemplate * templ,
  *
  * This method is slower than manually getting the pad template and calling
  * gst_element_request_pad() if the pads should have a specific name (e.g.
- * @name is "src_1" instead of "src_%u").
+ * @name is "src_1" instead of "src_\%u").
  *
  * Returns: (transfer full) (nullable): requested #GstPad if found,
  *     otherwise %NULL.  Release after usage.
@@ -1070,7 +1091,7 @@ gst_element_get_request_pad (GstElement * element, const gchar * name)
 }
 
 /**
- * gst_element_request_pad:
+ * gst_element_request_pad: (virtual request_new_pad)
  * @element: a #GstElement to find a request pad of.
  * @templ: a #GstPadTemplate of which we want a pad of.
  * @name: (transfer none) (allow-none): the name of the request #GstPad
@@ -1215,6 +1236,26 @@ gst_element_class_add_pad_template (GstElementClass * klass,
 
   klass->padtemplates = g_list_append (klass->padtemplates, templ);
   klass->numpadtemplates++;
+}
+
+/**
+ * gst_element_class_add_static_pad_template:
+ * @klass: the #GstElementClass to add the pad template to.
+ * @static_templ: #GstStaticPadTemplate to add as pad template to the element class.
+ *
+ * Adds a pad template to an element class based on the static pad template
+ * @templ. This is mainly used in the _class_init functions of element
+ * implementations. If a pad template with the same name already exists,
+ * the old one is replaced by the new one.
+ *
+ * Since: 1.8
+ */
+void
+gst_element_class_add_static_pad_template (GstElementClass * klass,
+    GstStaticPadTemplate * static_templ)
+{
+  gst_element_class_add_pad_template (klass,
+      gst_static_pad_template_get (static_templ));
 }
 
 /**
@@ -1506,8 +1547,8 @@ gst_element_default_send_event (GstElement * element, GstEvent * event)
   GstPad *pad;
 
   pad = GST_EVENT_IS_DOWNSTREAM (event) ?
-      gst_element_get_random_pad (element, TRUE, GST_PAD_SRC) :
-      gst_element_get_random_pad (element, TRUE, GST_PAD_SINK);
+      gst_element_get_random_pad (element, TRUE, GST_PAD_SINK) :
+      gst_element_get_random_pad (element, TRUE, GST_PAD_SRC);
 
   if (pad) {
     GST_CAT_DEBUG (GST_CAT_ELEMENT_PADS,
@@ -1516,7 +1557,7 @@ gst_element_default_send_event (GstElement * element, GstEvent * event)
         (GST_PAD_DIRECTION (pad) == GST_PAD_SRC ? "src" : "sink"),
         GST_DEBUG_PAD_NAME (pad));
 
-    result = gst_pad_push_event (pad, event);
+    result = gst_pad_send_event (pad, event);
     gst_object_unref (pad);
   } else {
     GST_CAT_INFO (GST_CAT_ELEMENT_PADS, "can't send %s event on element %s",
@@ -1533,7 +1574,7 @@ gst_element_default_send_event (GstElement * element, GstEvent * event)
  *
  * Sends an event to an element. If the element doesn't implement an
  * event handler, the event will be pushed on a random linked sink pad for
- * upstream events or a random linked source pad for downstream events.
+ * downstream events or a random linked source pad for upstream events.
  *
  * This function takes ownership of the provided event so you should
  * gst_event_ref() it if you want to reuse the event after this call.
@@ -1559,6 +1600,8 @@ gst_element_send_event (GstElement * element, GstEvent * event)
     GST_CAT_DEBUG (GST_CAT_ELEMENT_PADS, "send %s event on element %s",
         GST_EVENT_TYPE_NAME (event), GST_ELEMENT_NAME (element));
     result = oclass->send_event (element, event);
+  } else {
+    gst_event_unref (event);
   }
   GST_STATE_UNLOCK (element);
 
@@ -1651,18 +1694,22 @@ gboolean
 gst_element_query (GstElement * element, GstQuery * query)
 {
   GstElementClass *klass;
+  gboolean res = FALSE;
 
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
   g_return_val_if_fail (query != NULL, FALSE);
+
+  GST_TRACER_ELEMENT_QUERY_PRE (element, query);
 
   klass = GST_ELEMENT_GET_CLASS (element);
   if (klass->query) {
     GST_CAT_DEBUG (GST_CAT_ELEMENT_PADS, "send query on element %s",
         GST_ELEMENT_NAME (element));
-    return klass->query (element, query);
+    res = klass->query (element, query);
   }
 
-  return FALSE;
+  GST_TRACER_ELEMENT_QUERY_POST (element, query, res);
+  return res;
 }
 
 static gboolean
@@ -1719,15 +1766,21 @@ gboolean
 gst_element_post_message (GstElement * element, GstMessage * message)
 {
   GstElementClass *klass;
+  gboolean res = FALSE;
 
   g_return_val_if_fail (GST_IS_ELEMENT (element), FALSE);
   g_return_val_if_fail (message != NULL, FALSE);
 
+  GST_TRACER_ELEMENT_POST_MESSAGE_PRE (element, message);
+
   klass = GST_ELEMENT_GET_CLASS (element);
   if (klass->post_message)
-    return klass->post_message (element, message);
+    res = klass->post_message (element, message);
+  else
+    gst_message_unref (message);
 
-  return FALSE;
+  GST_TRACER_ELEMENT_POST_MESSAGE_POST (element, res);
+  return res;
 }
 
 /**
@@ -1766,7 +1819,7 @@ _gst_element_error_printf (const gchar * format, ...)
 }
 
 /**
- * gst_element_message_full:
+ * gst_element_message_full_with_details:
  * @element:  a #GstElement to send message from
  * @type:     the #GstMessageType
  * @domain:   the GStreamer GError domain this message belongs to
@@ -1780,18 +1833,20 @@ _gst_element_error_printf (const gchar * format, ...)
  * @file:     the source code file where the error was generated
  * @function: the source code function where the error was generated
  * @line:     the source code line where the error was generated
+ * @structure:(transfer full): optional details structure
  *
  * Post an error, warning or info message on the bus from inside an element.
  *
  * @type must be of #GST_MESSAGE_ERROR, #GST_MESSAGE_WARNING or
  * #GST_MESSAGE_INFO.
  *
- * MT safe.
+ * Since: 1.10
  */
-void gst_element_message_full
+void gst_element_message_full_with_details
     (GstElement * element, GstMessageType type,
     GQuark domain, gint code, gchar * text,
-    gchar * debug, const gchar * file, const gchar * function, gint line)
+    gchar * debug, const gchar * file, const gchar * function, gint line,
+    GstStructure * structure)
 {
   GError *gerror = NULL;
   gchar *name;
@@ -1838,20 +1893,24 @@ void gst_element_message_full
   switch (type) {
     case GST_MESSAGE_ERROR:
       message =
-          gst_message_new_error (GST_OBJECT_CAST (element), gerror, sent_debug);
+          gst_message_new_error_with_details (GST_OBJECT_CAST (element), gerror,
+          sent_debug, structure);
       break;
     case GST_MESSAGE_WARNING:
-      message = gst_message_new_warning (GST_OBJECT_CAST (element), gerror,
-          sent_debug);
+      message =
+          gst_message_new_warning_with_details (GST_OBJECT_CAST (element),
+          gerror, sent_debug, structure);
       break;
     case GST_MESSAGE_INFO:
-      message = gst_message_new_info (GST_OBJECT_CAST (element), gerror,
-          sent_debug);
+      message =
+          gst_message_new_info_with_details (GST_OBJECT_CAST (element), gerror,
+          sent_debug, structure);
       break;
     default:
       g_assert_not_reached ();
       break;
   }
+
   gst_element_post_message (element, message);
 
   GST_CAT_INFO_OBJECT (GST_CAT_ERROR_SYSTEM, element, "posted %s message: %s",
@@ -1861,6 +1920,38 @@ void gst_element_message_full
   g_error_free (gerror);
   g_free (sent_debug);
   g_free (sent_text);
+}
+
+/**
+ * gst_element_message_full:
+ * @element:  a #GstElement to send message from
+ * @type:     the #GstMessageType
+ * @domain:   the GStreamer GError domain this message belongs to
+ * @code:     the GError code belonging to the domain
+ * @text:     (allow-none) (transfer full): an allocated text string to be used
+ *            as a replacement for the default message connected to code,
+ *            or %NULL
+ * @debug:    (allow-none) (transfer full): an allocated debug message to be
+ *            used as a replacement for the default debugging information,
+ *            or %NULL
+ * @file:     the source code file where the error was generated
+ * @function: the source code function where the error was generated
+ * @line:     the source code line where the error was generated
+ *
+ * Post an error, warning or info message on the bus from inside an element.
+ *
+ * @type must be of #GST_MESSAGE_ERROR, #GST_MESSAGE_WARNING or
+ * #GST_MESSAGE_INFO.
+ *
+ * MT safe.
+ */
+void gst_element_message_full
+    (GstElement * element, GstMessageType type,
+    GQuark domain, gint code, gchar * text,
+    gchar * debug, const gchar * file, const gchar * function, gint line)
+{
+  gst_element_message_full_with_details (element, type, domain, code, text,
+      debug, file, function, line, NULL);
 }
 
 /**
@@ -2597,11 +2688,15 @@ gst_element_change_state (GstElement * element, GstStateChange transition)
 
   oclass = GST_ELEMENT_GET_CLASS (element);
 
+  GST_TRACER_ELEMENT_CHANGE_STATE_PRE (element, transition);
+
   /* call the state change function so it can set the state */
   if (oclass->change_state)
     ret = (oclass->change_state) (element, transition);
   else
     ret = GST_STATE_CHANGE_FAILURE;
+
+  GST_TRACER_ELEMENT_CHANGE_STATE_POST (element, transition, ret);
 
   switch (ret) {
     case GST_STATE_CHANGE_FAILURE:
@@ -2677,15 +2772,20 @@ invalid_return:
 }
 
 /* gst_iterator_fold functions for pads_activate
- * Stop the iterator if activating one pad failed. */
+ * Stop the iterator if activating one pad failed, but only if that pad
+ * has not been removed from the element. */
 static gboolean
 activate_pads (const GValue * vpad, GValue * ret, gboolean * active)
 {
   GstPad *pad = g_value_get_object (vpad);
   gboolean cont = TRUE;
 
-  if (!(cont = gst_pad_set_active (pad, *active)))
-    g_value_set_boolean (ret, FALSE);
+  if (!gst_pad_set_active (pad, *active)) {
+    if (GST_PAD_PARENT (pad) != NULL) {
+      cont = FALSE;
+      g_value_set_boolean (ret, FALSE);
+    }
+  }
 
   return cont;
 }
@@ -2809,13 +2909,34 @@ gst_element_change_state_func (GstElement * element, GstStateChange transition)
     case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
       break;
     case GST_STATE_CHANGE_PAUSED_TO_READY:
-    case GST_STATE_CHANGE_READY_TO_NULL:
+    case GST_STATE_CHANGE_READY_TO_NULL:{
+      GList *l;
+
       /* deactivate pads in both cases, since they are activated on
          ready->paused but the element might not have made it to paused */
       if (!gst_element_pads_activate (element, FALSE)) {
         result = GST_STATE_CHANGE_FAILURE;
       }
+
+      /* Remove all non-persistent contexts */
+      GST_OBJECT_LOCK (element);
+      for (l = element->contexts; l;) {
+        GstContext *context = l->data;
+
+        if (!gst_context_is_persistent (context)) {
+          GList *next;
+
+          gst_context_unref (context);
+          next = l->next;
+          element->contexts = g_list_delete_link (element->contexts, l);
+          l = next;
+        } else {
+          l = l->next;
+        }
+      }
+      GST_OBJECT_UNLOCK (element);
       break;
+    }
     default:
       /* this will catch real but unhandled state changes;
        * can only be caused by:
@@ -2870,7 +2991,7 @@ gst_element_dispose (GObject * object)
 
   oclass = GST_ELEMENT_GET_CLASS (element);
 
-  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "dispose");
+  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "%p dispose", element);
 
   if (GST_STATE (element) != GST_STATE_NULL)
     goto not_null;
@@ -2912,9 +3033,11 @@ gst_element_dispose (GObject * object)
   bus_p = &element->bus;
   gst_object_replace ((GstObject **) clock_p, NULL);
   gst_object_replace ((GstObject **) bus_p, NULL);
+  g_list_free_full (element->contexts, (GDestroyNotify) gst_context_unref);
   GST_OBJECT_UNLOCK (element);
 
-  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "parent class dispose");
+  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "%p parent class dispose",
+      element);
 
   G_OBJECT_CLASS (parent_class)->dispose (object);
 
@@ -2945,12 +3068,13 @@ gst_element_finalize (GObject * object)
 {
   GstElement *element = GST_ELEMENT_CAST (object);
 
-  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "finalize");
+  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "%p finalize", element);
 
   g_cond_clear (&element->state_cond);
   g_rec_mutex_clear (&element->state_lock);
 
-  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "finalize parent");
+  GST_CAT_INFO_OBJECT (GST_CAT_REFCOUNTING, element, "%p finalize parent",
+      element);
 
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
@@ -3022,6 +3146,38 @@ gst_element_get_bus (GstElement * element)
   return result;
 }
 
+static void
+gst_element_set_context_default (GstElement * element, GstContext * context)
+{
+  const gchar *context_type;
+  GList *l;
+
+  g_return_if_fail (GST_IS_CONTEXT (context));
+  context_type = gst_context_get_context_type (context);
+  g_return_if_fail (context_type != NULL);
+
+  GST_OBJECT_LOCK (element);
+  for (l = element->contexts; l; l = l->next) {
+    GstContext *tmp = l->data;
+    const gchar *tmp_type = gst_context_get_context_type (tmp);
+
+    /* Always store newest context but never replace
+     * a persistent one by a non-persistent one */
+    if (g_strcmp0 (context_type, tmp_type) == 0 &&
+        (gst_context_is_persistent (context) ||
+            !gst_context_is_persistent (tmp))) {
+      gst_context_replace ((GstContext **) & l->data, context);
+      break;
+    }
+  }
+  /* Not found? Add */
+  if (l == NULL) {
+    element->contexts =
+        g_list_prepend (element->contexts, gst_context_ref (context));
+  }
+  GST_OBJECT_UNLOCK (element);
+}
+
 /**
  * gst_element_set_context:
  * @element: a #GstElement to set the context of.
@@ -3037,6 +3193,7 @@ gst_element_set_context (GstElement * element, GstContext * context)
   GstElementClass *oclass;
 
   g_return_if_fail (GST_IS_ELEMENT (element));
+  g_return_if_fail (GST_IS_CONTEXT (context));
 
   oclass = GST_ELEMENT_GET_CLASS (element);
 
@@ -3046,4 +3203,297 @@ gst_element_set_context (GstElement * element, GstContext * context)
 
   if (oclass->set_context)
     oclass->set_context (element, context);
+}
+
+/**
+ * gst_element_get_contexts:
+ * @element: a #GstElement to set the context of.
+ *
+ * Gets the contexts set on the element.
+ *
+ * MT safe.
+ *
+ * Returns: (element-type Gst.Context) (transfer full): List of #GstContext
+ *
+ * Since: 1.8
+ */
+GList *
+gst_element_get_contexts (GstElement * element)
+{
+  GList *ret;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
+
+  GST_OBJECT_LOCK (element);
+  ret = g_list_copy_deep (element->contexts, (GCopyFunc) gst_context_ref, NULL);
+  GST_OBJECT_UNLOCK (element);
+
+  return ret;
+}
+
+static gint
+_match_context_type (GstContext * c1, const gchar * context_type)
+{
+  const gchar *c1_type;
+
+  c1_type = gst_context_get_context_type (c1);
+
+  return g_strcmp0 (c1_type, context_type);
+}
+
+/**
+ * gst_element_get_context_unlocked:
+ * @element: a #GstElement to get the context of.
+ * @context_type: a name of a context to retrieve
+ *
+ * Gets the context with @context_type set on the element or NULL.
+ *
+ * Returns: (transfer full): A #GstContext or NULL
+ *
+ * Since: 1.8
+ */
+GstContext *
+gst_element_get_context_unlocked (GstElement * element,
+    const gchar * context_type)
+{
+  GstContext *ret = NULL;
+  GList *node;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
+
+  node =
+      g_list_find_custom (element->contexts, context_type,
+      (GCompareFunc) _match_context_type);
+  if (node && node->data)
+    ret = gst_context_ref (node->data);
+
+  return ret;
+}
+
+/**
+ * gst_element_get_context:
+ * @element: a #GstElement to get the context of.
+ * @context_type: a name of a context to retrieve
+ *
+ * Gets the context with @context_type set on the element or NULL.
+ *
+ * MT safe.
+ *
+ * Returns: (transfer full): A #GstContext or NULL
+ *
+ * Since: 1.8
+ */
+GstContext *
+gst_element_get_context (GstElement * element, const gchar * context_type)
+{
+  GstContext *ret = NULL;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), NULL);
+
+  GST_OBJECT_LOCK (element);
+  ret = gst_element_get_context_unlocked (element, context_type);
+  GST_OBJECT_UNLOCK (element);
+
+  return ret;
+}
+
+static void
+gst_element_property_post_notify_msg (GstElement * element, GObject * obj,
+    GParamSpec * pspec, gboolean include_value)
+{
+  GValue val = G_VALUE_INIT;
+  GValue *v;
+
+  GST_LOG_OBJECT (element, "property '%s' of object %" GST_PTR_FORMAT " has "
+      "changed, posting message with%s value", pspec->name, obj,
+      include_value ? "" : "out");
+
+  if (include_value && (pspec->flags & G_PARAM_READABLE) != 0) {
+    g_value_init (&val, pspec->value_type);
+    g_object_get_property (obj, pspec->name, &val);
+    v = &val;
+  } else {
+    v = NULL;
+  }
+  gst_element_post_message (element,
+      gst_message_new_property_notify (GST_OBJECT_CAST (obj), pspec->name, v));
+}
+
+static void
+gst_element_property_deep_notify_cb (GstElement * element, GObject * prop_obj,
+    GParamSpec * pspec, gpointer user_data)
+{
+  gboolean include_value = GPOINTER_TO_INT (user_data);
+
+  gst_element_property_post_notify_msg (element, prop_obj, pspec,
+      include_value);
+}
+
+static void
+gst_element_property_notify_cb (GObject * obj, GParamSpec * pspec,
+    gpointer user_data)
+{
+  gboolean include_value = GPOINTER_TO_INT (user_data);
+
+  gst_element_property_post_notify_msg (GST_ELEMENT_CAST (obj), obj, pspec,
+      include_value);
+}
+
+/**
+ * gst_element_add_property_notify_watch:
+ * @element: a #GstElement to watch for property changes
+ * @property_name: (allow-none): name of property to watch for changes, or
+ *     NULL to watch all properties
+ * @include_value: whether to include the new property value in the message
+ *
+ * Returns: a watch id, which can be used in connection with
+ *     gst_element_remove_property_notify_watch() to remove the watch again.
+ *
+ * Since: 1.10
+ */
+gulong
+gst_element_add_property_notify_watch (GstElement * element,
+    const gchar * property_name, gboolean include_value)
+{
+  const gchar *sep;
+  gchar *signal_name;
+  gulong id;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), 0);
+
+  sep = (property_name != NULL) ? "::" : NULL;
+  signal_name = g_strconcat ("notify", sep, property_name, NULL);
+  id = g_signal_connect (element, signal_name,
+      G_CALLBACK (gst_element_property_notify_cb),
+      GINT_TO_POINTER (include_value));
+  g_free (signal_name);
+
+  return id;
+}
+
+/**
+ * gst_element_add_property_deep_notify_watch:
+ * @element: a #GstElement to watch (recursively) for property changes
+ * @property_name: (allow-none): name of property to watch for changes, or
+ *     NULL to watch all properties
+ * @include_value: whether to include the new property value in the message
+ *
+ * Returns: a watch id, which can be used in connection with
+ *     gst_element_remove_property_notify_watch() to remove the watch again.
+ *
+ * Since: 1.10
+ */
+gulong
+gst_element_add_property_deep_notify_watch (GstElement * element,
+    const gchar * property_name, gboolean include_value)
+{
+  const gchar *sep;
+  gchar *signal_name;
+  gulong id;
+
+  g_return_val_if_fail (GST_IS_ELEMENT (element), 0);
+
+  sep = (property_name != NULL) ? "::" : NULL;
+  signal_name = g_strconcat ("deep-notify", sep, property_name, NULL);
+  id = g_signal_connect (element, signal_name,
+      G_CALLBACK (gst_element_property_deep_notify_cb),
+      GINT_TO_POINTER (include_value));
+  g_free (signal_name);
+
+  return id;
+}
+
+/**
+ * gst_element_remove_property_notify_watch:
+ * @element: a #GstElement being watched for property changes
+ * @watch_id: watch id to remove
+ *
+ * Since: 1.10
+ */
+void
+gst_element_remove_property_notify_watch (GstElement * element, gulong watch_id)
+{
+  g_signal_handler_disconnect (element, watch_id);
+}
+
+typedef struct
+{
+  GstElement *element;
+  GstElementCallAsyncFunc func;
+  gpointer user_data;
+  GDestroyNotify destroy_notify;
+} GstElementCallAsyncData;
+
+static void
+gst_element_call_async_func (gpointer data, gpointer user_data)
+{
+  GstElementCallAsyncData *async_data = data;
+
+  async_data->func (async_data->element, async_data->user_data);
+  if (async_data->destroy_notify)
+    async_data->destroy_notify (async_data->user_data);
+  gst_object_unref (async_data->element);
+  g_free (async_data);
+}
+
+/**
+ * gst_element_call_async:
+ * @element: a #GstElement
+ * @func: Function to call asynchronously from another thread
+ * @user_data: Data to pass to @func
+ * @destroy_notify: GDestroyNotify for @user_data
+ *
+ * Calls @func from another thread and passes @user_data to it. This is to be
+ * used for cases when a state change has to be performed from a streaming
+ * thread, directly via gst_element_set_state() or indirectly e.g. via SEEK
+ * events.
+ *
+ * Calling those functions directly from the streaming thread will cause
+ * deadlocks in many situations, as they might involve waiting for the
+ * streaming thread to shut down from this very streaming thread.
+ *
+ * MT safe.
+ *
+ * Since: 1.10
+ */
+void
+gst_element_call_async (GstElement * element, GstElementCallAsyncFunc func,
+    gpointer user_data, GDestroyNotify destroy_notify)
+{
+  GstElementCallAsyncData *async_data;
+
+  g_return_if_fail (GST_IS_ELEMENT (element));
+
+  async_data = g_new0 (GstElementCallAsyncData, 1);
+  async_data->element = gst_object_ref (element);
+  async_data->func = func;
+  async_data->user_data = user_data;
+  async_data->destroy_notify = destroy_notify;
+
+  g_thread_pool_push (gst_element_pool, async_data, NULL);
+}
+
+void
+_priv_gst_element_cleanup (void)
+{
+  if (gst_element_pool) {
+    g_thread_pool_free (gst_element_pool, FALSE, TRUE);
+    gst_element_setup_thread_pool ();
+  }
+}
+
+GstStructure *
+gst_make_element_message_details (const char *name, ...)
+{
+  GstStructure *structure;
+  va_list varargs;
+
+  if (name == NULL)
+    return NULL;
+
+  va_start (varargs, name);
+  structure = gst_structure_new_valist ("details", name, varargs);
+  va_end (varargs);
+
+  return structure;
 }

@@ -52,29 +52,36 @@ typedef struct _GstControlPoint GstControlPoint;
 
 /**
  * GstControlPoint:
+ * @timestamp: timestamp of the value change
+ * @value: the new value
  *
- * a internal structure for value+time and various temporary
+ * An internal structure for value+time and various temporary
  * values used for interpolation. This "inherits" from
  * GstTimedValue.
  */
 struct _GstControlPoint
 {
   /* fields from GstTimedValue. DO NOT CHANGE! */
-  GstClockTime timestamp;       /* timestamp of the value change */
-  gdouble value;                /* the new value */
+  GstClockTime timestamp;
+  gdouble value;
 
-  /* internal fields */
+  /*< private >*/
 
   /* Caches for the interpolators */
   /* FIXME: we should not have this here already ... */
   union {
-    struct {
+    struct { /* 16 bytes */
       gdouble h;
       gdouble z;
     } cubic;
+    struct { /* 24 bytes */
+      gdouble c1s, c2s, c3s;
+    } cubic_monotonic;
+    guint8 _gst_reserved[64];
   } cache;
-
 };
+
+GType gst_control_point_get_type (void);
 
 /**
  * GstTimedValueControlSource:
@@ -113,7 +120,7 @@ GType gst_timed_value_control_source_get_type (void);
 /* Functions */
 
 GSequenceIter * gst_timed_value_control_source_find_control_point_iter (
-                                                               GstTimedValueControlSource * self, 
+                                                               GstTimedValueControlSource * self,
                                                                GstClockTime timestamp);
 
 gboolean        gst_timed_value_control_source_set            (GstTimedValueControlSource * self,
@@ -127,6 +134,10 @@ void            gst_timed_value_control_source_unset_all      (GstTimedValueCont
 GList *         gst_timed_value_control_source_get_all        (GstTimedValueControlSource * self);
 gint            gst_timed_value_control_source_get_count      (GstTimedValueControlSource * self);
 void            gst_timed_value_control_invalidate_cache      (GstTimedValueControlSource * self);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstTimedValueControlSource, gst_object_unref)
+#endif
 
 G_END_DECLS
 

@@ -105,6 +105,18 @@ _priv_gst_caps_features_initialize (void)
       &static_caps_features_parent_refcount);
 }
 
+void
+_priv_gst_caps_features_cleanup (void)
+{
+  gst_caps_features_set_parent_refcount (_gst_caps_features_any, NULL);
+  gst_caps_features_free (_gst_caps_features_any);
+  _gst_caps_features_any = NULL;
+  gst_caps_features_set_parent_refcount
+      (_gst_caps_features_memory_system_memory, NULL);
+  gst_caps_features_free (_gst_caps_features_memory_system_memory);
+  _gst_caps_features_memory_system_memory = NULL;
+}
+
 gboolean
 gst_is_caps_features (gconstpointer obj)
 {
@@ -414,7 +426,7 @@ gst_caps_features_free (GstCapsFeatures * features)
  * Converts @features to a human-readable string representation.
  *
  * For debugging purposes its easier to do something like this:
- * |[
+ * |[<!-- language="C" -->
  * GST_LOG ("features is %" GST_PTR_FORMAT, features);
  * ]|
  * This prints the features in human readable form.

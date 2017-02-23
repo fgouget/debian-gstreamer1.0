@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.10.32.2\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2014-11-06 12:20+0100\n"
+"POT-Creation-Date: 2017-02-23 15:12+0200\n"
 "PO-Revision-Date: 2011-06-04 21:11+0100\n"
 "Last-Translator: Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
 "Language-Team: Esperanto <translation-team-eo@lists.sourceforge.net>\n"
@@ -430,6 +430,12 @@ msgstr "komponisto"
 msgid "person(s) who composed the recording"
 msgstr ""
 
+msgid "conductor"
+msgstr ""
+
+msgid "conductor/performer refinement"
+msgstr ""
+
 msgid "duration"
 msgstr "daŭro"
 
@@ -770,6 +776,12 @@ msgstr ""
 msgid "Midi note number of the audio track."
 msgstr ""
 
+msgid "private-data"
+msgstr ""
+
+msgid "Private data"
+msgstr ""
+
 msgid ", "
 msgstr ", "
 
@@ -807,6 +819,9 @@ msgstr ""
 msgid "could not set property \"%s\" in element \"%s\" to \"%s\""
 msgstr ""
 
+msgid "Delayed linking failed."
+msgstr ""
+
 #, c-format
 msgid "could not link %s to %s"
 msgstr ""
@@ -838,9 +853,6 @@ msgstr ""
 msgid "syntax error"
 msgstr ""
 
-msgid "bin"
-msgstr ""
-
 #, c-format
 msgid "specified empty bin \"%s\", not allowed"
 msgstr ""
@@ -858,9 +870,6 @@ msgstr ""
 msgid "Internal data flow problem."
 msgstr ""
 
-msgid "Internal data stream error."
-msgstr "Interna datumflu-eraro."
-
 msgid "Internal data flow error."
 msgstr ""
 
@@ -876,6 +885,12 @@ msgstr ""
 msgid ""
 "Restrict the possible allowed capabilities (NULL means ANY). Setting this "
 "property takes a reference to the supplied GstCaps object."
+msgstr ""
+
+msgid "Caps Change Mode"
+msgstr ""
+
+msgid "Filter caps change behaviour"
 msgstr ""
 
 msgid "No Temp directory specified."
@@ -944,6 +959,9 @@ msgstr ""
 msgid "force caps without doing a typefind"
 msgstr ""
 
+msgid "Stream doesn't contain enough data."
+msgstr ""
+
 msgid "Stream contains no data."
 msgstr ""
 
@@ -955,6 +973,9 @@ msgstr "legeble"
 
 msgid "writable"
 msgstr "skribeble"
+
+msgid "deprecated"
+msgstr ""
 
 msgid "controllable"
 msgstr "regeble"
@@ -1146,11 +1167,13 @@ msgstr ""
 msgid "Output messages"
 msgstr ""
 
-msgid "Do not output status information of TYPE"
+msgid ""
+"Do not output status information for the specified property if verbose "
+"output is enabled (can be used multiple times)"
 msgstr ""
 
-msgid "TYPE1,TYPE2,..."
-msgstr "TIPO1,TIPO2,..."
+msgid "PROPERTY-NAME"
+msgstr ""
 
 msgid "Do not install a fault handler"
 msgstr ""
@@ -1228,6 +1251,12 @@ msgstr ""
 
 msgid "Freeing pipeline ...\n"
 msgstr ""
+
+#~ msgid "Internal data stream error."
+#~ msgstr "Interna datumflu-eraro."
+
+#~ msgid "TYPE1,TYPE2,..."
+#~ msgstr "TIPO1,TIPO2,..."
 
 #~ msgid "FILE"
 #~ msgstr "DOSIERO"

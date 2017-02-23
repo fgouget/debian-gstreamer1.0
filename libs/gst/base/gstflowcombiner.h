@@ -47,11 +47,22 @@ void              gst_flow_combiner_free (GstFlowCombiner * combiner);
 
 GstFlowReturn     gst_flow_combiner_update_flow (GstFlowCombiner * combiner, GstFlowReturn fret);
 
+GstFlowReturn     gst_flow_combiner_update_pad_flow (GstFlowCombiner * combiner, GstPad * pad,
+                                                     GstFlowReturn fret);
+
 void              gst_flow_combiner_add_pad    (GstFlowCombiner * combiner, GstPad * pad);
 
 void              gst_flow_combiner_remove_pad (GstFlowCombiner * combiner, GstPad * pad);
 
+void              gst_flow_combiner_clear (GstFlowCombiner * combiner);
+
+void              gst_flow_combiner_reset (GstFlowCombiner * combiner);
+
 GType             gst_flow_combiner_get_type (void);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstFlowCombiner, gst_flow_combiner_free)
+#endif
 
 G_END_DECLS
 

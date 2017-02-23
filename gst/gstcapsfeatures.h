@@ -23,6 +23,8 @@
 
 #include <gst/gstconfig.h>
 #include <gst/glib-compat.h>
+#include <glib-object.h>
+#include <glib.h>
 
 G_BEGIN_DECLS
 
@@ -76,6 +78,10 @@ void              gst_caps_features_add_id ( GstCapsFeatures * features, GQuark 
 
 void              gst_caps_features_remove (GstCapsFeatures * features, const gchar * feature);
 void              gst_caps_features_remove_id (GstCapsFeatures * features, GQuark feature);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstCapsFeatures, gst_caps_features_free)
+#endif
 
 G_END_DECLS
 

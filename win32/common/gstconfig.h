@@ -56,8 +56,6 @@
 #define GST_DISABLE_GST_DEBUG 1
 #define GST_DISABLE_LOADSAVE 1
 #define GST_DISABLE_PARSE 1
-#define GST_DISABLE_TRACE 1
-#define GST_DISABLE_ALLOC_TRACE 1
 #define GST_DISABLE_REGISTRY 1
 #define GST_DISABLE_PLUGIN 1
 #define GST_HAVE_GLIB_2_8 1
@@ -77,16 +75,7 @@
 /* #undef GST_DISABLE_GST_DEBUG */
 
 /* DOES NOT WORK */
-/* #undef GST_DISABLE_LOADSAVE */
-
-/* DOES NOT WORK */
 /* #undef GST_DISABLE_PARSE */
-
-/* DOES NOT WORK */
-/* #undef GST_DISABLE_TRACE */
-
-/* DOES NOT WORK */
-/* #undef GST_DISABLE_ALLOC_TRACE */
 
 /* DOES NOT WORK */
 /* #undef GST_DISABLE_REGISTRY */
@@ -124,14 +113,6 @@
 /* whether or not we are using glib 2.8 api, e.g. atomic gobject
    refcounting */
 #define GST_HAVE_GLIB_2_8 1
-
-/***** Deal with XML stuff, we have to handle both loadsave and registry *****/
-
-#if (! (defined(GST_DISABLE_LOADSAVE) && defined(GST_DISABLE_REGISTRY)) )
-# include <libxml/parser.h>
-#else
-# define GST_DISABLE_LOADSAVE_REGISTRY
-#endif
 
 /**
  * GST_EXPORT:

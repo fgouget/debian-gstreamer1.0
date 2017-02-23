@@ -42,6 +42,9 @@ G_BEGIN_DECLS
 typedef struct _GstMultiQueue GstMultiQueue;
 typedef struct _GstMultiQueueClass GstMultiQueueClass;
 
+typedef struct _GstMultiQueuePad GstMultiQueuePad;
+typedef struct _GstMultiQueuePadClass GstMultiQueuePadClass;
+
 /**
  * GstMultiQueue:
  *
@@ -51,6 +54,7 @@ struct _GstMultiQueue {
   GstElement element;
 
   gboolean sync_by_running_time;
+  gboolean use_interleave;
 
   /* number of queues */
   guint	nbqueues;
@@ -61,13 +65,13 @@ struct _GstMultiQueue {
 
   GstDataQueueSize  max_size, extra_size;
   gboolean use_buffering;
-  gint low_percent, high_percent;
+  gint low_watermark, high_watermark;
   gboolean buffering;
-  gint percent;
+  gint buffering_percent;
 
   guint    counter;	/* incoming object counter, use atomic accesses */
   guint32  highid;	/* contains highest id of last outputted object */
-  GstClockTime high_time; /* highest start running time */
+  GstClockTimeDiff high_time; /* highest start running time */
 
   GMutex   qlock;	/* Global queue lock (vs object lock or individual */
 			/* queues lock). Protects nbqueues, queues, global */
@@ -75,8 +79,13 @@ struct _GstMultiQueue {
 
   gint numwaiting;	/* number of not-linked pads waiting */
 
-  gboolean percent_changed;
+  gboolean buffering_percent_changed;
   GMutex buffering_post_lock; /* assures only one posted at a time */
+
+  GstClockTime interleave;	/* Input interleave */
+  GstClockTimeDiff last_interleave_update;
+
+  GstClockTime unlinked_cache_time;
 };
 
 struct _GstMultiQueueClass {

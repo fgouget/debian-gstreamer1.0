@@ -34,13 +34,17 @@
  * native preset format of those wrapped plugins.
  * One method that is useful to be overridden is gst_preset_get_property_names().
  * With that one can control which properties are saved and in which order.
+ * When implementing support for read-only presets, one should set the vmethods
+ * for gst_preset_save_preset() and gst_preset_delete_preset() to %NULL.
+ * Applications can use gst_preset_is_editable() to check for that.
  *
  * The default implementation supports presets located in a system directory, 
  * application specific directory and in the users home directory. When getting
  * a list of presets individual presets are read and overlaid in 1) system, 
  * 2) application and 3) user order. Whenever an earlier entry is newer, the
- * later entries will be updated. 
- * 
+ * later entries will be updated. Since 1.8 you can also provide extra paths
+ * where to find presets through the GST_PRESET_PATH environment variable.
+ * Presets found in those paths will be concidered as "app presets".
  */
 /* FIXME:
  * - non racyness
@@ -100,8 +104,6 @@ static GQuark preset_user_path_quark = 0;
 static GQuark preset_app_path_quark = 0;
 static GQuark preset_system_path_quark = 0;
 static GQuark preset_quark = 0;
-
-/*static GQuark property_list_quark = 0;*/
 
 /* the application can set a custom path that is checked in addition to standard
  * system and user dirs. This helps to develop new presets first local to the
@@ -347,6 +349,26 @@ preset_merge (GKeyFile * system, GKeyFile * user)
   g_strfreev (groups);
 }
 
+typedef struct
+{
+  GKeyFile *preset;
+  guint64 version;
+} PresetAndVersion;
+
+static gint
+compare_preset_and_version (gconstpointer a, gconstpointer b,
+    gpointer user_data)
+{
+  const PresetAndVersion *pa = a, *pb = b;
+
+  if (pa->version > pb->version)
+    return -1;
+  if (pa->version < pb->version)
+    return 1;
+  else
+    return 0;
+}
+
 /* reads the user and system presets files and merges them together. This
  * function caches the GKeyFile on the element type. If there is no existing
  * preset file, a new in-memory GKeyFile will be created. */
@@ -365,18 +387,47 @@ preset_get_keyfile (GstPreset * preset)
     guint64 version = G_GUINT64_CONSTANT (0);
     gboolean merged = FALSE;
     GKeyFile *in_user, *in_app = NULL, *in_system;
-
-    preset_get_paths (preset, &preset_user_path, &preset_app_path,
-        &preset_system_path);
+    GQueue in_env = G_QUEUE_INIT;
+    gboolean have_env = FALSE;
+    const gchar *envvar;
 
     /* try to load the user, app and system presets, we do this to get the
      * versions of all files. */
+    preset_get_paths (preset, &preset_user_path, &preset_app_path,
+        &preset_system_path);
     in_user = preset_open_and_parse_header (preset, preset_user_path,
         &version_user);
+
     if (preset_app_path) {
       in_app = preset_open_and_parse_header (preset, preset_app_path,
           &version_app);
     }
+
+    envvar = g_getenv ("GST_PRESET_PATH");
+    if (envvar) {
+      gint i;
+      gchar **preset_dirs = g_strsplit (envvar, G_SEARCHPATH_SEPARATOR_S, -1);
+
+      for (i = 0; preset_dirs[i]; i++) {
+        gchar *preset_path = g_strdup_printf ("%s" G_DIR_SEPARATOR_S "%s.prs",
+            preset_dirs[i], G_OBJECT_TYPE_NAME (preset));
+        GKeyFile *env_file;
+        guint64 env_version;
+
+        env_file = preset_open_and_parse_header (preset, preset_path,
+            &env_version);
+        g_free (preset_path);
+        if (env_file) {
+          PresetAndVersion *pv = g_new (PresetAndVersion, 1);
+          pv->preset = env_file;
+          pv->version = env_version;
+          g_queue_push_tail (&in_env, pv);
+          have_env = TRUE;
+        }
+      }
+      g_strfreev (preset_dirs);
+    }
+
     in_system = preset_open_and_parse_header (preset, preset_system_path,
         &version_system);
 
@@ -385,8 +436,34 @@ preset_get_keyfile (GstPreset * preset)
       presets = in_system;
       version = version_system;
     }
+
+    if (have_env) {
+      GList *l;
+
+      /* merge the ones from the environment paths. If any of them has a
+       * higher version, take that as the "master" version. Lower versions are
+       * then just merged in. */
+      g_queue_sort (&in_env, compare_preset_and_version, NULL);
+      /* highest version to lowest */
+      for (l = in_env.head; l; l = l->next) {
+        PresetAndVersion *pv = l->data;
+
+        if (version > pv->version) {
+          preset_merge (presets, pv->preset);
+          g_key_file_free (pv->preset);
+        } else {
+          if (presets)
+            g_key_file_free (presets);
+          presets = pv->preset;
+          version = pv->version;
+        }
+        g_free (pv);
+      }
+      g_queue_clear (&in_env);
+    }
+
     if (in_app) {
-      /* if system version is higher, merge */
+      /* if system/env version is higher, merge */
       if (version > version_app) {
         preset_merge (presets, in_app);
         g_key_file_free (in_app);
@@ -394,11 +471,11 @@ preset_get_keyfile (GstPreset * preset)
         if (presets)
           g_key_file_free (presets);
         presets = in_app;
-        version = version_system;
+        version = version_app;
       }
     }
     if (in_user) {
-      /* if system or app version is higher, merge */
+      /* if system/env or app version is higher, merge */
       if (version > version_user) {
         preset_merge (presets, in_user);
         g_key_file_free (in_user);
@@ -425,6 +502,12 @@ preset_get_keyfile (GstPreset * preset)
     }
   }
   return presets;
+}
+
+static gint
+compare_strings (gchar ** a, gchar ** b, gpointer user_data)
+{
+  return g_strcmp0 (*a, *b);
 }
 
 /* get a list of all supported preset names for an element */
@@ -455,9 +538,15 @@ gst_preset_default_get_preset_names (GstPreset * preset)
       groups[num_groups] = NULL;
     }
   }
+  if (!num_groups) {
+    GST_INFO_OBJECT (preset, "Empty preset file");
+    g_strfreev (groups);
+    return NULL;
+  }
+
   /* sort the array now */
   g_qsort_with_data (groups, num_groups, sizeof (gchar *),
-      (GCompareDataFunc) strcmp, NULL);
+      (GCompareDataFunc) compare_strings, NULL);
 
   return groups;
 
@@ -1150,6 +1239,24 @@ gst_preset_get_app_dir (void)
   return preset_app_dir;
 }
 
+/**
+ * gst_preset_is_editable:
+ * @preset: a #GObject that implements #GstPreset
+ *
+ * Check if one can add new presets, change existing ones and remove presets.
+ *
+ * Returns: %TRUE if presets are editable or %FALSE if they are static
+ *
+ * Since: 1.6
+ */
+gboolean
+gst_preset_is_editable (GstPreset * preset)
+{
+  GstPresetInterface *iface = GST_PRESET_GET_INTERFACE (preset);
+
+  return iface->save_preset && iface->delete_preset;
+}
+
 /* class internals */
 
 static void
@@ -1186,8 +1293,6 @@ gst_preset_base_init (gpointer g_class)
         g_quark_from_static_string ("GstPreset::system_path");
 
 #if 0
-    property_list_quark = g_quark_from_static_string ("GstPreset::properties");
-
     /* create interface properties, each element would need to override this
      *   g_object_class_override_property(gobject_class, PROP_PRESET_NAME, "preset-name");
      * and in _set_property() do

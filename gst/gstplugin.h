@@ -93,6 +93,9 @@ typedef enum
  * @GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_SUFFIX : interpret
  *         filename argument as filter suffix and check all matching files in
  *         the directory
+ * @GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_PREFIX : interpret
+ *         filename argument as filter prefix and check all matching files in
+ *         the directory. Since 1.8.
  *
  * Flags used in connection with gst_plugin_add_dependency().
  */
@@ -100,7 +103,8 @@ typedef enum {
   GST_PLUGIN_DEPENDENCY_FLAG_NONE = 0,
   GST_PLUGIN_DEPENDENCY_FLAG_RECURSE = (1 << 0),
   GST_PLUGIN_DEPENDENCY_FLAG_PATHS_ARE_DEFAULT_ONLY = (1 << 1),
-  GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_SUFFIX = (1 << 2)
+  GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_SUFFIX = (1 << 2),
+  GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_PREFIX = (1 << 3)
 } GstPluginDependencyFlags;
 
 /**
@@ -149,7 +153,7 @@ typedef gboolean (*GstPluginInitFullFunc) (GstPlugin *plugin, gpointer user_data
  *     format (or rather, a subset thereof), or %NULL. Allowed are the
  *     following formats: "YYYY-MM-DD" and "YYY-MM-DDTHH:MMZ" (with
  *     'T' a separator and 'Z' indicating UTC/Zulu time). This field
- *     should be set via the %GST_PACKAGE_RELEASE_DATETIME
+ *     should be set via the GST_PACKAGE_RELEASE_DATETIME
  *     preprocessor macro.
  *
  * A plugin should export a variable of this type called plugin_desc. The plugin
@@ -353,6 +357,10 @@ void                    gst_plugin_add_dependency_simple (GstPlugin   * plugin,
                                                           GstPluginDependencyFlags flags);
 
 void gst_plugin_list_free (GList *list);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstPlugin, gst_object_unref)
+#endif
 
 G_END_DECLS
 

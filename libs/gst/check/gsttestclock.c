@@ -139,7 +139,7 @@
  *   g_assert_cmpint (GST_BUFFER_TIMESTAMP (buf), ==, latency);
  *   gst_buffer_unref (buf);
  *   GST_INFO ("Check that element does not wait for any clock notification\n");
- *   g_assert (gst_test_clock_peek_next_pending_id (test_clock, NULL) == FALSE);
+ *   g_assert (!gst_test_clock_peek_next_pending_id (test_clock, NULL));
  *
  *   GST_INFO ("Set time, create and push the second buffer\n");
  *   gst_test_clock_advance_time (test_clock, 10 * GST_SECOND);
@@ -164,7 +164,7 @@
  *       10 * GST_SECOND + latency + 7 * GST_MSECOND);
  *   gst_buffer_unref (buf);
  *   GST_INFO ("Check that element does not wait for any clock notification\n");
- *   g_assert (gst_test_clock_peek_next_pending_id (test_clock, NULL) == FALSE);
+ *   g_assert (!gst_test_clock_peek_next_pending_id (test_clock, NULL));
  *   ...
  *   </programlisting>
  * </example>
@@ -183,7 +183,8 @@
 enum
 {
   PROP_0,
-  PROP_START_TIME
+  PROP_START_TIME,
+  PROP_CLOCK_TYPE
 };
 
 typedef struct _GstClockEntryContext GstClockEntryContext;
@@ -196,12 +197,15 @@ struct _GstClockEntryContext
 
 struct _GstTestClockPrivate
 {
+  GstClockType clock_type;
   GstClockTime start_time;
   GstClockTime internal_time;
   GList *entry_contexts;
   GCond entry_added_cond;
   GCond entry_processed_cond;
 };
+
+#define DEFAULT_CLOCK_TYPE GST_CLOCK_TYPE_MONOTONIC
 
 #define GST_TEST_CLOCK_GET_PRIVATE(obj) ((GST_TEST_CLOCK_CAST (obj))->priv)
 
@@ -287,6 +291,13 @@ gst_test_clock_class_init (GstTestClockClass * klass)
       "Start Time of the Clock", 0, G_MAXUINT64, 0,
       G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_CONSTRUCT_ONLY);
   g_object_class_install_property (gobject_class, PROP_START_TIME, pspec);
+
+  g_object_class_install_property (gobject_class, PROP_CLOCK_TYPE,
+      g_param_spec_enum ("clock-type", "Clock type",
+          "The kind of clock implementation to be reported by this clock",
+          GST_TYPE_CLOCK_TYPE, DEFAULT_CLOCK_TYPE,
+          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
 }
 
 static void
@@ -301,6 +312,7 @@ gst_test_clock_init (GstTestClock * test_clock)
 
   g_cond_init (&priv->entry_added_cond);
   g_cond_init (&priv->entry_processed_cond);
+  priv->clock_type = DEFAULT_CLOCK_TYPE;
 
   GST_OBJECT_FLAG_SET (test_clock,
       GST_CLOCK_FLAG_CAN_DO_SINGLE_SYNC |
@@ -361,6 +373,9 @@ gst_test_clock_get_property (GObject * object, guint property_id,
     case PROP_START_TIME:
       g_value_set_uint64 (value, priv->start_time);
       break;
+    case PROP_CLOCK_TYPE:
+      g_value_set_enum (value, priv->clock_type);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -380,6 +395,11 @@ gst_test_clock_set_property (GObject * object, guint property_id,
       GST_CAT_TRACE_OBJECT (GST_CAT_TEST_CLOCK, test_clock,
           "test clock start time initialized at %" GST_TIME_FORMAT,
           GST_TIME_ARGS (priv->start_time));
+      break;
+    case PROP_CLOCK_TYPE:
+      priv->clock_type = (GstClockType) g_value_get_enum (value);
+      GST_CAT_DEBUG (GST_CAT_TEST_CLOCK, "clock-type set to %d",
+          priv->clock_type);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -1075,6 +1095,51 @@ gst_test_clock_id_list_get_latest_time (const GList * pending_list)
     if (time > result)
       result = time;
   }
+
+  return result;
+}
+
+/**
+ * gst_test_clock_crank:
+ * @test_clock: #GstTestClock to crank
+ *
+ * A "crank" consists of three steps:
+ * 1: Wait for a #GstClockID to be registered with the #GstTestClock.
+ * 2: Advance the #GstTestClock to the time the #GstClockID is waiting for.
+ * 3: Release the #GstClockID wait.
+ * A "crank" can be though of as the notion of
+ * manually driving the clock forward to its next logical step.
+ *
+ * Return: %TRUE if the crank was successful, %FALSE otherwise.
+ *
+ * MT safe.
+ *
+ * Since: 1.8
+ */
+gboolean
+gst_test_clock_crank (GstTestClock * test_clock)
+{
+  GstClockID res, pending;
+  gboolean result;
+
+  gst_test_clock_wait_for_next_pending_id (test_clock, &pending);
+  gst_test_clock_set_time (test_clock, gst_clock_id_get_time (pending));
+  res = gst_test_clock_process_next_clock_id (test_clock);
+  if (G_LIKELY (res == pending)) {
+    GST_CAT_DEBUG_OBJECT (GST_CAT_TEST_CLOCK, test_clock,
+        "cranked to time %" GST_TIME_FORMAT,
+        GST_TIME_ARGS (gst_clock_get_time (GST_CLOCK (test_clock))));
+    result = TRUE;
+  } else {
+    GST_CAT_WARNING_OBJECT (GST_CAT_TEST_CLOCK, test_clock,
+        "testclock next id != pending (%p != %p)", res, pending);
+    result = FALSE;
+  }
+
+  if (G_LIKELY (res != NULL))
+    gst_clock_id_unref (res);
+
+  gst_clock_id_unref (pending);
 
   return result;
 }

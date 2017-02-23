@@ -86,44 +86,117 @@ GST_START_TEST (test_fake_object_new)
 
 GST_END_TEST;
 
+static void
+notify_name (GObject * object, GParamSpec * pspec, gint * out_count)
+{
+  *out_count += 1;
+}
+
 /* GstFakeObject name tests */
-GST_START_TEST (test_fake_object_name)
+GST_START_TEST (test_fake_object_initial_name)
 {
   GstObject *object;
   gchar *name;
-  gchar *name2;
 
   object = g_object_new (gst_fake_object_get_type (), NULL);
 
   name = gst_object_get_name (object);
   fail_if (name == NULL, "Newly created object has no name");
   fail_if (strncmp (name, "fakeobject", 10) != 0,
-      "Random name %s does not start with Gst", name);
+      "Random name %s does not start with 'fakeobject'", name);
   g_free (name);
+
+  gst_object_unref (object);
+}
+
+GST_END_TEST;
+
+
+GST_START_TEST (test_fake_object_reset_name)
+{
+  GstObject *object;
+  gchar *name;
+  gint count = 0;
+
+  object = g_object_new (gst_fake_object_get_type (), NULL);
+  g_signal_connect (object, "notify::name", G_CALLBACK (notify_name), &count);
 
   /* give a random name by setting with NULL;
    * GstFakeObject class -> fakeobject%d */
-  gst_object_set_name (object, NULL);
+  fail_unless (gst_object_set_name (object, NULL), "Could not set name");
   name = gst_object_get_name (object);
   fail_if (name == NULL, "Random name was not assigned");
   fail_if (strncmp (name, "fakeobject", 10) != 0,
-      "Random name %s does not start with Gst", name);
+      "Random name %s does not start with 'fakeobject'", name);
   g_free (name);
+  fail_unless (count == 1, "Name change was not notified");
 
-  gst_object_set_name (object, "fake");
+  gst_object_unref (object);
+}
+
+GST_END_TEST;
+
+
+GST_START_TEST (test_fake_object_set_name_via_property)
+{
+  GstObject *object;
+  gchar *name;
+  gint count = 0;
+
+  object = g_object_new (gst_fake_object_get_type (), NULL);
+  g_signal_connect (object, "notify::name", G_CALLBACK (notify_name), &count);
+
+  /* also test the property code path */
+  g_object_set (object, "name", "fake", NULL);
   name = gst_object_get_name (object);
   fail_if (name == NULL, "Failed to get name of GstFakeObject");
   fail_if (strcmp (name, "fake") != 0, "Name of GstFakeObject is not 'fake'");
+  g_free (name);
+  fail_if (count > 1, "Name change was notified multiple time");
+  fail_unless (count == 1, "Name change was not notified");
+
+  gst_object_unref (object);
+}
+
+GST_END_TEST;
+
+
+GST_START_TEST (test_fake_object_get_name_returns_copy)
+{
+  GstObject *object;
+  gchar *name1, *name2;
+
+  object = g_object_new (gst_fake_object_get_type (), NULL);
 
   /* change the gotten name to see that it's a copy and not the original */
-  name[0] = 'm';
+  name1 = gst_object_get_name (object);
+  name1[0] = 'm';
   name2 = gst_object_get_name (object);
-  fail_if (strcmp (name2, "fake") != 0,
+  fail_if (strncmp (name2, "fakeobject", 10) != 0,
       "Copy of object name affected actual object name");
-  g_free (name);
+  g_free (name1);
   g_free (name2);
 
   gst_object_unref (object);
+}
+
+GST_END_TEST;
+
+
+GST_START_TEST (test_fake_object_set_name_when_parented)
+{
+  GstObject *object, *parent;
+
+  object = g_object_new (gst_fake_object_get_type (), NULL);
+
+  /* add a parent and ensure name cannot be changed */
+  parent = g_object_new (gst_fake_object_get_type (), NULL);
+  gst_object_set_parent (object, parent);
+  fail_if (gst_object_set_name (object, "broken"),
+      "Could set name on parented object");
+
+  gst_object_unparent (object);
+  gst_object_unref (parent);
 }
 
 GST_END_TEST;
@@ -140,7 +213,7 @@ thread_name_object (GstObject * object)
   g_usleep (100000);
 
   /* write our name repeatedly */
-  g_message ("THREAD %s: starting loop\n", thread_id);
+  g_message ("THREAD %s: starting loop", thread_id);
   while (THREAD_TEST_RUNNING ()) {
     gst_object_set_name (object, thread_id);
     /* a minimal sleep invokes a thread switch */
@@ -148,7 +221,7 @@ thread_name_object (GstObject * object)
   }
 
   /* thread is done, so let's return */
-  g_message ("THREAD %s: set name\n", thread_id);
+  g_message ("THREAD %s: set name", thread_id);
   g_free (thread_id);
 
   return NULL;
@@ -162,7 +235,7 @@ GST_START_TEST (test_fake_object_name_threaded_wrong)
   gint i;
   gboolean expected_failure = FALSE;
 
-  g_message ("\nTEST: set/get without lock\n");
+  g_message ("\nTEST: set/get without lock");
 
   object = g_object_new (gst_fake_object_get_type (), NULL);
   gst_object_set_name (object, "main");
@@ -175,7 +248,7 @@ GST_START_TEST (test_fake_object_name_threaded_wrong)
     THREAD_SWITCH ();
     name = gst_object_get_name (object);
     if (strcmp (name, "main") != 0) {
-      g_message ("MAIN: expected failure during run %d\n", i);
+      g_message ("MAIN: expected failure during run %d", i);
       expected_failure = TRUE;
       g_free (name);
       break;
@@ -202,7 +275,7 @@ GST_START_TEST (test_fake_object_name_threaded_right)
   gchar *name;
   gint i;
 
-  g_message ("\nTEST: set/get inside lock\n");
+  g_message ("\nTEST: set/get inside lock");
 
   object = g_object_new (gst_fake_object_get_type (), NULL);
   gst_object_set_name (object, "main");
@@ -248,14 +321,14 @@ thread_name_object_default (int *i)
   for (j = *i; j < num_objects; j += num_threads) {
     GstObject *o = GST_OBJECT (g_list_nth_data (object_list, j));
 
-    /* g_message ("THREAD %p: setting default name on object %d\n",
+    /* g_message ("THREAD %p: setting default name on object %d",
        g_thread_self (), j); */
     gst_object_set_name (o, NULL);
     THREAD_SWITCH ();
   }
 
   /* thread is done, so let's return */
-  g_message ("THREAD %p: set name\n", g_thread_self ());
+  g_message ("THREAD %p: set name", g_thread_self ());
   g_free (i);
 
   return NULL;
@@ -293,7 +366,7 @@ GST_START_TEST (test_fake_object_name_threaded_unique)
   gchar *name1, *name2;
   GList *l;
 
-  g_message ("\nTEST: uniqueness of default names\n");
+  g_message ("\nTEST: uniqueness of default names");
 
   for (i = 0; i < num_objects; ++i) {
     object = g_object_new (gst_fake_object_get_type (), NULL);
@@ -321,7 +394,7 @@ GST_START_TEST (test_fake_object_name_threaded_unique)
 
   name1 = gst_object_get_name (GST_OBJECT (object_list->data));
   for (l = object_list->next; l->next; l = l->next) {
-    g_message ("object with name %s\n", name1);
+    g_message ("object with name %s", name1);
     name2 = gst_object_get_name (GST_OBJECT (l->data));
     fail_if (strcmp (name1, name2) == 0, "Two objects with name %s", name2);
     g_free (name1);
@@ -355,10 +428,15 @@ GST_START_TEST (test_fake_object_parentage)
   fail_if (parent != NULL, "GstFakeObject has parent");
   /* try to set a NULL parent, this should give a warning */
   ASSERT_CRITICAL (result = gst_object_set_parent (object1, NULL));
-  fail_if (result == TRUE, "GstFakeObject accepted NULL parent");
+  fail_if (result, "GstFakeObject accepted NULL parent");
   /* try to set itself as parent, we expect a warning here */
   ASSERT_CRITICAL (result = gst_object_set_parent (object1, object1));
-  fail_if (result == TRUE, "GstFakeObject accepted itself as parent");
+  fail_if (result, "GstFakeObject accepted itself as parent");
+
+  /* _has_parent always returns FALSE if there is no parent */
+  fail_if (gst_object_has_as_parent (object1, NULL));
+  fail_if (gst_object_has_as_parent (NULL, object1));
+  fail_if (gst_object_has_as_parent (object1, object1));
 
   /* should still be floating */
   fail_unless (g_object_is_floating (object1),
@@ -373,10 +451,12 @@ GST_START_TEST (test_fake_object_parentage)
   fail_unless (g_object_is_floating (object1),
       "GstFakeObject instance is not floating");
 
+  result = gst_object_has_as_parent (object1, object2);
+  fail_if (result, "GstFakeObject has a parent");
+
   /* try to set other object as parent */
   result = gst_object_set_parent (object1, object2);
-  fail_if (result == FALSE,
-      "GstFakeObject could not accept other object as parent");
+  fail_unless (result, "GstFakeObject could not accept other object as parent");
 
   /* should not be floating anymore */
   fail_if (g_object_is_floating (object1),
@@ -386,12 +466,20 @@ GST_START_TEST (test_fake_object_parentage)
       "GstFakeObject instance is not floating");
 
   /* check the parent */
-  parent = gst_object_get_parent (object1);
-  fail_if (parent != object2, "GstFakeObject has wrong parent");
-  gst_object_unref (parent);
+  fail_unless (gst_object_has_as_parent (object1, object2));
+
+  /* any other combination is invalid */
+  fail_if (gst_object_has_as_parent (object2, object1));
+  fail_if (gst_object_has_as_parent (object1, NULL));
+  fail_if (gst_object_has_as_parent (object2, NULL));
+  fail_if (gst_object_has_as_parent (NULL, object1));
+  fail_if (gst_object_has_as_parent (NULL, object2));
+  fail_if (gst_object_has_as_parent (object1, object1));
+  fail_if (gst_object_has_as_parent (object2, object2));
+
   /* try to set other object as parent again */
   result = gst_object_set_parent (object1, object2);
-  fail_if (result == TRUE, "GstFakeObject could set parent twice");
+  fail_if (result, "GstFakeObject could set parent twice");
 
   /* ref before unparenting */
   gst_object_ref (object1);
@@ -430,8 +518,7 @@ GST_START_TEST (test_fake_object_parentage_dispose)
 
   /* try to set other object as parent */
   result = gst_object_set_parent (object1, object2);
-  fail_if (result == FALSE,
-      "GstFakeObject could not accept other object as parent");
+  fail_unless (result, "GstFakeObject could not accept other object as parent");
 
   /* clear parent of object */
   gst_object_unparent (object1);
@@ -442,7 +529,7 @@ GST_START_TEST (test_fake_object_parentage_dispose)
 
 GST_END_TEST;
 
-GST_START_TEST (test_fake_object_has_ancestor)
+GST_START_TEST (test_fake_object_has_as_ancestor)
 {
   GstObject *object1, *object2, *object3, *object4;
   gboolean result;
@@ -461,24 +548,55 @@ GST_START_TEST (test_fake_object_has_ancestor)
 
   /* try to set other object as parent */
   result = gst_object_set_parent (object1, object3);
-  fail_if (result == FALSE,
-      "GstFakeObject could not accept other object as parent");
+  fail_unless (result, "GstFakeObject could not accept other object as parent");
   result = gst_object_set_parent (object2, object3);
-  fail_if (result == FALSE,
-      "GstFakeObject could not accept other object as parent");
+  fail_unless (result, "GstFakeObject could not accept other object as parent");
   result = gst_object_set_parent (object3, object4);
-  fail_if (result == FALSE,
-      "GstFakeObject could not accept other object as parent");
+  fail_unless (result, "GstFakeObject could not accept other object as parent");
 
-  fail_unless (gst_object_has_ancestor (object1, object1));
-  fail_if (gst_object_has_ancestor (object1, object2));
-  fail_unless (gst_object_has_ancestor (object1, object3));
-  fail_unless (gst_object_has_ancestor (object1, object4));
-  fail_if (gst_object_has_ancestor (object3, object1));
-  fail_if (gst_object_has_ancestor (object4, object1));
-  fail_unless (gst_object_has_ancestor (object3, object4));
-  fail_if (gst_object_has_ancestor (object4, object3));
-  fail_unless (gst_object_has_ancestor (object4, object4));
+  /* Hierarchy:
+   *  object4
+   *   `- object3
+   *       |- object2
+   *       `- object1
+   */
+
+  /* An object isn't its own parent, but it is its own ancestor */
+  fail_if (gst_object_has_as_parent (object1, object1));
+  fail_unless (gst_object_has_as_ancestor (object1, object1));
+
+  fail_if (gst_object_has_as_parent (object4, object4));
+  fail_unless (gst_object_has_as_ancestor (object4, object4));
+
+  /* direct parents */
+  fail_unless (gst_object_has_as_parent (object1, object3));
+  fail_unless (gst_object_has_as_ancestor (object1, object3));
+
+  fail_unless (gst_object_has_as_parent (object2, object3));
+  fail_unless (gst_object_has_as_ancestor (object2, object3));
+
+  fail_unless (gst_object_has_as_parent (object3, object4));
+  fail_unless (gst_object_has_as_ancestor (object3, object4));
+
+  /* grandparents */
+  fail_if (gst_object_has_as_parent (object1, object4));
+  fail_unless (gst_object_has_as_ancestor (object1, object4));
+
+  fail_if (gst_object_has_as_parent (object2, object4));
+  fail_unless (gst_object_has_as_ancestor (object2, object4));
+
+  /* not ancestors */
+  fail_if (gst_object_has_as_parent (object1, object2));
+  fail_if (gst_object_has_as_ancestor (object1, object2));
+
+  fail_if (gst_object_has_as_parent (object3, object1));
+  fail_if (gst_object_has_as_ancestor (object3, object1));
+
+  fail_if (gst_object_has_as_parent (object4, object1));
+  fail_if (gst_object_has_as_ancestor (object4, object1));
+
+  fail_if (gst_object_has_as_parent (object4, object3));
+  fail_if (gst_object_has_as_ancestor (object4, object3));
 
   /* unparent everything */
   gst_object_unparent (object3);
@@ -504,7 +622,11 @@ gst_object_suite (void)
 
   suite_add_tcase (s, tc_chain);
   tcase_add_test (tc_chain, test_fake_object_new);
-  tcase_add_test (tc_chain, test_fake_object_name);
+  tcase_add_test (tc_chain, test_fake_object_initial_name);
+  tcase_add_test (tc_chain, test_fake_object_reset_name);
+  tcase_add_test (tc_chain, test_fake_object_set_name_via_property);
+  tcase_add_test (tc_chain, test_fake_object_get_name_returns_copy);
+  tcase_add_test (tc_chain, test_fake_object_set_name_when_parented);
 #if 0
   tcase_add_test (tc_chain, test_fake_object_name_threaded_wrong);
 #endif
@@ -513,7 +635,7 @@ gst_object_suite (void)
   tcase_add_test (tc_chain, test_fake_object_parentage);
   tcase_add_test (tc_chain, test_fake_object_parentage_dispose);
 
-  tcase_add_test (tc_chain, test_fake_object_has_ancestor);
+  tcase_add_test (tc_chain, test_fake_object_has_as_ancestor);
   //tcase_add_checked_fixture (tc_chain, setup, teardown);
 
   return s;

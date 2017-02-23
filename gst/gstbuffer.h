@@ -94,6 +94,16 @@ typedef struct _GstBufferPool GstBufferPool;
  */
 #define GST_BUFFER_DTS(buf)                     (GST_BUFFER_CAST(buf)->dts)
 /**
+ * GST_BUFFER_DTS_OR_PTS:
+ * @buf: a #GstBuffer.:
+ *
+ * Returns the buffer decoding timestamp (dts) if valid, else the buffer
+ * presentation time (pts)
+ *
+ * Since: 1.8
+ */
+#define GST_BUFFER_DTS_OR_PTS(buf)              (GST_BUFFER_DTS_IS_VALID(buf) ? GST_BUFFER_DTS(buf) : GST_BUFFER_PTS (buf))
+/**
  * GST_BUFFER_DURATION:
  * @buf: a #GstBuffer.
  *
@@ -194,6 +204,9 @@ typedef struct _GstBufferPool GstBufferPool;
  * @GST_BUFFER_FLAG_DELTA_UNIT:  this unit cannot be decoded independently.
  * @GST_BUFFER_FLAG_TAG_MEMORY:  this flag is set when memory of the buffer
  *                               is added/removed
+ * @GST_BUFFER_FLAG_SYNC_AFTER:  Elements which write to disk or permanent
+ * 				 storage should ensure the data is synced after
+ * 				 writing the contents of this buffer. (Since 1.6)
  * @GST_BUFFER_FLAG_LAST:        additional media specific flags can be added starting from
  *                               this flag.
  *
@@ -211,6 +224,7 @@ typedef enum {
   GST_BUFFER_FLAG_DROPPABLE   = (GST_MINI_OBJECT_FLAG_LAST << 8),
   GST_BUFFER_FLAG_DELTA_UNIT  = (GST_MINI_OBJECT_FLAG_LAST << 9),
   GST_BUFFER_FLAG_TAG_MEMORY  = (GST_MINI_OBJECT_FLAG_LAST << 10),
+  GST_BUFFER_FLAG_SYNC_AFTER  = (GST_MINI_OBJECT_FLAG_LAST << 11),
 
   GST_BUFFER_FLAG_LAST        = (GST_MINI_OBJECT_FLAG_LAST << 16)
 } GstBufferFlags;
@@ -318,6 +332,13 @@ void        gst_buffer_extract_dup         (GstBuffer *buffer, gsize offset,
                                             gsize size, gpointer *dest,
                                             gsize *dest_size);
 
+GstBufferFlags gst_buffer_get_flags        (GstBuffer * buffer);
+gboolean       gst_buffer_has_flags        (GstBuffer * buffer, GstBufferFlags flags);
+gboolean       gst_buffer_set_flags        (GstBuffer * buffer, GstBufferFlags flags);
+gboolean       gst_buffer_unset_flags      (GstBuffer * buffer, GstBufferFlags flags);
+
+
+
 /* refcounting */
 /**
  * gst_buffer_ref:
@@ -333,10 +354,6 @@ void        gst_buffer_extract_dup         (GstBuffer *buffer, gsize offset,
  *
  * Returns: (transfer full): @buf
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstBuffer * gst_buffer_ref (GstBuffer * buf);
-#endif
-
 static inline GstBuffer *
 gst_buffer_ref (GstBuffer * buf)
 {
@@ -350,10 +367,6 @@ gst_buffer_ref (GstBuffer * buf)
  * Decreases the refcount of the buffer. If the refcount reaches 0, the buffer
  * with the associated metadata and memory will be freed.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC void gst_buffer_unref (GstBuffer * buf);
-#endif
-
 static inline void
 gst_buffer_unref (GstBuffer * buf)
 {
@@ -365,21 +378,21 @@ gst_buffer_unref (GstBuffer * buf)
  * gst_buffer_copy:
  * @buf: a #GstBuffer.
  *
- * Create a copy of the given buffer. This will also make a newly allocated
- * copy of the data the source buffer contains.
+ * Create a copy of the given buffer. This will only copy the buffer's
+ * data to a newly allocated memory if needed (if the type of memory
+ * requires it), otherwise the underlying data is just referenced.
+ * Check gst_buffer_copy_deep() if you want to force the data
+ * to be copied to newly allocated memory.
  *
  * Returns: (transfer full): a new copy of @buf.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC GstBuffer * gst_buffer_copy (const GstBuffer * buf);
-#endif
-
 static inline GstBuffer *
 gst_buffer_copy (const GstBuffer * buf)
 {
   return GST_BUFFER (gst_mini_object_copy (GST_MINI_OBJECT_CONST_CAST (buf)));
 }
 
+GstBuffer * gst_buffer_copy_deep (const GstBuffer * buf);
 
 /**
  * GstBufferCopyFlags:
@@ -446,9 +459,24 @@ gboolean        gst_buffer_copy_into            (GstBuffer *dest, GstBuffer *src
  * gst_buffer_make_writable:
  * @buf: (transfer full): a #GstBuffer
  *
- * Makes a writable buffer from the given buffer. If the source buffer is
- * already writable, this will simply return the same buffer. A copy will
- * otherwise be made using gst_buffer_copy().
+ * Returns a writable copy of @buf. If the source buffer is
+ * already writable, this will simply return the same buffer.
+ *
+ * Use this function to ensure that a buffer can be safely modified before
+ * making changes to it, including changing the metadata such as PTS/DTS.
+ *
+ * If the reference count of the source buffer @buf is exactly one, the caller
+ * is the sole owner and this function will return the buffer object unchanged.
+ *
+ * If there is more than one reference on the object, a copy will be made using
+ * gst_buffer_copy(). The passed-in @buf will be unreffed in that case, and the
+ * caller will now own a reference to the new returned buffer object. Note
+ * that this just copies the buffer structure itself, the underlying memory is
+ * not copied if it can be shared amongst multiple buffers.
+ *
+ * In short, this function unrefs the buf in the argument and refs the buffer
+ * that it returns. Don't access the argument after calling this function unless
+ * you have an additional reference to it.
  *
  * Returns: (transfer full): a writable buffer which may or may not be the
  *     same as @buf
@@ -471,10 +499,6 @@ gboolean        gst_buffer_copy_into            (GstBuffer *dest, GstBuffer *src
  *
  * Returns: %TRUE when @obuf was different from @nbuf.
  */
-#ifdef _FOOL_GTK_DOC_
-G_INLINE_FUNC gboolean gst_buffer_replace (GstBuffer **obuf, GstBuffer *nbuf);
-#endif
-
 static inline gboolean
 gst_buffer_replace (GstBuffer **obuf, GstBuffer *nbuf)
 {
@@ -552,6 +576,63 @@ gboolean        gst_buffer_foreach_meta         (GstBuffer *buffer,
  * Returns: (transfer none): buffer
  */
 #define         gst_value_get_buffer(v)         GST_BUFFER_CAST (g_value_get_boxed(v))
+
+typedef struct _GstParentBufferMeta GstParentBufferMeta;
+
+/**
+ * GstParentBufferMeta:
+ * @parent: the parent #GstMeta structure
+ * @buffer: the #GstBuffer on which a reference is being held.
+ *
+ * The #GstParentBufferMeta is a #GstMeta which can be attached to a #GstBuffer
+ * to hold a reference to another buffer that is only released when the child
+ * #GstBuffer is released.
+ *
+ * Typically, #GstParentBufferMeta is used when the child buffer is directly
+ * using the #GstMemory of the parent buffer, and wants to prevent the parent
+ * buffer from being returned to a buffer pool until the #GstMemory is available
+ * for re-use.
+ *
+ * Since: 1.6
+ */
+struct _GstParentBufferMeta
+{
+  GstMeta parent;
+
+  /*< public >*/
+  GstBuffer *buffer;
+};
+
+GType gst_parent_buffer_meta_api_get_type (void);
+#ifndef GST_DISABLE_DEPRECATED
+#define GST_TYPE_PARENT_BUFFER_META_API_TYPE GST_PARENT_BUFFER_META_API_TYPE
+#endif
+#define GST_PARENT_BUFFER_META_API_TYPE (gst_parent_buffer_meta_api_get_type())
+
+/**
+ * gst_buffer_get_parent_buffer_meta:
+ * @b: a #GstBuffer
+ *
+ * Find and return a #GstParentBufferMeta if one exists on the
+ * buffer
+ */
+#define gst_buffer_get_parent_buffer_meta(b) \
+  ((GstParentBufferMeta*)gst_buffer_get_meta((b),GST_PARENT_BUFFER_META_API_TYPE))
+
+const GstMetaInfo *gst_parent_buffer_meta_get_info (void);
+#define GST_PARENT_BUFFER_META_INFO (gst_parent_buffer_meta_get_info())
+
+/* implementation */
+GstParentBufferMeta *gst_buffer_add_parent_buffer_meta (GstBuffer *buffer,
+    GstBuffer *ref);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstBuffer, gst_buffer_unref)
+#endif
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstBufferPool, gst_object_unref)
+#endif
 
 G_END_DECLS
 

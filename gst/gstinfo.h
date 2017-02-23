@@ -59,10 +59,10 @@ G_BEGIN_DECLS
  *  An example would be notifications about state changes or receiving/sending
  *  of events.
  * @GST_LEVEL_LOG: Log messages are messages that are very common but might be
- *  useful to know. As a rule of thumb a pipeline that is iterating as expected
- *  should never output anything else but LOG messages. Use this log level to
- *  log recurring information in chain functions and loop functions, for
- *  example.
+ *  useful to know. As a rule of thumb a pipeline that is running as expected
+ *  should never output anything else but LOG messages whilst processing data.
+ *  Use this log level to log recurring information in chain functions and
+ *  loop functions, for example.
  * @GST_LEVEL_TRACE: Tracing-related messages.
  *  Examples for this are referencing/dereferencing of objects.
  * @GST_LEVEL_MEMDUMP: memory dump messages are used to log (small) chunks of
@@ -100,6 +100,22 @@ typedef enum {
  */
 #ifndef GST_LEVEL_DEFAULT
 #define GST_LEVEL_DEFAULT GST_LEVEL_NONE
+#endif
+
+/**
+ * GST_LEVEL_MAX:
+ *
+ * Defines the maximum debugging level to be enabled at compilation time. By default
+ * it is set such that all debugging statements will be enabled.
+ *
+ * If you wish to compile GStreamer and plugins with only some debugging statements
+ * (Such as just warnings and errors), you can define it at compile time to the
+ * maximum debug level. Any debug statements above that level will be compiled out.
+ *
+ * Since: 1.6
+ */
+#ifndef GST_LEVEL_MAX
+#define GST_LEVEL_MAX GST_LEVEL_COUNT
 #endif
 
 /* defines for format (colors etc)
@@ -234,10 +250,10 @@ struct _GstDebugCategory {
  * function signature in C++ code.
  */
 #ifndef GST_FUNCTION
-#if defined (__GNUC__) || (defined (_MSC_VER) && _MSC_VER >= 1300)
-#  define GST_FUNCTION     ((const char*) (__FUNCTION__))
-#elif defined (__STDC__) && defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+#if defined (__STDC__) && defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #  define GST_FUNCTION     ((const char*) (__func__))
+#elif defined (__GNUC__) || (defined (_MSC_VER) && _MSC_VER >= 1300)
+#  define GST_FUNCTION     ((const char*) (__FUNCTION__))
 #else
 #  define GST_FUNCTION     ((const char*) ("???"))
 #endif
@@ -246,7 +262,15 @@ struct _GstDebugCategory {
 /**
  * GST_PTR_FORMAT:
  *
- * printf format type used to debug GStreamer types.
+ * printf format type used to debug GStreamer types. You can use this in
+ * combination with GStreamer's debug logging system as well as the functions
+ * gst_info_vasprintf(), gst_info_strdup_vprintf() and gst_info_strdup_printf()
+ * to pretty-print the following types: #GstCaps, #GstStructure,
+ * #GstCapsFeatures, #GstTagList, #GstDateTime, #GstBuffer, #GstBufferList,
+ * #GstMessage, #GstEvent, #GstQuery, #GstContext, #GstPad, #GstObject. All
+ * #GObject types will be printed as typename plus pointer, and everything
+ * else will simply be printed as pointer address.
+ *
  * This can only be used on types whose size is >= sizeof(gpointer).
  */
 #define GST_PTR_FORMAT     "p\aA"
@@ -254,7 +278,10 @@ struct _GstDebugCategory {
 /**
  * GST_SEGMENT_FORMAT:
  *
- * printf format type used to debug GStreamer segments.
+ * printf format type used to debug GStreamer segments. You can use this in
+ * combination with GStreamer's debug logging system as well as the functions
+ * gst_info_vasprintf(), gst_info_strdup_vprintf() and gst_info_strdup_printf()
+ * to pretty-print #GstSegment structures.
  * This can only be used on pointers to GstSegment structures.
  */
 #define GST_SEGMENT_FORMAT "p\aB"
@@ -338,7 +365,7 @@ void            gst_debug_log_default    (GstDebugCategory * category,
                                           gint               line,
                                           GObject          * object,
                                           GstDebugMessage  * message,
-                                          gpointer           unused) G_GNUC_NO_INSTRUMENT;
+                                          gpointer           user_data) G_GNUC_NO_INSTRUMENT;
 
 const gchar *   gst_debug_level_get_name (GstDebugLevel level);
 
@@ -380,21 +407,28 @@ GSList *        gst_debug_get_all_categories	(void);
 gchar * gst_debug_construct_term_color (guint colorinfo);
 gint    gst_debug_construct_win_color  (guint colorinfo);
 
+gint    gst_info_vasprintf              (gchar ** result,
+                                         const gchar * format,
+                                         va_list args) G_GNUC_PRINTF (2, 0);
+gchar * gst_info_strdup_vprintf         (const gchar *format, va_list args) G_GNUC_PRINTF (1, 0);
+gchar * gst_info_strdup_printf          (const gchar *format, ...) G_GNUC_PRINTF (1, 2);
 
 #ifndef GST_DISABLE_GST_DEBUG
 
+/* cast to void * avoids a warning with gcc 6
+ * see https://bugzilla.gnome.org/show_bug.cgi?id=764526 */
 #define gst_debug_add_log_function(func,data,notify) \
 G_STMT_START{                                        \
-  if (func == gst_debug_log_default) {               \
+  if ((func) == (void *) gst_debug_log_default) {    \
     gst_debug_add_log_function(NULL,data,notify);    \
   } else {                                           \
     gst_debug_add_log_function(func,data,notify);    \
   }                                                  \
 }G_STMT_END
 
-#define gst_debug_remove_log_function(func)   \
-    (func == gst_debug_log_default) ?         \
-        gst_debug_remove_log_function(NULL) : \
+#define gst_debug_remove_log_function(func)          \
+    ((func) == (void *) gst_debug_log_default) ?     \
+        gst_debug_remove_log_function(NULL) :        \
         gst_debug_remove_log_function(func)
 
 /**
@@ -472,7 +506,7 @@ G_STMT_START{                                        \
  * category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
  * @cat. Otherwise @cat will be %NULL.
  *
- * |[
+ * |[<!-- language="C" -->
  * GST_DEBUG_CATEGORY_STATIC (gst_myplugin_debug);
  * #define GST_CAT_DEFAULT gst_myplugin_debug
  * GST_DEBUG_CATEGORY_STATIC (GST_CAT_PERFORMANCE);
@@ -520,7 +554,7 @@ GST_EXPORT GstDebugLevel            _gst_debug_min;
  */
 #ifdef G_HAVE_ISO_VARARGS
 #define GST_CAT_LEVEL_LOG(cat,level,object,...) G_STMT_START{		\
-  if (G_UNLIKELY (level <= _gst_debug_min)) {						\
+  if (G_UNLIKELY ((level) <= GST_LEVEL_MAX && (level) <= _gst_debug_min)) {						\
     gst_debug_log ((cat), (level), __FILE__, GST_FUNCTION, __LINE__,	\
         (GObject *) (object), __VA_ARGS__);				\
   }									\
@@ -528,7 +562,7 @@ GST_EXPORT GstDebugLevel            _gst_debug_min;
 #else /* G_HAVE_GNUC_VARARGS */
 #ifdef G_HAVE_GNUC_VARARGS
 #define GST_CAT_LEVEL_LOG(cat,level,object,args...) G_STMT_START{	\
-  if (G_UNLIKELY (level <= _gst_debug_min)) {						\
+  if (G_UNLIKELY ((level) <= GST_LEVEL_MAX && (level) <= _gst_debug_min)) {						\
     gst_debug_log ((cat), (level), __FILE__, GST_FUNCTION, __LINE__,	\
         (GObject *) (object), ##args );					\
   }									\
@@ -538,7 +572,7 @@ static inline void
 GST_CAT_LEVEL_LOG_valist (GstDebugCategory * cat,
     GstDebugLevel level, gpointer object, const char *format, va_list varargs)
 {
-  if (G_UNLIKELY (level <= _gst_debug_min)) {
+  if (G_UNLIKELY ((level) <= GST_LEVEL_MAX && (level) <= _gst_debug_min)) {
     gst_debug_log_valist (cat, level, "", "", 0, (GObject *) object, format,
         varargs);
   }
@@ -561,7 +595,8 @@ GST_CAT_LEVEL_LOG (GstDebugCategory * cat, GstDebugLevel level,
  * other macros and hence in a separate block right here. Docs chunks are
  * with the other doc chunks below though. */
 #define __GST_CAT_MEMDUMP_LOG(cat,object,msg,data,length) G_STMT_START{       \
-  if (G_UNLIKELY (GST_LEVEL_MEMDUMP <= _gst_debug_min)) {                    \
+    if (G_UNLIKELY (GST_LEVEL_MEMDUMP <= GST_LEVEL_MAX &&		      \
+		    GST_LEVEL_MEMDUMP <= _gst_debug_min)) {		      \
     _gst_debug_dump_mem ((cat), __FILE__, GST_FUNCTION, __LINE__,             \
         (GObject *) (object), (msg), (data), (length));                       \
   }                                                                           \

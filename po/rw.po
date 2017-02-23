@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.8.8\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2014-11-06 12:20+0100\n"
+"POT-Creation-Date: 2017-02-23 15:12+0200\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -599,6 +599,12 @@ msgstr ""
 msgid "person(s) who composed the recording"
 msgstr "S Nshingwabikorwa kugirango i"
 
+msgid "conductor"
+msgstr ""
+
+msgid "conductor/performer refinement"
+msgstr ""
+
 # officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....AgendaType.Duration.text
 #, fuzzy
 msgid "duration"
@@ -984,6 +990,12 @@ msgstr ""
 msgid "Midi note number of the audio track."
 msgstr ""
 
+msgid "private-data"
+msgstr ""
+
+msgid "Private data"
+msgstr ""
+
 msgid ", "
 msgstr ", "
 
@@ -1021,6 +1033,9 @@ msgstr "Oya indangakintu in Ikigize:"
 msgid "could not set property \"%s\" in element \"%s\" to \"%s\""
 msgstr "OYA Gushyiraho indangakintu in Ikigize: Kuri"
 
+msgid "Delayed linking failed."
+msgstr ""
+
 #, fuzzy, c-format
 msgid "could not link %s to %s"
 msgstr "OYA Ihuza Kuri"
@@ -1052,9 +1067,6 @@ msgstr "Oya Inkomoko Ikigize: kugirango"
 msgid "syntax error"
 msgstr ""
 
-msgid "bin"
-msgstr ""
-
 #, fuzzy, c-format
 msgid "specified empty bin \"%s\", not allowed"
 msgstr "ubusa OYA"
@@ -1073,9 +1085,6 @@ msgstr ""
 msgid "Internal data flow problem."
 msgstr ""
 
-msgid "Internal data stream error."
-msgstr ""
-
 msgid "Internal data flow error."
 msgstr ""
 
@@ -1091,6 +1100,12 @@ msgstr ""
 msgid ""
 "Restrict the possible allowed capabilities (NULL means ANY). Setting this "
 "property takes a reference to the supplied GstCaps object."
+msgstr ""
+
+msgid "Caps Change Mode"
+msgstr ""
+
+msgid "Filter caps change behaviour"
 msgstr ""
 
 msgid "No Temp directory specified."
@@ -1174,6 +1189,10 @@ msgid "force caps without doing a typefind"
 msgstr ""
 
 #, fuzzy
+msgid "Stream doesn't contain enough data."
+msgstr "iyi Ibyatanzwe"
+
+#, fuzzy
 msgid "Stream contains no data."
 msgstr "iyi Ibyatanzwe"
 
@@ -1186,6 +1205,9 @@ msgstr ""
 #, fuzzy
 msgid "writable"
 msgstr "umutwe"
+
+msgid "deprecated"
+msgstr ""
 
 msgid "controllable"
 msgstr ""
@@ -1380,11 +1402,12 @@ msgstr "OYA Ibisohoka Imimerere Ibisobanuro Bya"
 msgid "Output messages"
 msgstr ""
 
-#, fuzzy
-msgid "Do not output status information of TYPE"
-msgstr "OYA Ibisohoka Imimerere Ibisobanuro Bya"
+msgid ""
+"Do not output status information for the specified property if verbose "
+"output is enabled (can be used multiple times)"
+msgstr ""
 
-msgid "TYPE1,TYPE2,..."
+msgid "PROPERTY-NAME"
 msgstr ""
 
 #, fuzzy
@@ -1469,6 +1492,10 @@ msgstr ""
 
 msgid "Freeing pipeline ...\n"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Do not output status information of TYPE"
+#~ msgstr "OYA Ibisohoka Imimerere Ibisobanuro Bya"
 
 #, fuzzy
 #~ msgid "link without source element"

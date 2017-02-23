@@ -25,7 +25,7 @@
 /**
  * SECTION:gstinfo
  * @short_description: Debugging and logging facilities
- * @see_also: #gstreamer-gstconfig, #gstreamer-Gst for command line parameters
+ * @see_also: #gst-running for command line parameters
  * and environment variables that affect the debugging output.
  *
  * GStreamer's debugging subsystem is an easy way to get information about what
@@ -50,12 +50,12 @@
  * categories. This is easily done with 3 lines. At the top of your code,
  * declare
  * the variables and set the default category.
- * |[
+ * |[<!-- language="C" -->
  *   GST_DEBUG_CATEGORY_STATIC (my_category);  // define category (statically)
  *   #define GST_CAT_DEFAULT my_category       // set as default
  * ]|
  * After that you only need to initialize the category.
- * |[
+ * |[<!-- language="C" -->
  *   GST_DEBUG_CATEGORY_INIT (my_category, "my category",
  *                            0, "This is my very own");
  * ]|
@@ -176,6 +176,7 @@ GstDebugCategory *_priv_GST_CAT_POLL = NULL;
 GstDebugCategory *GST_CAT_META = NULL;
 GstDebugCategory *GST_CAT_LOCKING = NULL;
 GstDebugCategory *GST_CAT_CONTEXT = NULL;
+GstDebugCategory *_priv_GST_CAT_PROTECTION = NULL;
 
 
 #endif /* !defined(GST_DISABLE_GST_DEBUG) || !defined(GST_REMOVE_DISABLED) */
@@ -184,12 +185,6 @@ GstDebugCategory *GST_CAT_CONTEXT = NULL;
 
 /* underscore is to prevent conflict with GST_CAT_DEBUG define */
 GST_DEBUG_CATEGORY_STATIC (_GST_CAT_DEBUG);
-
-/* time of initialization, so we get useful debugging output times
- * FIXME: we use this in gstdebugutils.c, what about a function + macro to
- * get the running time: GST_DEBUG_RUNNING_TIME
- */
-GstClockTime _priv_gst_info_start_time;
 
 #if 0
 #if defined __sgi__
@@ -258,13 +253,14 @@ LogFuncEntry;
 static GMutex __log_func_mutex;
 static GSList *__log_functions = NULL;
 
+/* whether to add the default log function in gst_init() */
+static gboolean add_default_log_func = TRUE;
+
 #define PRETTY_TAGS_DEFAULT  TRUE
 static gboolean pretty_tags = PRETTY_TAGS_DEFAULT;
 
 static volatile gint G_GNUC_MAY_ALIAS __default_level = GST_LEVEL_DEFAULT;
 static volatile gint G_GNUC_MAY_ALIAS __use_color = GST_DEBUG_COLOR_MODE_ON;
-
-static FILE *log_file;
 
 /* FIXME: export this? */
 gboolean
@@ -282,9 +278,6 @@ _priv_gst_in_valgrind (void)
 #ifdef HAVE_VALGRIND_VALGRIND_H
     if (RUNNING_ON_VALGRIND) {
       GST_CAT_INFO (GST_CAT_GST_INIT, "we're running inside valgrind");
-      printf ("GStreamer has detected that it is running inside valgrind.\n");
-      printf ("It might now take different code paths to ease debugging.\n");
-      printf ("Of course, this may also lead to different bugs.\n");
       in_valgrind = GST_VG_INSIDE;
     } else {
       GST_CAT_LOG (GST_CAT_GST_INIT, "not doing extra valgrind stuff");
@@ -304,25 +297,27 @@ void
 _priv_gst_debug_init (void)
 {
   const gchar *env;
+  FILE *log_file;
 
-  env = g_getenv ("GST_DEBUG_FILE");
-  if (env != NULL && *env != '\0') {
-    if (strcmp (env, "-") == 0) {
-      log_file = stdout;
-    } else {
-      log_file = g_fopen (env, "w");
-      if (log_file == NULL) {
-        g_printerr ("Could not open log file '%s' for writing: %s\n", env,
-            g_strerror (errno));
-        log_file = stderr;
+  if (add_default_log_func) {
+    env = g_getenv ("GST_DEBUG_FILE");
+    if (env != NULL && *env != '\0') {
+      if (strcmp (env, "-") == 0) {
+        log_file = stdout;
+      } else {
+        log_file = g_fopen (env, "w");
+        if (log_file == NULL) {
+          g_printerr ("Could not open log file '%s' for writing: %s\n", env,
+              g_strerror (errno));
+          log_file = stderr;
+        }
       }
+    } else {
+      log_file = stderr;
     }
-  } else {
-    log_file = stderr;
-  }
 
-  /* get time we started for debugging messages */
-  _priv_gst_info_start_time = gst_util_get_timestamp ();
+    gst_debug_add_log_function (gst_debug_log_default, log_file, NULL);
+  }
 
   __gst_printf_pointer_extension_set_func
       (gst_info_printf_pointer_extension_func);
@@ -332,8 +327,6 @@ _priv_gst_debug_init (void)
       GST_DEBUG_UNDERLINE, NULL);
   _GST_CAT_DEBUG = _gst_debug_category_new ("GST_DEBUG",
       GST_DEBUG_BOLD | GST_DEBUG_FG_YELLOW, "debugging subsystem");
-
-  gst_debug_add_log_function (gst_debug_log_default, NULL, NULL);
 
   /* FIXME: add descriptions here */
   GST_CAT_GST_INIT = _gst_debug_category_new ("GST_INIT",
@@ -394,6 +387,8 @@ _priv_gst_debug_init (void)
   GST_CAT_META = _gst_debug_category_new ("GST_META", 0, "meta");
   GST_CAT_LOCKING = _gst_debug_category_new ("GST_LOCKING", 0, "locking");
   GST_CAT_CONTEXT = _gst_debug_category_new ("GST_CONTEXT", 0, NULL);
+  _priv_GST_CAT_PROTECTION =
+      _gst_debug_category_new ("GST_PROTECTION", 0, "protection");
 
   /* print out the valgrind message if we're in valgrind */
   _priv_gst_in_valgrind ();
@@ -448,7 +443,6 @@ gst_debug_log (GstDebugCategory * category, GstDebugLevel level,
   va_end (var_args);
 }
 
-#ifdef G_OS_WIN32
 /* based on g_basename(), which we can't use because it was deprecated */
 static inline const gchar *
 gst_path_basename (const gchar * file_name)
@@ -471,7 +465,6 @@ gst_path_basename (const gchar * file_name)
 
   return file_name;
 }
-#endif
 
 /**
  * gst_debug_log_valist:
@@ -497,16 +490,13 @@ gst_debug_log_valist (GstDebugCategory * category, GstDebugLevel level,
   GSList *handler;
 
   g_return_if_fail (category != NULL);
+
+  if (level > gst_debug_category_get_threshold (category))
+    return;
+
   g_return_if_fail (file != NULL);
   g_return_if_fail (function != NULL);
   g_return_if_fail (format != NULL);
-
-  /* The predefined macro __FILE__ is always the exact path given to the
-   * compiler with MSVC, which may or may not be the basename.  We work
-   * around it at runtime to improve the readability. */
-#ifdef G_OS_WIN32
-  file = gst_path_basename (file);
-#endif
 
   message.message = NULL;
   message.format = format;
@@ -585,7 +575,7 @@ static inline gchar *
 gst_info_structure_to_string (const GstStructure * s)
 {
   if (G_LIKELY (s)) {
-    gchar *str = gst_structure_to_string (s);;
+    gchar *str = gst_structure_to_string (s);
     if (G_UNLIKELY (pretty_tags && s->name == GST_QUARK (TAGLIST)))
       return prettify_structure_string (str);
     else
@@ -597,14 +587,54 @@ gst_info_structure_to_string (const GstStructure * s)
 static inline gchar *
 gst_info_describe_buffer (GstBuffer * buffer)
 {
+  const gchar *offset_str = "none";
+  const gchar *offset_end_str = "none";
+  gchar offset_buf[32], offset_end_buf[32];
+
+  if (GST_BUFFER_OFFSET_IS_VALID (buffer)) {
+    g_snprintf (offset_buf, sizeof (offset_buf), "%" G_GUINT64_FORMAT,
+        GST_BUFFER_OFFSET (buffer));
+    offset_str = offset_buf;
+  }
+  if (GST_BUFFER_OFFSET_END_IS_VALID (buffer)) {
+    g_snprintf (offset_end_buf, sizeof (offset_end_buf), "%" G_GUINT64_FORMAT,
+        GST_BUFFER_OFFSET_END (buffer));
+    offset_end_str = offset_end_buf;
+  }
+
   return g_strdup_printf ("buffer: %p, pts %" GST_TIME_FORMAT ", dts %"
       GST_TIME_FORMAT ", dur %" GST_TIME_FORMAT ", size %" G_GSIZE_FORMAT
-      ", offset %" G_GUINT64_FORMAT ", offset_end %" G_GUINT64_FORMAT
-      ", flags 0x%x", buffer, GST_TIME_ARGS (GST_BUFFER_PTS (buffer)),
+      ", offset %s, offset_end %s, flags 0x%x", buffer,
+      GST_TIME_ARGS (GST_BUFFER_PTS (buffer)),
       GST_TIME_ARGS (GST_BUFFER_DTS (buffer)),
       GST_TIME_ARGS (GST_BUFFER_DURATION (buffer)),
-      gst_buffer_get_size (buffer), GST_BUFFER_OFFSET (buffer),
-      GST_BUFFER_OFFSET_END (buffer), GST_BUFFER_FLAGS (buffer));
+      gst_buffer_get_size (buffer), offset_str, offset_end_str,
+      GST_BUFFER_FLAGS (buffer));
+}
+
+static inline gchar *
+gst_info_describe_buffer_list (GstBufferList * list)
+{
+  GstClockTime pts = GST_CLOCK_TIME_NONE;
+  GstClockTime dts = GST_CLOCK_TIME_NONE;
+  gsize total_size = 0;
+  guint n, i;
+
+  n = gst_buffer_list_length (list);
+  for (i = 0; i < n; ++i) {
+    GstBuffer *buf = gst_buffer_list_get (list, i);
+
+    if (i == 0) {
+      pts = GST_BUFFER_PTS (buf);
+      dts = GST_BUFFER_DTS (buf);
+    }
+
+    total_size += gst_buffer_get_size (buf);
+  }
+
+  return g_strdup_printf ("bufferlist: %p, %u buffers, pts %" GST_TIME_FORMAT
+      ", dts %" GST_TIME_FORMAT ", size %" G_GSIZE_FORMAT, list, n,
+      GST_TIME_ARGS (pts), GST_TIME_ARGS (dts), total_size);
 }
 
 static inline gchar *
@@ -692,6 +722,9 @@ gst_debug_print_object (gpointer ptr)
   }
   if (GST_IS_BUFFER (ptr)) {
     return gst_info_describe_buffer (GST_BUFFER_CAST (ptr));
+  }
+  if (GST_IS_BUFFER_LIST (ptr)) {
+    return gst_info_describe_buffer_list (GST_BUFFER_LIST_CAST (ptr));
   }
 #ifdef USE_POISONING
   if (*(guint32 *) ptr == 0xffffffff) {
@@ -790,6 +823,9 @@ gst_info_printf_pointer_extension_func (const char *format, void *ptr)
         break;
       case 'B':                /* GST_SEGMENT_FORMAT */
         s = gst_debug_print_segment (ptr);
+        break;
+      case 'a':                /* GST_WRAPPED_PTR_FORMAT */
+        s = priv_gst_string_take_and_wrap (gst_debug_print_object (ptr));
         break;
       default:
         /* must have been compiled against a newer version with an extension
@@ -962,12 +998,13 @@ static const gchar *levelcolormap[GST_LEVEL_COUNT] = {
  * @message: the actual message
  * @object: (transfer none) (allow-none): the object this message relates to,
  *     or %NULL if none
- * @unused: an unused variable, reserved for some user_data.
+ * @user_data: the FILE* to log to
  *
  * The default logging handler used by GStreamer. Logging functions get called
- * whenever a macro like GST_DEBUG or similar is used. This function outputs the
- * message and additional info to stderr (or the log file specified via the
- * GST_DEBUG_FILE environment variable).
+ * whenever a macro like GST_DEBUG or similar is used. By default this function
+ * is setup to output the message and additional info to stderr (or the log file
+ * specified via the GST_DEBUG_FILE environment variable) as received via
+ * @user_data.
  *
  * You can add other handlers by using gst_debug_add_log_function().
  * And you can remove this handler by calling
@@ -976,15 +1013,23 @@ static const gchar *levelcolormap[GST_LEVEL_COUNT] = {
 void
 gst_debug_log_default (GstDebugCategory * category, GstDebugLevel level,
     const gchar * file, const gchar * function, gint line,
-    GObject * object, GstDebugMessage * message, gpointer unused)
+    GObject * object, GstDebugMessage * message, gpointer user_data)
 {
   gint pid;
   GstClockTime elapsed;
   gchar *obj = NULL;
   GstDebugColorMode color_mode;
+  FILE *log_file = user_data ? user_data : stderr;
+  gchar c;
 
-  if (level > gst_debug_category_get_threshold (category))
-    return;
+  /* __FILE__ might be a file name or an absolute path or a
+   * relative path, irrespective of the exact compiler used,
+   * in which case we want to shorten it to the filename for
+   * readability. */
+  c = file[0];
+  if (c == '.' || c == '/' || c == '\\' || (c != '\0' && file[1] == ':')) {
+    file = gst_path_basename (file);
+  }
 
   pid = getpid ();
   color_mode = gst_debug_get_color_mode ();
@@ -992,11 +1037,10 @@ gst_debug_log_default (GstDebugCategory * category, GstDebugLevel level,
   if (object) {
     obj = gst_debug_print_object (object);
   } else {
-    obj = g_strdup ("");
+    obj = (gchar *) "";
   }
 
-  elapsed = GST_CLOCK_DIFF (_priv_gst_info_start_time,
-      gst_util_get_timestamp ());
+  elapsed = GST_CLOCK_DIFF (_priv_gst_start_time, gst_util_get_timestamp ());
 
   if (color_mode != GST_DEBUG_COLOR_MODE_OFF) {
 #ifdef G_OS_WIN32
@@ -1075,7 +1119,8 @@ gst_debug_log_default (GstDebugCategory * category, GstDebugLevel level,
 #undef PRINT_FMT
   }
 
-  g_free (obj);
+  if (object != NULL)
+    g_free (obj);
 }
 
 /**
@@ -1208,7 +1253,8 @@ gst_debug_remove_with_compare_func (GCompareFunc func, gpointer data)
 
 /**
  * gst_debug_remove_log_function:
- * @func: (scope call): the log function to remove
+ * @func: (scope call) (allow-none): the log function to remove, or %NULL to
+ *     remove the default log function
  *
  * Removes all registered instances of the given logging functions.
  *
@@ -1225,9 +1271,18 @@ gst_debug_remove_log_function (GstLogFunction func)
   removals =
       gst_debug_remove_with_compare_func
       (gst_debug_compare_log_function_by_func, (gpointer) func);
-  if (gst_is_initialized ())
+
+  if (gst_is_initialized ()) {
     GST_DEBUG ("removed log function %p %d times from log function list", func,
         removals);
+  } else {
+    /* If the default log function is removed before gst_init() was called,
+     * set a flag so we don't add it in gst_init() later */
+    if (func == gst_debug_log_default) {
+      add_default_log_func = FALSE;
+      ++removals;
+    }
+  }
 
   return removals;
 }
@@ -1507,6 +1562,8 @@ gst_debug_unset_threshold_for_name (const gchar * name)
       g_slice_free (LevelNameEntry, entry);
       g_slist_free_1 (walk);
       walk = __level_name;
+    } else {
+      walk = g_slist_next (walk);
     }
   }
   g_mutex_unlock (&__level_name_mutex);
@@ -1801,7 +1858,7 @@ gst_debug_set_threshold_from_string (const gchar * list, gboolean reset)
 
   g_assert (list);
 
-  if (reset == TRUE)
+  if (reset)
     gst_debug_set_default_threshold (0);
 
   split = g_strsplit (list, ",", 0);
@@ -2203,6 +2260,91 @@ __gst_info_fallback_vasprintf (char **result, char const *format, va_list args)
   return len;
 }
 #endif
+
+/**
+ * gst_info_vasprintf:
+ * @result: (out): the resulting string
+ * @format: a printf style format string
+ * @args: the va_list of printf arguments for @format
+ *
+ * Allocates and fills a string large enough (including the terminating null
+ * byte) to hold the specified printf style @format and @args.
+ *
+ * This function deals with the GStreamer specific printf specifiers
+ * #GST_PTR_FORMAT and #GST_SEGMENT_FORMAT.  If you do not have these specifiers
+ * in your @format string, you do not need to use this function and can use
+ * alternatives such as g_vasprintf().
+ *
+ * Free @result with g_free().
+ *
+ * Returns: the length of the string allocated into @result or -1 on any error
+ *
+ * Since: 1.8
+ */
+gint
+gst_info_vasprintf (gchar ** result, const gchar * format, va_list args)
+{
+  /* This will fallback to __gst_info_fallback_vasprintf() via a #define in
+   * gst_private.h if the debug system is disabled which will remove the gst
+   * specific printf format specifiers */
+  return __gst_vasprintf (result, format, args);
+}
+
+/**
+ * gst_info_strdup_vprintf:
+ * @format: a printf style format string
+ * @args: the va_list of printf arguments for @format
+ *
+ * Allocates, fills and returns a null terminated string from the printf style
+ * @format string and @args.
+ *
+ * See gst_info_vasprintf() for when this function is required.
+ *
+ * Free with g_free().
+ *
+ * Returns: a newly allocated null terminated string or %NULL on any error
+ *
+ * Since: 1.8
+ */
+gchar *
+gst_info_strdup_vprintf (const gchar * format, va_list args)
+{
+  gchar *ret;
+
+  if (gst_info_vasprintf (&ret, format, args) < 0)
+    ret = NULL;
+
+  return ret;
+}
+
+/**
+ * gst_info_strdup_printf:
+ * @format: a printf style format string
+ * @...: the printf arguments for @format
+ *
+ * Allocates, fills and returns a null terminated string from the printf style
+ * @format string and corresponding arguments.
+ *
+ * See gst_info_vasprintf() for when this function is required.
+ *
+ * Free with g_free().
+ *
+ * Returns: a newly allocated null terminated string or %NULL on any error
+ *
+ * Since: 1.8
+ */
+gchar *
+gst_info_strdup_printf (const gchar * format, ...)
+{
+  gchar *ret;
+  va_list args;
+
+  va_start (args, format);
+  ret = gst_info_strdup_vprintf (format, args);
+  va_end (args);
+
+  return ret;
+}
 
 #ifdef GST_ENABLE_FUNC_INSTRUMENTATION
 /* FIXME make this thread specific */

@@ -25,7 +25,7 @@
 #  include "config.h"
 #endif
 
-/* FIXME 0.11: suppress warnings for deprecated API such as GValueArray
+/* FIXME 2.0: suppress warnings for deprecated API such as GValueArray
  * with newer GLib versions (>= 2.31.0) */
 #define GLIB_DISABLE_DEPRECATION_WARNINGS
 
@@ -245,9 +245,9 @@ flags_to_string (GFlagsValue * vals, guint flags)
 #define KNOWN_PARAM_FLAGS \
   (G_PARAM_CONSTRUCT | G_PARAM_CONSTRUCT_ONLY | \
   G_PARAM_LAX_VALIDATION |  G_PARAM_STATIC_STRINGS | \
-  G_PARAM_READABLE | G_PARAM_WRITABLE | GST_PARAM_CONTROLLABLE | \
-  GST_PARAM_MUTABLE_PLAYING | GST_PARAM_MUTABLE_PAUSED | \
-  GST_PARAM_MUTABLE_READY)
+  G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_DEPRECATED | \
+  GST_PARAM_CONTROLLABLE | GST_PARAM_MUTABLE_PLAYING | \
+  GST_PARAM_MUTABLE_PAUSED | GST_PARAM_MUTABLE_READY)
 
 static void
 print_element_properties_info (GstElement * element)
@@ -288,6 +288,10 @@ print_element_properties_info (GstElement * element)
     }
     if (param->flags & G_PARAM_WRITABLE) {
       g_print ("%s%s", (first_flag) ? "" : ", ", _("writable"));
+      first_flag = FALSE;
+    }
+    if (param->flags & G_PARAM_DEPRECATED) {
+      g_print ("%s%s", (first_flag) ? "" : ", ", _("deprecated"));
       first_flag = FALSE;
     }
     if (param->flags & GST_PARAM_CONTROLLABLE) {
@@ -537,7 +541,6 @@ print_element_properties_info (GstElement * element)
 static void
 print_pad_templates_info (GstElement * element, GstElementFactory * factory)
 {
-  GstElementClass *gstelement_class;
   const GList *pads;
   GstStaticPadTemplate *padtemplate;
 
@@ -546,8 +549,6 @@ print_pad_templates_info (GstElement * element, GstElementFactory * factory)
     n_print ("  none\n");
     return;
   }
-
-  gstelement_class = GST_ELEMENT_CLASS (G_OBJECT_GET_CLASS (element));
 
   pads = gst_element_factory_get_static_pad_templates (factory);
   while (pads) {
@@ -567,8 +568,6 @@ print_pad_templates_info (GstElement * element, GstElementFactory * factory)
       n_print ("    Availability: Sometimes\n");
     else if (padtemplate->presence == GST_PAD_REQUEST) {
       n_print ("    Availability: On request\n");
-      n_print ("      Has request_new_pad() function: %s\n",
-          GST_DEBUG_FUNCPTR_NAME (gstelement_class->request_new_pad));
     } else
       n_print ("    Availability: UNKNOWN!!!\n");
 
@@ -705,33 +704,13 @@ print_pad_info (GstElement * element)
 
     name = gst_pad_get_name (pad);
     if (gst_pad_get_direction (pad) == GST_PAD_SRC)
-      g_print ("  SRC: '%s'", name);
+      n_print ("  SRC: '%s'\n", name);
     else if (gst_pad_get_direction (pad) == GST_PAD_SINK)
-      g_print ("  SINK: '%s'", name);
+      n_print ("  SINK: '%s'\n", name);
     else
-      g_print ("  UNKNOWN!!!: '%s'", name);
+      n_print ("  UNKNOWN!!!: '%s'\n", name);
 
     g_free (name);
-
-    g_print ("\n");
-
-    n_print ("    Implementation:\n");
-    if (pad->chainfunc)
-      n_print ("      Has chainfunc(): %s\n",
-          GST_DEBUG_FUNCPTR_NAME (pad->chainfunc));
-    if (pad->getrangefunc)
-      n_print ("      Has getrangefunc(): %s\n",
-          GST_DEBUG_FUNCPTR_NAME (pad->getrangefunc));
-    if (pad->eventfunc != gst_pad_event_default)
-      n_print ("      Has custom eventfunc(): %s\n",
-          GST_DEBUG_FUNCPTR_NAME (pad->eventfunc));
-    if (pad->queryfunc != gst_pad_query_default)
-      n_print ("      Has custom queryfunc(): %s\n",
-          GST_DEBUG_FUNCPTR_NAME (pad->queryfunc));
-
-    if (pad->iterintlinkfunc != gst_pad_iterate_internal_links_default)
-      n_print ("      Has custom iterintlinkfunc(): %s\n",
-          GST_DEBUG_FUNCPTR_NAME (pad->iterintlinkfunc));
 
     if (pad->padtemplate)
       n_print ("    Pad Template: '%s'\n", pad->padtemplate->name_template);
@@ -755,6 +734,19 @@ has_sometimes_template (GstElement * element)
     if (GST_PAD_TEMPLATE (l->data)->presence == GST_PAD_SOMETIMES)
       return TRUE;
   }
+
+  return FALSE;
+}
+
+static gboolean
+gtype_needs_ptr_marker (GType type)
+{
+  if (type == G_TYPE_POINTER)
+    return FALSE;
+
+  if (G_TYPE_FUNDAMENTAL (type) == G_TYPE_POINTER || G_TYPE_IS_BOXED (type)
+      || G_TYPE_IS_OBJECT (type))
+    return TRUE;
 
   return FALSE;
 }
@@ -829,12 +821,7 @@ print_signal_info (GstElement * element)
       indent_len = strlen (query->signal_name) +
           strlen (g_type_name (query->return_type)) + 24;
 
-
-      if (query->return_type == G_TYPE_POINTER) {
-        pmark = "";
-      } else if (G_TYPE_FUNDAMENTAL (query->return_type) == G_TYPE_POINTER
-          || G_TYPE_IS_BOXED (query->return_type)
-          || G_TYPE_IS_OBJECT (query->return_type)) {
+      if (gtype_needs_ptr_marker (query->return_type)) {
         pmark = "* ";
         indent_len += 2;
       } else {
@@ -849,17 +836,13 @@ print_signal_info (GstElement * element)
           g_type_name (type));
 
       for (j = 0; j < query->n_params; j++) {
+        const gchar *type_name, *asterisk;
+
+        type_name = g_type_name (query->param_types[j]);
+        asterisk = gtype_needs_ptr_marker (query->param_types[j]) ? "*" : "";
+
         g_print (",\n");
-        if (G_TYPE_IS_FUNDAMENTAL (query->param_types[j])) {
-          n_print ("%s%s arg%d", indent,
-              g_type_name (query->param_types[j]), j);
-        } else if (G_TYPE_IS_ENUM (query->param_types[j])) {
-          n_print ("%s%s arg%d", indent,
-              g_type_name (query->param_types[j]), j);
-        } else {
-          n_print ("%s%s* arg%d", indent,
-              g_type_name (query->param_types[j]), j);
-        }
+        n_print ("%s%s%s arg%d", indent, type_name, asterisk, j);
       }
 
       if (k == 0) {
@@ -895,6 +878,25 @@ print_children_info (GstElement * element)
   while (children) {
     n_print ("  %s\n", GST_ELEMENT_NAME (GST_ELEMENT (children->data)));
     children = g_list_next (children);
+  }
+}
+
+static void
+print_preset_list (GstElement * element)
+{
+  gchar **presets, **preset;
+
+  if (!GST_IS_PRESET (element))
+    return;
+
+  presets = gst_preset_get_preset_names (GST_PRESET (element));
+  if (presets && *presets) {
+    n_print ("\n");
+    n_print ("Presets:\n");
+    for (preset = presets; *preset; preset++) {
+      n_print ("  \"%s\"\n", *preset);
+    }
+    g_strfreev (presets);
   }
 }
 
@@ -1138,6 +1140,7 @@ print_plugin_features (GstPlugin * plugin)
   GList *features, *origlist;
   gint num_features = 0;
   gint num_elements = 0;
+  gint num_tracers = 0;
   gint num_typefinders = 0;
   gint num_devproviders = 0;
   gint num_other = 0;
@@ -1188,6 +1191,10 @@ print_plugin_features (GstPlugin * plugin)
           gst_device_provider_factory_get_metadata (factory,
               GST_ELEMENT_METADATA_LONGNAME));
       num_devproviders++;
+    } else if (GST_IS_TRACER_FACTORY (feature)) {
+      n_print ("  %s (%s)\n", gst_object_get_name (GST_OBJECT (feature)),
+          g_type_name (G_OBJECT_TYPE (feature)));
+      num_tracers++;
     } else if (feature) {
       n_print ("  %s (%s)\n", gst_object_get_name (GST_OBJECT (feature)),
           g_type_name (G_OBJECT_TYPE (feature)));
@@ -1207,6 +1214,8 @@ print_plugin_features (GstPlugin * plugin)
     n_print ("  +-- %d typefinders\n", num_typefinders);
   if (num_devproviders > 0)
     n_print ("  +-- %d device providers\n", num_devproviders);
+  if (num_tracers > 0)
+    n_print ("  +-- %d tracers\n", num_tracers);
   if (num_other > 0)
     n_print ("  +-- %d other objects\n", num_other);
 
@@ -1223,6 +1232,12 @@ print_element_features (const gchar * element_name)
       GST_TYPE_TYPE_FIND_FACTORY);
   if (feature) {
     n_print ("%s: a typefind function\n", element_name);
+    return 0;
+  }
+  feature = gst_registry_find_feature (gst_registry_get (), element_name,
+      GST_TYPE_TRACER_FACTORY);
+  if (feature) {
+    n_print ("%s: a tracer module\n", element_name);
     return 0;
   }
 
@@ -1277,6 +1292,7 @@ print_element_info (GstElementFactory * factory, gboolean print_names)
   print_element_properties_info (element);
   print_signal_info (element);
   print_children_info (element);
+  print_preset_list (element);
 
   gst_object_unref (element);
   gst_object_unref (factory);
@@ -1495,6 +1511,8 @@ main (int argc, char *argv[])
   g_option_context_add_group (ctx, gst_init_get_option_group ());
   if (!g_option_context_parse (ctx, &argc, &argv, &err)) {
     g_printerr ("Error initializing: %s\n", err->message);
+    g_clear_error (&err);
+    g_option_context_free (ctx);
     return -1;
   }
   g_option_context_free (ctx);
@@ -1542,6 +1560,9 @@ main (int argc, char *argv[])
         } else {
           exit_code = 1;
         }
+
+        if (feature)
+          gst_object_unref (feature);
       } else {
         /* FIXME: support checking for plugins too */
         g_printerr ("Checking for plugins is not supported yet\n");
@@ -1611,7 +1632,7 @@ main (int argc, char *argv[])
             }
           } else {
             g_printerr (_("Could not load plugin file: %s\n"), error->message);
-            g_error_free (error);
+            g_clear_error (&error);
             return -1;
           }
         } else {

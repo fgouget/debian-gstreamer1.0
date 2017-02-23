@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.10.30.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2014-11-06 12:20+0100\n"
+"POT-Creation-Date: 2017-02-23 15:12+0200\n"
 "PO-Revision-Date: 2010-11-17 23:10+0200\n"
 "Last-Translator: Tommi Vainikainen <Tommi.Vainikainen@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
@@ -459,6 +459,12 @@ msgstr "säveltäjä"
 msgid "person(s) who composed the recording"
 msgstr "sävellyksestä vastuussa oleva(t) henkilö(t)"
 
+msgid "conductor"
+msgstr ""
+
+msgid "conductor/performer refinement"
+msgstr ""
+
 msgid "duration"
 msgstr "kesto"
 
@@ -826,6 +832,12 @@ msgstr ""
 msgid "Midi note number of the audio track."
 msgstr ""
 
+msgid "private-data"
+msgstr ""
+
+msgid "Private data"
+msgstr ""
+
 msgid ", "
 msgstr ", "
 
@@ -865,6 +877,9 @@ msgstr "ominaisuutta ”%s” ei ole elementissä ”%s”"
 msgid "could not set property \"%s\" in element \"%s\" to \"%s\""
 msgstr "elementin ”%2$s” ominaisuutta ”%1$s” ei voitu asettaa arvoon ”%3$s”"
 
+msgid "Delayed linking failed."
+msgstr ""
+
 #, c-format
 msgid "could not link %s to %s"
 msgstr "elementtiä %s ei voitu linkittää elementtiin %s"
@@ -896,9 +911,6 @@ msgstr "ei lähde-elementtiä URI:lle ”%s”"
 msgid "syntax error"
 msgstr ""
 
-msgid "bin"
-msgstr ""
-
 #, c-format
 msgid "specified empty bin \"%s\", not allowed"
 msgstr "määritetty tyhjä säiliö ”%s”, ei sallittu"
@@ -915,9 +927,6 @@ msgstr "Useita puskureita putoilee."
 
 msgid "Internal data flow problem."
 msgstr "Sisäinen tiedon virtausongelma."
-
-msgid "Internal data stream error."
-msgstr "Sisäinen tietovirtavirhe."
 
 msgid "Internal data flow error."
 msgstr "Sisäinen tiedon virtausvirhe."
@@ -938,6 +947,12 @@ msgid ""
 msgstr ""
 "Rajoita mahdollisia sallittuja kykyjä (NULL tarkoittaa mitä tahansa). Tämän "
 "ominaisuuden asettaminen ottaa kahvan annettuun GstCaps-olioon."
+
+msgid "Caps Change Mode"
+msgstr ""
+
+msgid "Filter caps change behaviour"
+msgstr ""
 
 msgid "No Temp directory specified."
 msgstr "Tilapäishakemistoa ei ole määritetty."
@@ -1005,6 +1020,10 @@ msgstr "pakota kyvyt"
 msgid "force caps without doing a typefind"
 msgstr "pakota kyvyt ilman tyyppihakua"
 
+#, fuzzy
+msgid "Stream doesn't contain enough data."
+msgstr "Virta on tyhjä."
+
 msgid "Stream contains no data."
 msgstr "Virta on tyhjä."
 
@@ -1016,6 +1035,9 @@ msgstr "luettavissa"
 
 msgid "writable"
 msgstr "kirjoitettavissa"
+
+msgid "deprecated"
+msgstr ""
 
 msgid "controllable"
 msgstr "ohjattavissa"
@@ -1213,11 +1235,13 @@ msgstr "Älä tulosta mitään edistymistietoa"
 msgid "Output messages"
 msgstr "Tulosteviestit"
 
-msgid "Do not output status information of TYPE"
-msgstr "Älä tulosta tilatietoa TYYPPI"
+msgid ""
+"Do not output status information for the specified property if verbose "
+"output is enabled (can be used multiple times)"
+msgstr ""
 
-msgid "TYPE1,TYPE2,..."
-msgstr "TYYPPI1,TYYPPI2,..."
+msgid "PROPERTY-NAME"
+msgstr ""
 
 msgid "Do not install a fault handler"
 msgstr "Älä asenna virheenkäsittelintä"
@@ -1301,6 +1325,15 @@ msgstr "Asetetaan liukuhihna tilaan TYHJÄ...\n"
 
 msgid "Freeing pipeline ...\n"
 msgstr "Vapautetaan liukuhihna...\n"
+
+#~ msgid "Internal data stream error."
+#~ msgstr "Sisäinen tietovirtavirhe."
+
+#~ msgid "Do not output status information of TYPE"
+#~ msgstr "Älä tulosta tilatietoa TYYPPI"
+
+#~ msgid "TYPE1,TYPE2,..."
+#~ msgstr "TYYPPI1,TYYPPI2,..."
 
 #~ msgid "link without source element"
 #~ msgstr "linkki ilman lähde-elementtiä"
