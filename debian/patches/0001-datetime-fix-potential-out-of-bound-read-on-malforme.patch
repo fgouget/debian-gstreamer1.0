@@ -1,0 +1,44 @@
+From 9398b7f1a75b38844ae7050b5a7967e4cdebe24f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tim-Philipp=20M=C3=BCller?= <tim@centricular.com>
+Date: Sun, 15 Jan 2017 11:52:44 +0000
+Subject: [PATCH] datetime: fix potential out-of-bound read on malformed
+ datetime string
+
+https://bugzilla.gnome.org/show_bug.cgi?id=777263
+---
+ gst/gstdatetime.c             | 2 +-
+ tests/check/gst/gstdatetime.c | 8 ++++++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+Index: gstreamer1.0-1.4.4/gst/gstdatetime.c
+===================================================================
+--- gstreamer1.0-1.4.4.orig/gst/gstdatetime.c
++++ gstreamer1.0-1.4.4/gst/gstdatetime.c
+@@ -853,7 +853,7 @@ gst_date_time_new_from_iso8601_string (c
+     else if (neg_pos)
+       pos = neg_pos + 1;
+ 
+-    if (pos) {
++    if (pos && strlen (pos) >= 3) {
+       gint ret_tz;
+       if (pos[2] == ':')
+         ret_tz = sscanf (pos, "%d:%d", &gmt_offset_hour, &gmt_offset_min);
+Index: gstreamer1.0-1.4.4/tests/check/gst/gstdatetime.c
+===================================================================
+--- gstreamer1.0-1.4.4.orig/tests/check/gst/gstdatetime.c
++++ gstreamer1.0-1.4.4/tests/check/gst/gstdatetime.c
+@@ -632,6 +632,14 @@ GST_START_TEST (test_GstDateTime_iso8601
+   fail_unless (!gst_date_time_has_day (dt));
+   fail_unless (!gst_date_time_has_time (dt));
+   gst_date_time_unref (dt);
++
++  /* some bogus ones, make copy to detect out of bound read in valgrind/asan */
++  {
++    gchar *s = g_strdup ("0002000000T00000:00+0");
++    dt = gst_date_time_new_from_iso8601_string (s);
++    gst_date_time_unref (dt);
++    g_free (s);
++  }
+ }
+ 
+ GST_END_TEST;
