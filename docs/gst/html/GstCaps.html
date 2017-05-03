@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstCaps</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<title>GstCaps: GStreamer 1.0 Core Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="GstBus.html" title="GstBus">
 <link rel="next" href="GstCapsFeatures.html" title="GstCapsFeatures">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="GstCaps.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -86,6 +86,30 @@
 <td class="define_keyword">#define</td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#GST-CAPS-FLAG-UNSET:CAPS" title="GST_CAPS_FLAG_UNSET()">GST_CAPS_FLAG_UNSET</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="GstCaps.html#GstCapsForeachFunc" title="GstCapsForeachFunc ()">*GstCapsForeachFunc</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="GstCaps.html#GstCapsMapFunc" title="GstCapsMapFunc ()">*GstCapsMapFunc</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="GstCaps.html#GstCapsFilterMapFunc" title="GstCapsFilterMapFunc ()">*GstCapsFilterMapFunc</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -240,7 +264,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-get-size" title="gst_caps_get_size ()">gst_caps_get_size</a> <span class="c_punctuation">()</span>
@@ -296,7 +320,31 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstCaps.html#gst-caps-foreach" title="gst_caps_foreach ()">gst_caps_foreach</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="GstCaps.html#gst-caps-map-in-place" title="gst_caps_map_in_place ()">gst_caps_map_in_place</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<a class="link" href="GstCaps.html#gst-caps-filter-and-map-in-place" title="gst_caps_filter_and_map_in_place ()">gst_caps_filter_and_map_in_place</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-is-any" title="gst_caps_is_any ()">gst_caps_is_any</a> <span class="c_punctuation">()</span>
@@ -304,7 +352,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-is-empty" title="gst_caps_is_empty ()">gst_caps_is_empty</a> <span class="c_punctuation">()</span>
@@ -312,7 +360,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-is-fixed" title="gst_caps_is_fixed ()">gst_caps_is_fixed</a> <span class="c_punctuation">()</span>
@@ -320,7 +368,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-is-equal" title="gst_caps_is_equal ()">gst_caps_is_equal</a> <span class="c_punctuation">()</span>
@@ -328,7 +376,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-is-equal-fixed" title="gst_caps_is_equal_fixed ()">gst_caps_is_equal_fixed</a> <span class="c_punctuation">()</span>
@@ -336,7 +384,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-is-strictly-equal" title="gst_caps_is_strictly_equal ()">gst_caps_is_strictly_equal</a> <span class="c_punctuation">()</span>
@@ -344,7 +392,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-is-always-compatible" title="gst_caps_is_always_compatible ()">gst_caps_is_always_compatible</a> <span class="c_punctuation">()</span>
@@ -352,7 +400,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-is-subset" title="gst_caps_is_subset ()">gst_caps_is_subset</a> <span class="c_punctuation">()</span>
@@ -360,7 +408,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-is-subset-structure" title="gst_caps_is_subset_structure ()">gst_caps_is_subset_structure</a> <span class="c_punctuation">()</span>
@@ -368,7 +416,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-is-subset-structure-full" title="gst_caps_is_subset_structure_full ()">gst_caps_is_subset_structure_full</a> <span class="c_punctuation">()</span>
@@ -376,7 +424,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-can-intersect" title="gst_caps_can_intersect ()">gst_caps_can_intersect</a> <span class="c_punctuation">()</span>
@@ -416,7 +464,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-replace" title="gst_caps_replace ()">gst_caps_replace</a> <span class="c_punctuation">()</span>
@@ -424,7 +472,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-take" title="gst_caps_take ()">gst_caps_take</a> <span class="c_punctuation">()</span>
@@ -432,7 +480,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstCaps.html#gst-caps-to-string" title="gst_caps_to_string ()">gst_caps_to_string</a> <span class="c_punctuation">()</span>
@@ -497,7 +545,7 @@
 </div>
 <div class="refsect1">
 <a name="GstCaps.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -571,7 +619,7 @@ handle or produce at runtime.</p>
 5
 6
 7</pre></td>
-        <td class="listing_code"><pre class="programlisting">GstCaps <span class="gtkdoc opt">*</span>caps <span class="gtkdoc opt">=</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstCaps.html#gst-caps-new-simple">gst_caps_new_simple</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;video/x-raw&quot;</span><span class="gtkdoc opt">,</span>
+        <td class="listing_code"><pre class="programlisting">GstCaps <span class="gtkdoc opt">*</span>caps <span class="gtkdoc opt">=</span> <span class="function"><a href="GstCaps.html#gst-caps-new-simple">gst_caps_new_simple</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;video/x-raw&quot;</span><span class="gtkdoc opt">,</span>
    <span class="string">&quot;format&quot;</span><span class="gtkdoc opt">,</span> G_TYPE_STRING<span class="gtkdoc opt">,</span> <span class="string">&quot;I420&quot;</span><span class="gtkdoc opt">,</span>
    <span class="string">&quot;framerate&quot;</span><span class="gtkdoc opt">,</span> GST_TYPE_FRACTION<span class="gtkdoc opt">,</span> <span class="number">25</span><span class="gtkdoc opt">,</span> <span class="number">1</span><span class="gtkdoc opt">,</span>
    <span class="string">&quot;pixel-aspect-ratio&quot;</span><span class="gtkdoc opt">,</span> GST_TYPE_FRACTION<span class="gtkdoc opt">,</span> <span class="number">1</span><span class="gtkdoc opt">,</span> <span class="number">1</span><span class="gtkdoc opt">,</span>
@@ -603,8 +651,8 @@ behavior when using serialization features, such as <a class="link" href="GstCap
 </pre>
 <p>Get access to the reference count field of the caps</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.2.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAPS-REFCOUNT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -625,8 +673,8 @@ behavior when using serialization features, such as <a class="link" href="GstCap
 </pre>
 <p>Get the reference count value of the caps.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.3.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAPS-REFCOUNT-VALUE.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -648,8 +696,8 @@ behavior when using serialization features, such as <a class="link" href="GstCap
 <p>Convenience macro that checks if the number of structures in the given caps
 is exactly one.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.4.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAPS-IS-SIMPLE.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -670,8 +718,8 @@ is exactly one.</p>
 <p>Creates a new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> static caps from an input string.
 This can be used in pad templates.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.5.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-STATIC-CAPS.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -692,8 +740,8 @@ This can be used in pad templates.</p>
 </pre>
 <p>A flags word containing <a class="link" href="GstCaps.html#GstCapsFlags" title="enum GstCapsFlags"><span class="type">GstCapsFlags</span></a> flags set on this caps.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.6.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAPS-FLAGS.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -714,8 +762,8 @@ This can be used in pad templates.</p>
 </pre>
 <p>Gives the status of a specific flag on a caps.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.7.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAPS-FLAG-IS-SET.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -743,8 +791,8 @@ This can be used in pad templates.</p>
 </pre>
 <p>Sets a caps flag on a caps.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.8.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAPS-FLAG-SET.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -772,8 +820,8 @@ This can be used in pad templates.</p>
 </pre>
 <p>Clears a caps flag.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.9.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAPS-FLAG-UNSET.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -796,6 +844,140 @@ This can be used in pad templates.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GstCapsForeachFunc"></a><h3>GstCapsForeachFunc ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="c_punctuation">(</span>*GstCapsForeachFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a> *features</code></em>,
+                       <em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>A function that will be called in <a class="link" href="GstCaps.html#gst-caps-foreach" title="gst_caps_foreach ()"><code class="function">gst_caps_foreach()</code></a>. The function may
+not modify <em class="parameter"><code>features</code></em>
+ or <em class="parameter"><code>structure</code></em>
+.</p>
+<div class="refsect3">
+<a name="GstCapsForeachFunc.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>features</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>structure</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="GstCapsForeachFunc.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the foreach operation should continue, <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if
+the foreach operation should stop with <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstCapsMapFunc"></a><h3>GstCapsMapFunc ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="c_punctuation">(</span>*GstCapsMapFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a> *features</code></em>,
+                   <em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
+                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>A function that will be called in <a class="link" href="GstCaps.html#gst-caps-map-in-place" title="gst_caps_map_in_place ()"><code class="function">gst_caps_map_in_place()</code></a>. The function
+may modify <em class="parameter"><code>features</code></em>
+ and <em class="parameter"><code>structure</code></em>
+.</p>
+<div class="refsect3">
+<a name="GstCapsMapFunc.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>features</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>structure</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="GstCapsMapFunc.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the map operation should continue, <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if
+the map operation should stop with <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a>.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstCapsFilterMapFunc"></a><h3>GstCapsFilterMapFunc ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="c_punctuation">(</span>*GstCapsFilterMapFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a> *features</code></em>,
+                         <em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>A function that will be called in <a class="link" href="GstCaps.html#gst-caps-filter-and-map-in-place" title="gst_caps_filter_and_map_in_place ()"><code class="function">gst_caps_filter_and_map_in_place()</code></a>.
+The function may modify <em class="parameter"><code>features</code></em>
+ and <em class="parameter"><code>structure</code></em>
+, and both will be
+removed from the caps if <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> is returned.</p>
+<div class="refsect3">
+<a name="GstCapsFilterMapFunc.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>features</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>structure</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>user data</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="GstCapsFilterMapFunc.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the features and structure should be preserved,
+<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if it should be removed.</p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-caps-new-empty"></a><h3>gst_caps_new_empty ()</h3>
 <pre class="programlisting"><a class="link" href="GstCaps.html" title="GstCaps"><span class="returnvalue">GstCaps</span></a> *
 gst_caps_new_empty (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
@@ -804,7 +986,7 @@ gst_caps_new_empty (<em class="parameter"><code><span class="type">void</span></
 The <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> is guaranteed to be writable.
 Caller is responsible for unreffing the returned caps.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.10.5"></a><h4>Returns</h4>
+<a name="gst-caps-new-empty.returns"></a><h4>Returns</h4>
 <p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -819,8 +1001,8 @@ gst_caps_new_empty_simple (<em class="parameter"><code>const <span class="type">
 .
 Caller is responsible for unreffing the returned caps.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.11.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-new-empty-simple.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -834,7 +1016,7 @@ Caller is responsible for unreffing the returned caps.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.11.6"></a><h4>Returns</h4>
+<a name="gst-caps-new-empty-simple.returns"></a><h4>Returns</h4>
 <p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -847,7 +1029,7 @@ gst_caps_new_any (<em class="parameter"><code><span class="type">void</span></co
 <p>Creates a new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> that indicates that it is compatible with
 any media format.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.12.5"></a><h4>Returns</h4>
+<a name="gst-caps-new-any.returns"></a><h4>Returns</h4>
 <p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -864,8 +1046,8 @@ structure is defined by the arguments, which have the same format
 as <a class="link" href="GstStructure.html#gst-structure-new" title="gst_structure_new ()"><code class="function">gst_structure_new()</code></a>.
 Caller is responsible for unreffing the returned caps.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.13.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-new-simple.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -891,7 +1073,7 @@ Caller is responsible for unreffing the returned caps.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.13.6"></a><h4>Returns</h4>
+<a name="gst-caps-new-simple.returns"></a><h4>Returns</h4>
 <p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -903,11 +1085,11 @@ Caller is responsible for unreffing the returned caps.</p>
 gst_caps_new_full (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *struct1</code></em>,
                    <em class="parameter"><code>...</code></em>);</pre>
 <p>Creates a new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> and adds all the structures listed as
-arguments.  The list must be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated.  The structures
+arguments.  The list must be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated.  The structures
 are not copied; the returned <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> owns the structures.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.14.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-new-full.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -928,7 +1110,7 @@ are not copied; the returned <a class="link" href="GstCaps.html" title="GstCaps"
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.14.6"></a><h4>Returns</h4>
+<a name="gst-caps-new-full.returns"></a><h4>Returns</h4>
 <p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -940,11 +1122,11 @@ are not copied; the returned <a class="link" href="GstCaps.html" title="GstCaps"
 gst_caps_new_full_valist (<em class="parameter"><code><a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                           <em class="parameter"><code><span class="type">va_list</span> var_args</code></em>);</pre>
 <p>Creates a new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> and adds all the structures listed as
-arguments.  The list must be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated.  The structures
+arguments.  The list must be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated.  The structures
 are not copied; the returned <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> owns the structures.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.15.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-new-full-valist.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -965,7 +1147,7 @@ are not copied; the returned <a class="link" href="GstCaps.html" title="GstCaps"
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.15.6"></a><h4>Returns</h4>
+<a name="gst-caps-new-full-valist.returns"></a><h4>Returns</h4>
 <p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -979,8 +1161,8 @@ are not copied; the returned <a class="link" href="GstCaps.html" title="GstCaps"
 . It is only safe to modify caps when
 there is only one owner of the caps - ie, the object is writable.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.16.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-writable.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1007,8 +1189,8 @@ followed by a <a class="link" href="GstCaps.html#gst-caps-make-writable" title="
 reference to the data, you should use <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>.</p>
 <p>When you are finished with the caps, call <a class="link" href="GstCaps.html#gst-caps-unref" title="gst_caps_unref ()"><code class="function">gst_caps_unref()</code></a> on it.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.17.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-copy.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1022,9 +1204,8 @@ reference to the data, you should use <a class="link" href="GstCaps.html#gst-cap
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.17.8"></a><h4>Returns</h4>
+<a name="gst-caps-copy.returns"></a><h4>Returns</h4>
 <p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a></p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1032,13 +1213,13 @@ reference to the data, you should use <a class="link" href="GstCaps.html#gst-cap
 <a name="gst-caps-copy-nth"></a><h3>gst_caps_copy_nth ()</h3>
 <pre class="programlisting"><a class="link" href="GstCaps.html" title="GstCaps"><span class="returnvalue">GstCaps</span></a> *
 gst_caps_copy_nth (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
-                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> nth</code></em>);</pre>
+                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> nth</code></em>);</pre>
 <p>Creates a new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> and appends a copy of the nth structure
 contained in <em class="parameter"><code>caps</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.18.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-copy-nth.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1059,7 +1240,7 @@ contained in <em class="parameter"><code>caps</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.18.6"></a><h4>Returns</h4>
+<a name="gst-caps-copy-nth.returns"></a><h4>Returns</h4>
 <p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1071,8 +1252,8 @@ contained in <em class="parameter"><code>caps</code></em>
 gst_static_caps_get (<em class="parameter"><code><a class="link" href="GstCaps.html#GstStaticCaps" title="struct GstStaticCaps"><span class="type">GstStaticCaps</span></a> *static_caps</code></em>);</pre>
 <p>Converts a <a class="link" href="GstCaps.html#GstStaticCaps" title="struct GstStaticCaps"><span class="type">GstStaticCaps</span></a> to a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.19.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-static-caps-get.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1086,7 +1267,7 @@ gst_static_caps_get (<em class="parameter"><code><a class="link" href="GstCaps.h
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.19.6"></a><h4>Returns</h4>
+<a name="gst-static-caps-get.returns"></a><h4>Returns</h4>
 <p> a pointer to the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. Unref after usage.
 Since the core holds an additional ref to the returned caps,
 use <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a> on the returned caps to modify it. </p>
@@ -1101,8 +1282,8 @@ gst_static_caps_cleanup (<em class="parameter"><code><a class="link" href="GstCa
 <p>Clean up the cached caps contained in <em class="parameter"><code>static_caps</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.20.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-static-caps-cleanup.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1131,8 +1312,8 @@ gst_caps_append (<em class="parameter"><code><a class="link" href="GstCaps.html"
  is
 freed. If either caps is ANY, the resulting caps will be ANY.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.21.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-append.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1170,8 +1351,8 @@ transferred to a writable copy of <em class="parameter"><code>caps1</code></em>
  is freed.
 If either caps is ANY, the resulting caps will be ANY.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.22.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-merge.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1192,7 +1373,7 @@ If either caps is ANY, the resulting caps will be ANY.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.22.6"></a><h4>Returns</h4>
+<a name="gst-caps-merge.returns"></a><h4>Returns</h4>
 <p> the merged caps. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1210,8 +1391,8 @@ gst_caps_append_structure (<em class="parameter"><code><a class="link" href="Gst
 becomes the owner of <em class="parameter"><code>structure</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.23.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-append-structure.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1247,8 +1428,8 @@ gst_caps_append_structure_full (<em class="parameter"><code><a class="link" href
 becomes the owner of <em class="parameter"><code>structure</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.24.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-append-structure-full.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1273,20 +1454,20 @@ becomes the owner of <em class="parameter"><code>structure</code></em>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-remove-structure"></a><h3>gst_caps_remove_structure ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_caps_remove_structure (<em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
-                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> idx</code></em>);</pre>
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> idx</code></em>);</pre>
 <p>removes the structure with the given index from the list of structures
 contained in <em class="parameter"><code>caps</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.25.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-remove-structure.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1312,13 +1493,13 @@ contained in <em class="parameter"><code>caps</code></em>
 <a name="gst-caps-steal-structure"></a><h3>gst_caps_steal_structure ()</h3>
 <pre class="programlisting"><a class="link" href="GstStructure.html" title="GstStructure"><span class="returnvalue">GstStructure</span></a> *
 gst_caps_steal_structure (<em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
-                          <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
 <p>Retrieves the structure with the given index from the list of structures
 contained in <em class="parameter"><code>caps</code></em>
 . The caller becomes the owner of the returned structure.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.26.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-steal-structure.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1339,7 +1520,7 @@ contained in <em class="parameter"><code>caps</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.26.6"></a><h4>Returns</h4>
+<a name="gst-caps-steal-structure.returns"></a><h4>Returns</h4>
 <p> a pointer to the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> corresponding
 to <em class="parameter"><code>index</code></em>
 . </p>
@@ -1357,8 +1538,8 @@ gst_caps_merge_structure (<em class="parameter"><code><a class="link" href="GstC
  if its not already expressed by <em class="parameter"><code>caps</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.27.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-merge-structure.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1379,7 +1560,7 @@ gst_caps_merge_structure (<em class="parameter"><code><a class="link" href="GstC
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.27.6"></a><h4>Returns</h4>
+<a name="gst-caps-merge-structure.returns"></a><h4>Returns</h4>
 <p> the merged caps. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -1397,8 +1578,8 @@ gst_caps_merge_structure_full (<em class="parameter"><code><a class="link" href=
  if its not already expressed by <em class="parameter"><code>caps</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.28.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-merge-structure-full.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1424,22 +1605,22 @@ gst_caps_merge_structure_full (<em class="parameter"><code><a class="link" href=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.28.6"></a><h4>Returns</h4>
+<a name="gst-caps-merge-structure-full.returns"></a><h4>Returns</h4>
 <p> the merged caps. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-get-size"></a><h3>gst_caps_get_size ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gst_caps_get_size (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Gets the number of structures contained in <em class="parameter"><code>caps</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.29.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-get-size.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1453,10 +1634,9 @@ gst_caps_get_size (<em class="parameter"><code>const <a class="link" href="GstCa
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.29.6"></a><h4>Returns</h4>
+<a name="gst-caps-get-size.returns"></a><h4>Returns</h4>
 <p> the number of structures that <em class="parameter"><code>caps</code></em>
 contains</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1464,7 +1644,7 @@ contains</p>
 <a name="gst-caps-get-structure"></a><h3>gst_caps_get_structure ()</h3>
 <pre class="programlisting"><a class="link" href="GstStructure.html" title="GstStructure"><span class="returnvalue">GstStructure</span></a> *
 gst_caps_get_structure (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
-                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+                        <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
 <p>Finds the structure in <em class="parameter"><code>caps</code></em>
  that has the index <em class="parameter"><code>index</code></em>
 , and
@@ -1480,8 +1660,8 @@ structure returned in the usual way, e.g. with functions like
 <p>You do not need to free or unref the structure returned, it
 belongs to the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.30.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-get-structure.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1502,7 +1682,7 @@ belongs to the <a class="link" href="GstCaps.html" title="GstCaps"><span class="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.30.8"></a><h4>Returns</h4>
+<a name="gst-caps-get-structure.returns"></a><h4>Returns</h4>
 <p> a pointer to the <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> corresponding
 to <em class="parameter"><code>index</code></em>
 . </p>
@@ -1514,7 +1694,7 @@ to <em class="parameter"><code>index</code></em>
 <a name="gst-caps-get-features"></a><h3>gst_caps_get_features ()</h3>
 <pre class="programlisting"><a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="returnvalue">GstCapsFeatures</span></a> *
 gst_caps_get_features (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
-                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
 <p>Finds the features in <em class="parameter"><code>caps</code></em>
  that has the index <em class="parameter"><code>index</code></em>
 , and
@@ -1530,8 +1710,8 @@ features returned in the usual way, e.g. with functions like
 <p>You do not need to free or unref the structure returned, it
 belongs to the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.31.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-get-features.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1552,27 +1732,27 @@ belongs to the <a class="link" href="GstCaps.html" title="GstCaps"><span class="
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.31.8"></a><h4>Returns</h4>
+<a name="gst-caps-get-features.returns"></a><h4>Returns</h4>
 <p> a pointer to the <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a> corresponding
 to <em class="parameter"><code>index</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-set-features"></a><h3>gst_caps_set_features ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_caps_set_features (<em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
-                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
                        <em class="parameter"><code><a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a> *features</code></em>);</pre>
 <p>Sets the <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a> <em class="parameter"><code>features</code></em>
  for the structure at <em class="parameter"><code>index</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.32.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-set-features.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1597,7 +1777,7 @@ gst_caps_set_features (<em class="parameter"><code><a class="link" href="GstCaps
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1605,7 +1785,7 @@ gst_caps_set_features (<em class="parameter"><code><a class="link" href="GstCaps
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_caps_set_value (<em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
                     <em class="parameter"><code>const <span class="type">char</span> *field</code></em>,
-                    <em class="parameter"><code>const <a href="https://developer.gnome.org/gobject/unstable/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
+                    <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobjectgobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *value</code></em>);</pre>
 <p>Sets the given <em class="parameter"><code>field</code></em>
  on all structures of <em class="parameter"><code>caps</code></em>
  to the given <em class="parameter"><code>value</code></em>
@@ -1614,8 +1794,8 @@ This is a convenience function for calling <a class="link" href="GstStructure.ht
 all structures of <em class="parameter"><code>caps</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.33.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-set-value.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1649,10 +1829,10 @@ gst_caps_set_simple (<em class="parameter"><code><a class="link" href="GstCaps.h
                      <em class="parameter"><code>const <span class="type">char</span> *field</code></em>,
                      <em class="parameter"><code>...</code></em>);</pre>
 <p>Sets fields in a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>.  The arguments must be passed in the same
-manner as <a class="link" href="GstStructure.html#gst-structure-set" title="gst_structure_set ()"><code class="function">gst_structure_set()</code></a>, and be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated.</p>
+manner as <a class="link" href="GstStructure.html#gst-structure-set" title="gst_structure_set ()"><code class="function">gst_structure_set()</code></a>, and be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.34.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-set-simple.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1686,10 +1866,10 @@ gst_caps_set_simple_valist (<em class="parameter"><code><a class="link" href="Gs
                             <em class="parameter"><code>const <span class="type">char</span> *field</code></em>,
                             <em class="parameter"><code><span class="type">va_list</span> varargs</code></em>);</pre>
 <p>Sets fields in a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>.  The arguments must be passed in the same
-manner as <a class="link" href="GstStructure.html#gst-structure-set" title="gst_structure_set ()"><code class="function">gst_structure_set()</code></a>, and be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated.</p>
+manner as <a class="link" href="GstStructure.html#gst-structure-set" title="gst_structure_set ()"><code class="function">gst_structure_set()</code></a>, and be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>-terminated.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.35.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-set-simple-valist.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1717,14 +1897,144 @@ manner as <a class="link" href="GstStructure.html#gst-structure-set" title="gst_
 </div>
 <hr>
 <div class="refsect2">
+<a name="gst-caps-foreach"></a><h3>gst_caps_foreach ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_caps_foreach (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
+                  <em class="parameter"><code><a class="link" href="GstCaps.html#GstCapsForeachFunc" title="GstCapsForeachFunc ()"><span class="type">GstCapsForeachFunc</span></a> func</code></em>,
+                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Calls the provided function once for each structure and caps feature in the
+<a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. The function must not modify the fields.
+Also see <a class="link" href="GstCaps.html#gst-caps-map-in-place" title="gst_caps_map_in_place ()"><code class="function">gst_caps_map_in_place()</code></a> and <a class="link" href="GstCaps.html#gst-caps-filter-and-map-in-place" title="gst_caps_filter_and_map_in_place ()"><code class="function">gst_caps_filter_and_map_in_place()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-caps-foreach.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>caps</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p> a function to call for each field. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p> private data. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-caps-foreach.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the supplied function returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for each call,
+<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-caps-map-in-place"></a><h3>gst_caps_map_in_place ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+gst_caps_map_in_place (<em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
+                       <em class="parameter"><code><a class="link" href="GstCaps.html#GstCapsMapFunc" title="GstCapsMapFunc ()"><span class="type">GstCapsMapFunc</span></a> func</code></em>,
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Calls the provided function once for each structure and caps feature in the
+<a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. In contrast to <a class="link" href="GstCaps.html#gst-caps-foreach" title="gst_caps_foreach ()"><code class="function">gst_caps_foreach()</code></a>, the function may modify but not
+delete the structures and features. The caps must be mutable.</p>
+<div class="refsect3">
+<a name="gst-caps-map-in-place.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>caps</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p> a function to call for each field. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p> private data. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-caps-map-in-place.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the supplied function returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> for each call,
+<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise.</p>
+</div>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-caps-filter-and-map-in-place"></a><h3>gst_caps_filter_and_map_in_place ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+gst_caps_filter_and_map_in_place (<em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
+                                  <em class="parameter"><code><a class="link" href="GstCaps.html#GstCapsFilterMapFunc" title="GstCapsFilterMapFunc ()"><span class="type">GstCapsFilterMapFunc</span></a> func</code></em>,
+                                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+<p>Calls the provided function once for each structure and caps feature in the
+<a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. In contrast to <a class="link" href="GstCaps.html#gst-caps-foreach" title="gst_caps_foreach ()"><code class="function">gst_caps_foreach()</code></a>, the function may modify the
+structure and features. In contrast to <a class="link" href="GstCaps.html#gst-caps-filter-and-map-in-place" title="gst_caps_filter_and_map_in_place ()"><code class="function">gst_caps_filter_and_map_in_place()</code></a>,
+the structure and features are removed from the caps if <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> is returned
+from the function.
+The caps must be mutable.</p>
+<div class="refsect3">
+<a name="gst-caps-filter-and-map-in-place.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>caps</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>func</p></td>
+<td class="parameter_description"><p> a function to call for each field. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p> private data. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="This parameter is a 'user_data', for callbacks; many bindings can pass NULL here."><span class="acronym">closure</span></acronym>]</span></td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-caps-is-any"></a><h3>gst_caps_is_any ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_is_any (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Determines if <em class="parameter"><code>caps</code></em>
  represents any media format.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.36.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-any.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1738,22 +2048,21 @@ gst_caps_is_any (<em class="parameter"><code>const <a class="link" href="GstCaps
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.36.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>caps</code></em>
+<a name="gst-caps-is-any.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>caps</code></em>
 represents any format.</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-is-empty"></a><h3>gst_caps_is_empty ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_is_empty (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Determines if <em class="parameter"><code>caps</code></em>
  represents no media formats.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.37.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-empty.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1767,23 +2076,22 @@ gst_caps_is_empty (<em class="parameter"><code>const <a class="link" href="GstCa
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.37.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>caps</code></em>
+<a name="gst-caps-is-empty.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>caps</code></em>
 represents no formats.</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-is-fixed"></a><h3>gst_caps_is_fixed ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_is_fixed (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Fixed <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> describe exactly one format, that is, they have exactly
 one structure, and each field in the structure describes a fixed type.
 Examples of non-fixed types are GST_TYPE_INT_RANGE and GST_TYPE_LIST.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.38.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-fixed.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1797,22 +2105,21 @@ Examples of non-fixed types are GST_TYPE_INT_RANGE and GST_TYPE_LIST.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.38.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>caps</code></em>
+<a name="gst-caps-is-fixed.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>caps</code></em>
 is fixed</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-is-equal"></a><h3>gst_caps_is_equal ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_is_equal (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps1</code></em>,
                    <em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps2</code></em>);</pre>
 <p>Checks if the given caps represent the same set of caps.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.39.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-equal.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1833,22 +2140,21 @@ gst_caps_is_equal (<em class="parameter"><code>const <a class="link" href="GstCa
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.39.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if both caps are equal.</p>
-<p></p>
+<a name="gst-caps-is-equal.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if both caps are equal.</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-is-equal-fixed"></a><h3>gst_caps_is_equal_fixed ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_is_equal_fixed (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps1</code></em>,
                          <em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps2</code></em>);</pre>
 <p>Tests if two <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> are equal.  This function only works on fixed
 <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.40.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-equal-fixed.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1869,21 +2175,20 @@ gst_caps_is_equal_fixed (<em class="parameter"><code>const <a class="link" href=
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.40.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the arguments represent the same format</p>
-<p></p>
+<a name="gst-caps-is-equal-fixed.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the arguments represent the same format</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-is-strictly-equal"></a><h3>gst_caps_is_strictly_equal ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_is_strictly_equal (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps1</code></em>,
                             <em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps2</code></em>);</pre>
 <p>Checks if the given caps are exactly the same set of caps.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.41.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-strictly-equal.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1904,15 +2209,14 @@ gst_caps_is_strictly_equal (<em class="parameter"><code>const <a class="link" hr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.41.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if both caps are strictly equal.</p>
-<p></p>
+<a name="gst-caps-is-strictly-equal.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if both caps are strictly equal.</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-is-always-compatible"></a><h3>gst_caps_is_always_compatible ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_is_always_compatible (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps1</code></em>,
                                <em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps2</code></em>);</pre>
 <p>A given <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> structure is always compatible with another if
@@ -1921,8 +2225,8 @@ second.  That is, <em class="parameter"><code>caps1</code></em>
  is a subset of <em class="parameter"><code>caps2</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.42.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-always-compatible.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1943,25 +2247,24 @@ second.  That is, <em class="parameter"><code>caps1</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.42.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>caps1</code></em>
+<a name="gst-caps-is-always-compatible.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>caps1</code></em>
 is a subset of <em class="parameter"><code>caps2</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-is-subset"></a><h3>gst_caps_is_subset ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_is_subset (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *subset</code></em>,
                     <em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *superset</code></em>);</pre>
 <p>Checks if all caps represented by <em class="parameter"><code>subset</code></em>
  are also represented by <em class="parameter"><code>superset</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.43.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-subset.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1982,17 +2285,16 @@ gst_caps_is_subset (<em class="parameter"><code>const <a class="link" href="GstC
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.43.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>subset</code></em>
+<a name="gst-caps-is-subset.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>subset</code></em>
 is a subset of <em class="parameter"><code>superset</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-is-subset-structure"></a><h3>gst_caps_is_subset_structure ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_is_subset_structure (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
                               <em class="parameter"><code>const <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>);</pre>
 <p>Checks if <em class="parameter"><code>structure</code></em>
@@ -2000,8 +2302,8 @@ gst_caps_is_subset_structure (<em class="parameter"><code>const <a class="link" 
 . See <a class="link" href="GstCaps.html#gst-caps-is-subset" title="gst_caps_is_subset ()"><code class="function">gst_caps_is_subset()</code></a>
 for more information.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.44.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-subset-structure.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2023,17 +2325,16 @@ for more information.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.44.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>structure</code></em>
+<a name="gst-caps-is-subset-structure.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>structure</code></em>
 is a subset of <em class="parameter"><code>caps</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-is-subset-structure-full"></a><h3>gst_caps_is_subset_structure_full ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_is_subset_structure_full (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>,
                                    <em class="parameter"><code>const <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> *structure</code></em>,
                                    <em class="parameter"><code>const <a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a> *features</code></em>);</pre>
@@ -2042,8 +2343,8 @@ gst_caps_is_subset_structure_full (<em class="parameter"><code>const <a class="l
 . See <a class="link" href="GstCaps.html#gst-caps-is-subset" title="gst_caps_is_subset ()"><code class="function">gst_caps_is_subset()</code></a>
 for more information.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.45.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-is-subset-structure-full.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2071,18 +2372,17 @@ for more information.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.45.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>structure</code></em>
+<a name="gst-caps-is-subset-structure-full.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>structure</code></em>
 is a subset of <em class="parameter"><code>caps</code></em>
 </p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-can-intersect"></a><h3>gst_caps_can_intersect ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_can_intersect (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps1</code></em>,
                         <em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps2</code></em>);</pre>
 <p>Tries intersecting <em class="parameter"><code>caps1</code></em>
@@ -2090,8 +2390,8 @@ gst_caps_can_intersect (<em class="parameter"><code>const <a class="link" href="
  and reports whether the result would not
 be empty</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.46.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-can-intersect.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2112,9 +2412,8 @@ be empty</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.46.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if intersection would be not empty</p>
-<p></p>
+<a name="gst-caps-can-intersect.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if intersection would be not empty</p>
 </div>
 </div>
 <hr>
@@ -2128,8 +2427,8 @@ to both <em class="parameter"><code>caps1</code></em>
  and <em class="parameter"><code>caps2</code></em>
 . Defaults to <a class="link" href="GstCaps.html#GST-CAPS-INTERSECT-ZIG-ZAG:CAPS"><code class="literal">GST_CAPS_INTERSECT_ZIG_ZAG</code></a> mode.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.47.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-intersect.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2150,9 +2449,9 @@ to both <em class="parameter"><code>caps1</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.47.6"></a><h4>Returns</h4>
-<p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a></p>
-<p></p>
+<a name="gst-caps-intersect.returns"></a><h4>Returns</h4>
+<p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2168,8 +2467,8 @@ to both <em class="parameter"><code>caps1</code></em>
 , the order is defined by the <a class="link" href="GstCaps.html#GstCapsIntersectMode" title="enum GstCapsIntersectMode"><span class="type">GstCapsIntersectMode</span></a>
 used.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.48.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-intersect-full.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2195,9 +2494,9 @@ used.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.48.6"></a><h4>Returns</h4>
-<p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a></p>
-<p></p>
+<a name="gst-caps-intersect-full.returns"></a><h4>Returns</h4>
+<p> the new <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2211,10 +2510,13 @@ gst_caps_normalize (<em class="parameter"><code><a class="link" href="GstCaps.ht
 <em class="parameter"><code>GstStructures</code></em>
 .</p>
 <p>This function takes ownership of <em class="parameter"><code>caps</code></em>
-.</p>
+ and will call <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a>
+on it so you must not use <em class="parameter"><code>caps</code></em>
+ afterwards unless you keep an additional
+reference to it with <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.49.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-normalize.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2228,7 +2530,7 @@ gst_caps_normalize (<em class="parameter"><code><a class="link" href="GstCaps.ht
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.49.7"></a><h4>Returns</h4>
+<a name="gst-caps-normalize.returns"></a><h4>Returns</h4>
 <p> the normalized <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -2243,11 +2545,16 @@ gst_caps_simplify (<em class="parameter"><code><a class="link" href="GstCaps.htm
 same set of formats, but in a simpler form.  Component structures that are
 identical are merged.  Component structures that have values that can be
 merged are also merged.</p>
+<p>This function takes ownership of <em class="parameter"><code>caps</code></em>
+ and will call <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a>
+on it if necessary, so you must not use <em class="parameter"><code>caps</code></em>
+ afterwards unless you keep an
+additional reference to it with <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>.</p>
 <p>This method does not preserve the original order of <em class="parameter"><code>caps</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.50.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-simplify.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2261,15 +2568,15 @@ merged are also merged.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.50.7"></a><h4>Returns</h4>
-<p> The simplified caps.</p>
-<p></p>
+<a name="gst-caps-simplify.returns"></a><h4>Returns</h4>
+<p> The simplified caps. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-replace"></a><h3>gst_caps_replace ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_replace (<em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> **old_caps</code></em>,
                   <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *new_caps</code></em>);</pre>
 <p>Modifies a pointer to a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> to point to a different <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. The
@@ -2278,10 +2585,10 @@ in some cases), and the reference counts are updated appropriately (the old
 caps is unreffed, the new is reffed).</p>
 <p>Either <em class="parameter"><code>new_caps</code></em>
  or the <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> pointed to by <em class="parameter"><code>old_caps</code></em>
- may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+ may be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.51.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-replace.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2305,17 +2612,16 @@ replace the caps pointed to by <em class="parameter"><code>old_caps</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.51.7"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>new_caps</code></em>
+<a name="gst-caps-replace.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>new_caps</code></em>
 was different from <em class="parameter"><code>old_caps</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-take"></a><h3>gst_caps_take ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_caps_take (<em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> **old_caps</code></em>,
                <em class="parameter"><code><a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *new_caps</code></em>);</pre>
 <p>Modifies a pointer to a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> to point to a different <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. This
@@ -2323,8 +2629,8 @@ function is similar to <a class="link" href="GstCaps.html#gst-caps-replace" titl
 of <em class="parameter"><code>new_caps</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.52.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-take.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2348,17 +2654,16 @@ replace the caps pointed to by <em class="parameter"><code>old_caps</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.52.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>new_caps</code></em>
+<a name="gst-caps-take.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>new_caps</code></em>
 was different from <em class="parameter"><code>old_caps</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-caps-to-string"></a><h3>gst_caps_to_string ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_caps_to_string (<em class="parameter"><code>const <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> *caps</code></em>);</pre>
 <p>Converts <em class="parameter"><code>caps</code></em>
  to a string representation.  This string representation
@@ -2369,7 +2674,7 @@ can be converted back to a <a class="link" href="GstCaps.html" title="GstCaps"><
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-LOG:CAPS">GST_LOG</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;caps are %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> caps<span class="gtkdoc opt">);</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="gstreamer-GstInfo.html#GST-LOG:CAPS">GST_LOG</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;caps are %&quot;</span> GST_PTR_FORMAT<span class="gtkdoc opt">,</span> caps<span class="gtkdoc opt">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -2380,8 +2685,8 @@ This prints the caps in human readable form.</p>
 <p>The current implementation of serialization will lead to unexpected results
 when there are nested <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> / <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> deeper than one level.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.53.9"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-to-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2395,7 +2700,7 @@ when there are nested <a class="link" href="GstCaps.html" title="GstCaps"><span 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.53.10"></a><h4>Returns</h4>
+<a name="gst-caps-to-string.returns"></a><h4>Returns</h4>
 <p> a newly allocated string representing <em class="parameter"><code>caps</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -2405,14 +2710,14 @@ when there are nested <a class="link" href="GstCaps.html" title="GstCaps"><span 
 <div class="refsect2">
 <a name="gst-caps-from-string"></a><h3>gst_caps_from_string ()</h3>
 <pre class="programlisting"><a class="link" href="GstCaps.html" title="GstCaps"><span class="returnvalue">GstCaps</span></a> *
-gst_caps_from_string (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *string</code></em>);</pre>
+gst_caps_from_string (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *string</code></em>);</pre>
 <p>Converts <em class="parameter"><code>caps</code></em>
  from a string representation.</p>
 <p>The current implementation of serialization will lead to unexpected results
 when there are nested <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> / <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a> deeper than one level.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.54.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-from-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2426,7 +2731,7 @@ when there are nested <a class="link" href="GstCaps.html" title="GstCaps"><span 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.54.7"></a><h4>Returns</h4>
+<a name="gst-caps-from-string.returns"></a><h4>Returns</h4>
 <p> a newly allocated <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -2443,8 +2748,8 @@ gst_caps_subtract (<em class="parameter"><code><a class="link" href="GstCaps.htm
 <div class="note">This function does not work reliably if optional properties for caps
 are included on one caps and omitted on the other.</div>
 <div class="refsect3">
-<a name="id-1.3.11.8.55.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-subtract.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2465,9 +2770,9 @@ are included on one caps and omitted on the other.</div>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.55.7"></a><h4>Returns</h4>
-<p> the resulting caps</p>
-<p></p>
+<a name="gst-caps-subtract.returns"></a><h4>Returns</h4>
+<p> the resulting caps. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -2488,8 +2793,8 @@ caller will own a reference to the returned object.</p>
 that it returns. Don't access the argument after calling this function. See
 also: <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.56.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-make-writable.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2503,7 +2808,7 @@ also: <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()">
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.56.8"></a><h4>Returns</h4>
+<a name="gst-caps-make-writable.returns"></a><h4>Returns</h4>
 <p> a writable caps which may or may not be the
 same as <em class="parameter"><code>caps</code></em>
 . </p>
@@ -2518,9 +2823,14 @@ gst_caps_truncate (<em class="parameter"><code><a class="link" href="GstCaps.htm
 <p>Discard all but the first structure from <em class="parameter"><code>caps</code></em>
 . Useful when
 fixating.</p>
+<p>This function takes ownership of <em class="parameter"><code>caps</code></em>
+ and will call <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a>
+on it if necessary, so you must not use <em class="parameter"><code>caps</code></em>
+ afterwards unless you keep an
+additional reference to it with <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.57.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-truncate.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2534,7 +2844,7 @@ fixating.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.57.6"></a><h4>Returns</h4>
+<a name="gst-caps-truncate.returns"></a><h4>Returns</h4>
 <p> truncated caps. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -2548,9 +2858,14 @@ gst_caps_fixate (<em class="parameter"><code><a class="link" href="GstCaps.html"
  into a representation with only fixed
 values. First the caps will be truncated and then the first structure will be
 fixated with <a class="link" href="GstStructure.html#gst-structure-fixate" title="gst_structure_fixate ()"><code class="function">gst_structure_fixate()</code></a>.</p>
+<p>This function takes ownership of <em class="parameter"><code>caps</code></em>
+ and will call <a class="link" href="GstCaps.html#gst-caps-make-writable" title="gst_caps_make_writable()"><code class="function">gst_caps_make_writable()</code></a>
+on it so you must not use <em class="parameter"><code>caps</code></em>
+ afterwards unless you keep an additional
+reference to it with <a class="link" href="GstCaps.html#gst-caps-ref" title="gst_caps_ref ()"><code class="function">gst_caps_ref()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.58.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-fixate.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2564,7 +2879,7 @@ fixated with <a class="link" href="GstStructure.html#gst-structure-fixate" title
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.58.6"></a><h4>Returns</h4>
+<a name="gst-caps-fixate.returns"></a><h4>Returns</h4>
 <p> the fixated caps. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
@@ -2582,8 +2897,8 @@ object, you must always have a refcount on it -- either the one made
 implicitly by e.g. <a class="link" href="GstCaps.html#gst-caps-new-simple" title="gst_caps_new_simple ()"><code class="function">gst_caps_new_simple()</code></a>, or via taking one explicitly with
 this function.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.59.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-ref.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2597,9 +2912,8 @@ this function.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.11.8.59.7"></a><h4>Returns</h4>
+<a name="gst-caps-ref.returns"></a><h4>Returns</h4>
 <p> the same <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> object.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2610,8 +2924,8 @@ gst_caps_unref (<em class="parameter"><code><a class="link" href="GstCaps.html" 
 <p>Unref a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a> and and free all its structures and the
 structures' values when the refcount reaches 0.</p>
 <div class="refsect3">
-<a name="id-1.3.11.8.60.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-caps-unref.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2636,8 +2950,8 @@ structures' values when the refcount reaches 0.</p>
 </pre>
 <p>Object describing media types.</p>
 <div class="refsect3">
-<a name="id-1.3.11.9.2.5"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstCaps.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
@@ -2663,8 +2977,8 @@ structures' values when the refcount reaches 0.</p>
 used in conjunction with <a class="link" href="GstCaps.html#GST-STATIC-CAPS" title="GST_STATIC_CAPS()"><code class="function">GST_STATIC_CAPS()</code></a> and <a class="link" href="GstCaps.html#gst-static-caps-get" title="gst_static_caps_get ()"><code class="function">gst_static_caps_get()</code></a> to
 instantiate a <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.11.9.3.5"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstStaticCaps.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
@@ -2721,8 +3035,8 @@ another element's caps priority order when intersecting with its own caps.
 Example: If caps1 is [A, B, C] and caps2 is [E, B, D, A], the result
 would be [A, B], maintaining the first caps priority on the intersection.</p>
 <div class="refsect3">
-<a name="id-1.3.11.9.4.8"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstCapsIntersectMode.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -2752,8 +3066,8 @@ would be [A, B], maintaining the first caps priority on the intersection.</p>
 <a name="GstCapsFlags"></a><h3>enum GstCapsFlags</h3>
 <p>Extra flags for a caps.</p>
 <div class="refsect3">
-<a name="id-1.3.11.9.5.4"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstCapsFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -2811,7 +3125,6 @@ This can be used in pad templates.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>

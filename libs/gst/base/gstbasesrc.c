@@ -112,15 +112,14 @@
  * There is only support in #GstBaseSrc for exactly one source pad, which
  * should be named "src". A source implementation (subclass of #GstBaseSrc)
  * should install a pad template in its class_init function, like so:
- * |[
+ * |[<!-- language="C" -->
  * static void
  * my_element_class_init (GstMyElementClass *klass)
  * {
  *   GstElementClass *gstelement_class = GST_ELEMENT_CLASS (klass);
  *   // srctemplate should be a #GstStaticPadTemplate with direction
  *   // %GST_PAD_SRC and name "src"
- *   gst_element_class_add_pad_template (gstelement_class,
- *       gst_static_pad_template_get (&amp;srctemplate));
+ *   gst_element_class_add_static_pad_template (gstelement_class, &amp;srctemplate);
  *
  *   gst_element_class_set_static_metadata (gstelement_class,
  *      "Source name",
@@ -695,9 +694,9 @@ gst_base_src_is_async (GstBaseSrc * src)
  * @max_latency: (out) (allow-none): the max latency of the source
  *
  * Query the source for the latency parameters. @live will be %TRUE when @src is
- * configured as a live source. @min_latency will be set to the difference
- * between the running time and the timestamp of the first buffer.
- * @max_latency is always the undefined value of -1.
+ * configured as a live source. @min_latency and @max_latency will be set
+ * to the difference between the running time and the timestamp of the first
+ * buffer.
  *
  * This function is mostly used by subclasses.
  *
@@ -726,11 +725,11 @@ gst_base_src_query_latency (GstBaseSrc * src, gboolean * live,
   if (min_latency)
     *min_latency = min;
   if (max_latency)
-    *max_latency = -1;
+    *max_latency = min;
 
   GST_LOG_OBJECT (src, "latency: live %d, min %" GST_TIME_FORMAT
       ", max %" GST_TIME_FORMAT, src->is_live, GST_TIME_ARGS (min),
-      GST_TIME_ARGS (-1));
+      GST_TIME_ARGS (min));
   GST_OBJECT_UNLOCK (src);
 
   return TRUE;
@@ -895,7 +894,7 @@ gst_base_src_send_stream_start (GstBaseSrc * src)
 /**
  * gst_base_src_set_caps:
  * @src: a #GstBaseSrc
- * @caps: a #GstCaps
+ * @caps: (transfer none): a #GstCaps
  *
  * Set new caps on the basesrc source pad.
  *
@@ -906,16 +905,27 @@ gst_base_src_set_caps (GstBaseSrc * src, GstCaps * caps)
 {
   GstBaseSrcClass *bclass;
   gboolean res = TRUE;
+  GstCaps *current_caps;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
   gst_base_src_send_stream_start (src);
 
-  if (bclass->set_caps)
-    res = bclass->set_caps (src, caps);
+  current_caps = gst_pad_get_current_caps (GST_BASE_SRC_PAD (src));
+  if (current_caps && gst_caps_is_equal (current_caps, caps)) {
+    GST_DEBUG_OBJECT (src, "New caps equal to old ones: %" GST_PTR_FORMAT,
+        caps);
+    res = TRUE;
+  } else {
+    if (bclass->set_caps)
+      res = bclass->set_caps (src, caps);
 
-  if (res)
-    res = gst_pad_push_event (src->srcpad, gst_event_new_caps (caps));
+    if (res)
+      res = gst_pad_push_event (src->srcpad, gst_event_new_caps (caps));
+  }
+
+  if (current_caps)
+    gst_caps_unref (current_caps);
 
   return res;
 }
@@ -1027,7 +1037,9 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
           } else
             res = TRUE;
 
-          gst_query_set_position (query, format, position);
+          if (res)
+            gst_query_set_position (query, format, position);
+
           break;
         }
       }
@@ -1080,7 +1092,10 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
              * means that we cannot report the duration at all. */
             res = TRUE;
           }
-          gst_query_set_duration (query, format, duration);
+
+          if (res)
+            gst_query_set_duration (query, format, duration);
+
           break;
         }
       }
@@ -1103,7 +1118,7 @@ gst_base_src_default_query (GstBaseSrc * src, GstQuery * query)
             gst_base_src_seekable (src), 0, duration);
         res = TRUE;
       } else {
-        /* FIXME 0.11: return TRUE + seekable=FALSE for SEEKING query here */
+        /* FIXME 2.0: return TRUE + seekable=FALSE for SEEKING query here */
         /* Don't reply to the query to make up for demuxers which don't
          * handle the SEEKING query yet. Players like Totem will fall back
          * to the duration when the SEEKING query isn't answered. */
@@ -1695,12 +1710,6 @@ gst_base_src_perform_seek (GstBaseSrc * src, GstEvent * event, gboolean unlock)
       gst_element_post_message (GST_ELEMENT (src), message);
     }
 
-    /* for deriving a stop position for the playback segment from the seek
-     * segment, we must take the duration when the stop is not set */
-    /* FIXME: This is never used below */
-    if ((stop = seeksegment.stop) == -1)
-      stop = seeksegment.duration;
-
     src->priv->segment_pending = TRUE;
     src->priv->segment_seqnum = seqnum;
   }
@@ -1789,6 +1798,12 @@ gst_base_src_send_event (GstElement * element, GstEvent * event)
       GST_OBJECT_LOCK (src->srcpad);
       start = (GST_PAD_MODE (src->srcpad) == GST_PAD_MODE_PUSH);
       GST_OBJECT_UNLOCK (src->srcpad);
+
+      if (src->is_live) {
+        if (!src->live_running)
+          start = FALSE;
+      }
+
       if (start)
         gst_pad_start_task (src->srcpad, (GstTaskFunction) gst_base_src_loop,
             src->srcpad, NULL);
@@ -2227,7 +2242,7 @@ gst_base_src_do_sync (GstBaseSrc * basesrc, GstBuffer * buffer)
     if (!GST_CLOCK_TIME_IS_VALID (dts)) {
       if (do_timestamp) {
         dts = running_time;
-      } else {
+      } else if (!GST_CLOCK_TIME_IS_VALID (pts)) {
         if (GST_CLOCK_TIME_IS_VALID (basesrc->segment.start)) {
           dts = basesrc->segment.start;
         } else {
@@ -2310,19 +2325,17 @@ gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length,
 {
   guint64 size, maxsize;
   GstBaseSrcClass *bclass;
-  GstFormat format;
   gint64 stop;
+
+  /* only operate if we are working with bytes */
+  if (src->segment.format != GST_FORMAT_BYTES)
+    return TRUE;
 
   bclass = GST_BASE_SRC_GET_CLASS (src);
 
-  format = src->segment.format;
   stop = src->segment.stop;
   /* get total file size */
   size = src->segment.duration;
-
-  /* only operate if we are working with bytes */
-  if (format != GST_FORMAT_BYTES)
-    return TRUE;
 
   /* when not doing automatic EOS, just use the stop position. We don't use
    * the size to check for EOS */
@@ -2350,21 +2363,26 @@ gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length,
         if (!bclass->get_size (src, &size))
           size = -1;
 
-      /* make sure we don't exceed the configured segment stop
-       * if it was set */
-      if (stop != -1)
-        maxsize = MIN (size, stop);
+      /* when not doing automatic EOS, just use the stop position. We don't use
+       * the size to check for EOS */
+      if (!g_atomic_int_get (&src->priv->automatic_eos))
+        maxsize = stop;
+      /* Otherwise, the max amount of bytes to read is the total
+       * size or up to the segment.stop if present. */
+      else if (stop != -1)
+        maxsize = size != -1 ? MIN (size, stop) : stop;
       else
         maxsize = size;
 
-      /* if we are at or past the end, EOS */
-      if (G_UNLIKELY (offset >= maxsize))
-        goto unexpected_length;
+      if (maxsize != -1) {
+        /* if we are at or past the end, EOS */
+        if (G_UNLIKELY (offset >= maxsize))
+          goto unexpected_length;
 
-      /* else we can clip to the end */
-      if (G_UNLIKELY (offset + *length >= maxsize))
-        *length = maxsize - offset;
-
+        /* else we can clip to the end */
+        if (G_UNLIKELY (offset + *length >= maxsize))
+          *length = maxsize - offset;
+      }
     }
   }
 
@@ -2379,6 +2397,7 @@ gst_base_src_update_length (GstBaseSrc * src, guint64 offset, guint * length,
   /* ERRORS */
 unexpected_length:
   {
+    GST_WARNING_OBJECT (src, "processing at or past EOS");
     return FALSE;
   }
 }
@@ -2928,9 +2947,7 @@ pause:
        * due to flushing and posting an error message because of
        * that is the wrong thing to do, e.g. when we're doing
        * a flushing seek. */
-      GST_ELEMENT_ERROR (src, STREAM, FAILED,
-          (_("Internal data flow error.")),
-          ("streaming task paused, reason %s (%d)", reason, ret));
+      GST_ELEMENT_FLOW_ERROR (src, ret);
       gst_pad_push_event (pad, event);
     }
     goto done;
@@ -3068,7 +3085,7 @@ gst_base_src_decide_allocation_default (GstBaseSrc * basesrc, GstQuery * query)
       /* If change are not acceptable, fallback to generic pool */
       if (!gst_buffer_pool_config_validate_params (config, outcaps, size, min,
               max)) {
-        GST_DEBUG_OBJECT (basesrc, "unsuported pool, making new pool");
+        GST_DEBUG_OBJECT (basesrc, "unsupported pool, making new pool");
 
         gst_object_unref (pool);
         pool = gst_buffer_pool_new ();
@@ -3099,6 +3116,7 @@ config_failed:
   GST_ELEMENT_ERROR (basesrc, RESOURCE, SETTINGS,
       ("Failed to configure the buffer pool"),
       ("Configuration is most likely invalid, please report this issue."));
+  gst_object_unref (pool);
   return FALSE;
 }
 
@@ -3332,7 +3350,10 @@ was_started:
 could_not_start:
   {
     GST_DEBUG_OBJECT (basesrc, "could not start");
-    /* subclass is supposed to post a message. We don't have to call _stop. */
+    /* subclass is supposed to post a message but we post one as a fallback
+     * just in case. We don't have to call _stop. */
+    GST_ELEMENT_ERROR (basesrc, CORE, STATE_CHANGE, (NULL),
+        ("Failed to start"));
     gst_base_src_start_complete (basesrc, GST_FLOW_ERROR);
     return FALSE;
   }
@@ -3849,7 +3870,7 @@ failure:
  * @src: a #GstBaseSrc
  *
  * Returns: (transfer full): the instance of the #GstBufferPool used
- * by the src; free it after use it
+ * by the src; unref it after usage.
  */
 GstBufferPool *
 gst_base_src_get_buffer_pool (GstBaseSrc * src)
@@ -3873,7 +3894,7 @@ gst_base_src_get_buffer_pool (GstBaseSrc * src)
  * Lets #GstBaseSrc sub-classes to know the memory @allocator
  * used by the base class and its @params.
  *
- * Unref the @allocator after use it.
+ * Unref the @allocator after usage.
  */
 void
 gst_base_src_get_allocator (GstBaseSrc * src,

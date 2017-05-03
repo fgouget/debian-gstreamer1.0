@@ -35,6 +35,9 @@
 #ifdef G_OS_UNIX
 #include <glib-unix.h>
 #include <sys/wait.h>
+#elif defined (G_OS_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #endif
 #include <locale.h>             /* for LC_ALL */
 #include "tools.h"
@@ -62,6 +65,7 @@ static gboolean toc = FALSE;
 static gboolean messages = FALSE;
 static gboolean is_live = FALSE;
 static gboolean waiting_eos = FALSE;
+static gchar **exclude_args = NULL;
 
 /* convenience macro so we don't have to litter the code with if(!quiet) */
 #define PRINT if(!quiet)g_print
@@ -322,7 +326,7 @@ print_error_message (GstMessage * msg)
   if (debug != NULL)
     g_printerr (_("Additional debug info:\n%s\n"), debug);
 
-  g_error_free (err);
+  g_clear_error (&err);
   g_free (debug);
   g_free (name);
 }
@@ -368,6 +372,7 @@ print_tag (const GstTagList * list, const gchar * tag, gpointer unused)
         g_warning ("Couldn't fetch sample for %s tag", tag);
         g_assert_not_reached ();
       }
+      gst_sample_unref (sample);
     } else if (gst_tag_get_type (tag) == GST_TYPE_DATE_TIME) {
       GstDateTime *dt = NULL;
 
@@ -461,11 +466,14 @@ print_toc_entry (gpointer data, gpointer user_data)
   g_list_foreach (subentries, print_toc_entry, GUINT_TO_POINTER (indent));
 }
 
-#ifdef G_OS_UNIX
+#if defined(G_OS_UNIX) || defined(G_OS_WIN32)
 static guint signal_watch_id;
+#if defined(G_OS_WIN32)
+static GstElement *intr_pipeline;
+#endif
 #endif
 
-#ifdef G_OS_UNIX
+#if defined(G_OS_UNIX) || defined(G_OS_WIN32)
 /* As the interrupt handler is dispatched from GMainContext as a GSourceFunc
  * handler, we can react to this by posting a message. */
 static gboolean
@@ -486,6 +494,15 @@ intr_handler (gpointer user_data)
   return FALSE;
 }
 
+#if defined(G_OS_WIN32)         /* G_OS_UNIX */
+static BOOL WINAPI
+w32_intr_handler (DWORD dwCtrlType)
+{
+  intr_handler ((gpointer) intr_pipeline);
+  intr_pipeline = NULL;
+  return TRUE;
+}
+#endif /* G_OS_WIN32 */
 #endif /* G_OS_UNIX */
 
 /* returns ELR_ERROR if there was an error
@@ -506,6 +523,10 @@ event_loop (GstElement * pipeline, gboolean blocking, gboolean do_progress,
 #ifdef G_OS_UNIX
   signal_watch_id =
       g_unix_signal_add (SIGINT, (GSourceFunc) intr_handler, pipeline);
+#elif defined(G_OS_WIN32)
+  intr_pipeline = NULL;
+  if (SetConsoleCtrlHandler (w32_intr_handler, TRUE))
+    intr_pipeline = pipeline;
 #endif
 
   while (TRUE) {
@@ -630,7 +651,7 @@ event_loop (GstElement * pipeline, gboolean blocking, gboolean do_progress,
         if (debug) {
           PRINT (_("INFO:\n%s\n"), debug);
         }
-        g_error_free (gerror);
+        g_clear_error (&gerror);
         g_free (debug);
         g_free (name);
         break;
@@ -649,7 +670,7 @@ event_loop (GstElement * pipeline, gboolean blocking, gboolean do_progress,
         if (debug) {
           PRINT (_("Additional debug info:\n%s\n"), debug);
         }
-        g_error_free (gerror);
+        g_clear_error (&gerror);
         g_free (debug);
         g_free (name);
         break;
@@ -713,7 +734,7 @@ event_loop (GstElement * pipeline, gboolean blocking, gboolean do_progress,
             goto exit;
         } else {
           /* buffering busy */
-          if (buffering == FALSE && target_state == GST_STATE_PLAYING) {
+          if (!buffering && target_state == GST_STATE_PLAYING) {
             /* we were not buffering but PLAYING, PAUSE  the pipeline. */
             PRINT (_("Buffering, setting pipeline to PAUSED ...\n"));
             gst_element_set_state (pipeline, GST_STATE_PAUSED);
@@ -814,6 +835,47 @@ event_loop (GstElement * pipeline, gboolean blocking, gboolean do_progress,
         gst_context_unref (context);
         break;
       }
+      case GST_MESSAGE_PROPERTY_NOTIFY:{
+        const GValue *val;
+        const gchar *name;
+        GstObject *obj;
+        gchar *val_str = NULL;
+        gchar **ex_prop, *obj_name;
+
+        if (quiet)
+          break;
+
+        gst_message_parse_property_notify (message, &obj, &name, &val);
+
+        /* Let's not print anything for excluded properties... */
+        ex_prop = exclude_args;
+        while (ex_prop != NULL && *ex_prop != NULL) {
+          if (strcmp (name, *ex_prop) == 0)
+            break;
+          ex_prop++;
+        }
+        if (ex_prop != NULL && *ex_prop != NULL)
+          break;
+
+        obj_name = gst_object_get_path_string (GST_OBJECT (obj));
+        if (val != NULL) {
+          if (G_VALUE_HOLDS_STRING (val))
+            val_str = g_value_dup_string (val);
+          else if (G_VALUE_TYPE (val) == GST_TYPE_CAPS)
+            val_str = gst_caps_to_string (g_value_get_boxed (val));
+          else if (G_VALUE_TYPE (val) == GST_TYPE_TAG_LIST)
+            val_str = gst_tag_list_to_string (g_value_get_boxed (val));
+          else
+            val_str = gst_value_serialize (val);
+        } else {
+          val_str = g_strdup ("(no value)");
+        }
+
+        g_print ("%s: %s = %s\n", obj_name, name, val_str);
+        g_free (obj_name);
+        g_free (val_str);
+        break;
+      }
       default:
         /* just be quiet by default */
         break;
@@ -831,6 +893,9 @@ exit:
 #ifdef G_OS_UNIX
     if (signal_watch_id > 0)
       g_source_remove (signal_watch_id);
+#elif defined(G_OS_WIN32)
+    intr_pipeline = NULL;
+    SetConsoleCtrlHandler (w32_intr_handler, FALSE);
 #endif
     return res;
   }
@@ -890,7 +955,6 @@ main (int argc, char *argv[])
   gboolean check_index = FALSE;
 #endif
   gchar *savefile = NULL;
-  gchar *exclude_args = NULL;
 #ifndef GST_DISABLE_OPTION_PARSING
   GOptionEntry options[] = {
     {"tags", 't', 0, G_OPTION_ARG_NONE, &tags,
@@ -903,8 +967,10 @@ main (int argc, char *argv[])
         N_("Do not print any progress information"), NULL},
     {"messages", 'm', 0, G_OPTION_ARG_NONE, &messages,
         N_("Output messages"), NULL},
-    {"exclude", 'X', 0, G_OPTION_ARG_NONE, &exclude_args,
-        N_("Do not output status information of TYPE"), N_("TYPE1,TYPE2,...")},
+    {"exclude", 'X', 0, G_OPTION_ARG_STRING_ARRAY, &exclude_args,
+          N_("Do not output status information for the specified property "
+              "if verbose output is enabled (can be used multiple times)"),
+        N_("PROPERTY-NAME")},
     {"no-fault", 'f', 0, G_OPTION_ARG_NONE, &no_fault,
         N_("Do not install a fault handler"), NULL},
     {"eos-on-shutdown", 'e', 0, G_OPTION_ARG_NONE, &eos_on_shutdown,
@@ -939,6 +1005,8 @@ main (int argc, char *argv[])
 #endif
 
   g_set_prgname ("gst-launch-" GST_API_VERSION);
+  /* Ensure XInitThreads() is called if/when needed */
+  g_setenv ("GST_GL_XINITTHREADS", "1", TRUE);
 
 #ifndef GST_DISABLE_OPTION_PARSING
   ctx = g_option_context_new ("PIPELINE-DESCRIPTION");
@@ -949,6 +1017,8 @@ main (int argc, char *argv[])
       g_printerr ("Error initializing: %s\n", GST_STR_NULL (err->message));
     else
       g_printerr ("Error initializing: Unknown error!\n");
+    g_clear_error (&error);
+    g_option_context_free (ctx);
     exit (1);
   }
   g_option_context_free (ctx);
@@ -976,7 +1046,7 @@ main (int argc, char *argv[])
     if (error) {
       g_printerr (_("ERROR: pipeline could not be constructed: %s.\n"),
           GST_STR_NULL (error->message));
-      g_error_free (error);
+      g_clear_error (&error);
     } else {
       g_printerr (_("ERROR: pipeline could not be constructed.\n"));
     }
@@ -984,7 +1054,7 @@ main (int argc, char *argv[])
   } else if (error) {
     g_printerr (_("WARNING: erroneous pipeline: %s\n"),
         GST_STR_NULL (error->message));
-    g_error_free (error);
+    g_clear_error (&error);
     return 1;
   }
 
@@ -1005,10 +1075,8 @@ main (int argc, char *argv[])
       pipeline = real_pipeline;
     }
     if (verbose) {
-      gchar **exclude_list =
-          exclude_args ? g_strsplit (exclude_args, ",", 0) : NULL;
-      deep_notify_id = g_signal_connect (pipeline, "deep-notify",
-          G_CALLBACK (gst_object_default_deep_notify), exclude_list);
+      deep_notify_id =
+          gst_element_add_property_deep_notify_watch (pipeline, NULL, TRUE);
     }
 #if 0
     if (check_index) {
@@ -1088,6 +1156,7 @@ main (int argc, char *argv[])
 
       tfthen = gst_util_get_timestamp ();
       caught_error = event_loop (pipeline, TRUE, FALSE, GST_STATE_PLAYING);
+      res = caught_error;
       if (eos_on_shutdown && caught_error != ELR_NO_ERROR) {
         gboolean ignore_errors;
 

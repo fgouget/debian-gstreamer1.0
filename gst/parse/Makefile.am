@@ -14,18 +14,10 @@ EXTRA_DIST = \
 nodist_libgstparse_la_SOURCES = lex.priv_gst_parse_yy.c grammar.tab.c grammar.tag.h parse_lex.h
 CLEANFILES += grammar.tab.c lex.priv_gst_parse_yy.c
 
-libgstparse_la_CFLAGS = $(GST_ALL_CFLAGS) -DYYMALLOC=g_malloc -DYYFREE=g_free
+libgstparse_la_CFLAGS = $(GST_ALL_CFLAGS) -DGST_EXPORTS -DYYMALLOC=g_malloc -DYYFREE=g_free
 libgstparse_la_LIBADD = $(GST_ALL_LIBS)
 
 noinst_HEADERS = types.h
-
-Android.mk: Makefile.am
-	androgenizer -:PROJECT gstreamer -:STATIC libgstparse -:TAGS eng debug \
-	 -:REL_TOP $(top_srcdir) -:ABS_TOP $(abs_top_srcdir) \
-	 -:SOURCES $(libgstparse_la_SOURCES) $(nodist_libgstparse_la_SOURCES) \
-	 -:CFLAGS $(DEFS) $(libgstparse_la_CFLAGS) \
-	 -:LDFLAGS $(libgstparse_la_LIBADD) \
-	> $@
 
 grammar.tab.c grammar.tab.h: grammar.y
 	$(AM_V_GEN)$(BISON_PATH) -d -v -ppriv_gst_parse_yy $(srcdir)/grammar.y -o grammar.tab.c && \

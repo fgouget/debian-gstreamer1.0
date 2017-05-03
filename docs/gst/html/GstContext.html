@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstContext</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<title>GstContext: GStreamer 1.0 Core Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
-<link rel="prev" href="gstreamer-gstconfig.html" title="gstconfig">
+<link rel="prev" href="gstreamer-GstConfig.html" title="GstConfig">
 <link rel="next" href="GstControlBinding.html" title="GstControlBinding">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="libgstreamer.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
-<td><a accesskey="p" href="gstreamer-gstconfig.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="gstreamer-GstConfig.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
 <td><a accesskey="n" href="GstControlBinding.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="GstContext.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -73,7 +73,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="GstContext.html#gst-context-get-context-type" title="gst_context_get_context_type ()">gst_context_get_context_type</a> <span class="c_punctuation">()</span>
@@ -81,7 +81,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstContext.html#gst-context-has-context-type" title="gst_context_has_context_type ()">gst_context_has_context_type</a> <span class="c_punctuation">()</span>
@@ -89,7 +89,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstContext.html#gst-context-is-persistent" title="gst_context_is_persistent ()">gst_context_is_persistent</a> <span class="c_punctuation">()</span>
@@ -124,7 +124,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstContext.html#gst-context-replace" title="gst_context_replace ()">gst_context_replace</a> <span class="c_punctuation">()</span>
@@ -135,7 +135,7 @@
 </div>
 <div class="refsect1">
 <a name="GstContext.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -180,18 +180,23 @@ on the bus.</p></li>
 <p>Bins will catch GST_MESSAGE_NEED_CONTEXT messages and will set any previously
 known context on the element that asks for it if possible. Otherwise the
 application should provide one if it can.</p>
+<p><a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a>s can be persistent.
+A persistent <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> is kept in elements when they reach
+<a class="link" href="GstElement.html#GST-STATE-NULL:CAPS"><code class="literal">GST_STATE_NULL</code></a>, non-persistent ones will be removed.
+Also, a non-persistent context won't override a previous persistent
+context set to an element.</p>
 </div>
 <div class="refsect1">
 <a name="GstContext.functions_details"></a><h2>Functions</h2>
 <div class="refsect2">
 <a name="gst-context-new"></a><h3>gst_context_new ()</h3>
 <pre class="programlisting"><a class="link" href="GstContext.html" title="GstContext"><span class="returnvalue">GstContext</span></a> *
-gst_context_new (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *context_type</code></em>,
-                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> persistent</code></em>);</pre>
+gst_context_new (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *context_type</code></em>,
+                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> persistent</code></em>);</pre>
 <p>Create a new context.</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.2.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-new.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -212,11 +217,11 @@ gst_context_new (<em class="parameter"><code>const <a href="https://developer.gn
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.17.8.2.6"></a><h4>Returns</h4>
+<a name="gst-context-new.returns"></a><h4>Returns</h4>
 <p> The new context. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -225,8 +230,8 @@ gst_context_new (<em class="parameter"><code>const <a href="https://developer.gn
 gst_context_ref (<em class="parameter"><code><a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
 <p>Convenience macro to increase the reference count of the context.</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.3.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-ref.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -240,10 +245,9 @@ gst_context_ref (<em class="parameter"><code><a class="link" href="GstContext.ht
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.17.8.3.6"></a><h4>Returns</h4>
+<a name="gst-context-ref.returns"></a><h4>Returns</h4>
 <p> <em class="parameter"><code>context</code></em>
 (for convenience when doing assignments)</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -254,8 +258,8 @@ gst_context_unref (<em class="parameter"><code><a class="link" href="GstContext.
 <p>Convenience macro to decrease the reference count of the context, possibly
 freeing it.</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.4.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-unref.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -276,8 +280,8 @@ freeing it.</p>
 gst_context_copy (<em class="parameter"><code>const <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
 <p>Creates a copy of the context. Returns a copy of the context.</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.5.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-copy.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -291,7 +295,7 @@ gst_context_copy (<em class="parameter"><code>const <a class="link" href="GstCon
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.17.8.5.6"></a><h4>Returns</h4>
+<a name="gst-context-copy.returns"></a><h4>Returns</h4>
 <p> a new copy of <em class="parameter"><code>context</code></em>
 .</p>
 <p>MT safe. </p>
@@ -301,13 +305,13 @@ gst_context_copy (<em class="parameter"><code>const <a class="link" href="GstCon
 <hr>
 <div class="refsect2">
 <a name="gst-context-get-context-type"></a><h3>gst_context_get_context_type ()</h3>
-<pre class="programlisting">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_context_get_context_type (<em class="parameter"><code>const <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
 <p>Get the type of <em class="parameter"><code>context</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.6.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-get-context-type.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -321,24 +325,23 @@ gst_context_get_context_type (<em class="parameter"><code>const <a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.17.8.6.6"></a><h4>Returns</h4>
+<a name="gst-context-get-context-type.returns"></a><h4>Returns</h4>
 <p> The type of the context.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-context-has-context-type"></a><h3>gst_context_has_context_type ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_context_has_context_type (<em class="parameter"><code>const <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>,
-                              <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *context_type</code></em>);</pre>
+                              <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *context_type</code></em>);</pre>
 <p>Checks if <em class="parameter"><code>context</code></em>
  has <em class="parameter"><code>context_type</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.7.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-has-context-type.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -359,24 +362,23 @@ gst_context_has_context_type (<em class="parameter"><code>const <a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.17.8.7.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>context</code></em>
+<a name="gst-context-has-context-type.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>context</code></em>
 has <em class="parameter"><code>context_type</code></em>
 .</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-context-is-persistent"></a><h3>gst_context_is_persistent ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_context_is_persistent (<em class="parameter"><code>const <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
 <p>Check if <em class="parameter"><code>context</code></em>
  is persistent.</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.8.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-is-persistent.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -390,11 +392,10 @@ gst_context_is_persistent (<em class="parameter"><code>const <a class="link" hre
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.17.8.8.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the context is persistent.</p>
-<p></p>
+<a name="gst-context-is-persistent.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the context is persistent.</p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -403,8 +404,8 @@ gst_context_is_persistent (<em class="parameter"><code>const <a class="link" hre
 gst_context_get_structure (<em class="parameter"><code>const <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
 <p>Access the structure of the context.</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.9.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-get-structure.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -418,13 +419,13 @@ gst_context_get_structure (<em class="parameter"><code>const <a class="link" hre
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.17.8.9.6"></a><h4>Returns</h4>
+<a name="gst-context-get-structure.returns"></a><h4>Returns</h4>
 <p> The structure of the context. The structure is
 still owned by the context, which means that you should not modify it,
 free it and that the pointer becomes invalid when you free the context. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -433,8 +434,8 @@ free it and that the pointer becomes invalid when you free the context. </p>
 gst_context_writable_structure (<em class="parameter"><code><a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> *context</code></em>);</pre>
 <p>Get a writable version of the structure.</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.10.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-writable-structure.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -448,15 +449,14 @@ gst_context_writable_structure (<em class="parameter"><code><a class="link" href
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.17.8.10.6"></a><h4>Returns</h4>
+<a name="gst-context-writable-structure.returns"></a><h4>Returns</h4>
 <p> The structure of the context. The structure is still
-owned by the event, which means that you should not free it and
-that the pointer becomes invalid when you free the event.
+owned by the context, which means that you should not free it and
+that the pointer becomes invalid when you free the context.
 This function checks if <em class="parameter"><code>context</code></em>
 is writable.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -466,8 +466,8 @@ is writable.</p>
 <p>Checks if a context is writable. If not, a writable copy is made and
 returned.</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.11.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-make-writable.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -481,7 +481,7 @@ returned.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.17.8.11.6"></a><h4>Returns</h4>
+<a name="gst-context-make-writable.returns"></a><h4>Returns</h4>
 <p> a context (possibly a duplicate) that is writable.</p>
 <p>MT safe. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -495,8 +495,8 @@ returned.</p>
 <p>Tests if you can safely write into a context's structure or validly
 modify the seqnum and timestamp fields.</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.12.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-is-writable.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -513,7 +513,7 @@ modify the seqnum and timestamp fields.</p>
 <hr>
 <div class="refsect2">
 <a name="gst-context-replace"></a><h3>gst_context_replace ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_context_replace (<em class="parameter"><code><a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> **old_context</code></em>,
                      <em class="parameter"><code><a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> *new_context</code></em>);</pre>
 <p>Modifies a pointer to a <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> to point to a different <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a>. The
@@ -522,10 +522,10 @@ in some cases), and the reference counts are updated appropriately (the old
 context is unreffed, the new one is reffed).</p>
 <p>Either <em class="parameter"><code>new_context</code></em>
  or the <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a> pointed to by <em class="parameter"><code>old_context</code></em>
- may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+ may be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.17.8.13.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-context-replace.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -549,11 +549,10 @@ replace the context pointed to by <em class="parameter"><code>old_context</code>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.17.8.13.7"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>new_context</code></em>
+<a name="gst-context-replace.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>new_context</code></em>
 was different from <em class="parameter"><code>old_context</code></em>
 </p>
-<p></p>
 </div>
 </div>
 </div>
@@ -570,7 +569,6 @@ was different from <em class="parameter"><code>old_context</code></em>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>

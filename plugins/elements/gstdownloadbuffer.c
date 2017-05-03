@@ -30,7 +30,7 @@
  * With max-size-bytes and max-size-time you can configure the buffering limits.
  * The downloadbuffer element will try to read-ahead these amounts of data. When
  * the amount of read-ahead data drops below low-percent of the configured max,
- * the element will start emiting BUFFERING messages until high-percent of max is
+ * the element will start emitting BUFFERING messages until high-percent of max is
  * reached again.
  *
  * The downloadbuffer provides push and pull based scheduling on its source pad
@@ -70,10 +70,12 @@
 #include <io.h>                 /* lseek, open, close, read */
 #undef lseek
 #define lseek _lseeki64
-#undef off_t
-#define off_t guint64
 #else
 #include <unistd.h>
+#endif
+
+#ifdef __BIONIC__
+#include <fcntl.h>
 #endif
 
 static GstStaticPadTemplate sinktemplate = GST_STATIC_PAD_TEMPLATE ("sink",
@@ -174,7 +176,7 @@ enum
 G_DEFINE_TYPE_WITH_CODE (GstDownloadBuffer, gst_download_buffer,
     GST_TYPE_ELEMENT, _do_init);
 
-static void update_buffering (GstDownloadBuffer * dlbuf);
+static GstMessage *update_buffering (GstDownloadBuffer * dlbuf);
 
 static void gst_download_buffer_finalize (GObject * object);
 
@@ -225,11 +227,13 @@ gst_download_buffer_class_init (GstDownloadBufferClass * klass)
       g_param_spec_uint ("max-size-bytes", "Max. size (kB)",
           "Max. amount of data to buffer (bytes, 0=disable)",
           0, G_MAXUINT, DEFAULT_MAX_SIZE_BYTES,
-          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+          G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
+          G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_MAX_SIZE_TIME,
       g_param_spec_uint64 ("max-size-time", "Max. size (ns)",
           "Max. amount of data to buffer (in ns, 0=disable)", 0, G_MAXUINT64,
-          DEFAULT_MAX_SIZE_TIME, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+          DEFAULT_MAX_SIZE_TIME, G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
+          G_PARAM_STATIC_STRINGS));
 
   g_object_class_install_property (gobject_class, PROP_LOW_PERCENT,
       g_param_spec_int ("low-percent", "Low percent",
@@ -267,10 +271,8 @@ gst_download_buffer_class_init (GstDownloadBufferClass * klass)
   /* set several parent class virtual functions */
   gobject_class->finalize = gst_download_buffer_finalize;
 
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&srctemplate));
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&sinktemplate));
+  gst_element_class_add_static_pad_template (gstelement_class, &srctemplate);
+  gst_element_class_add_static_pad_template (gstelement_class, &sinktemplate);
 
   gst_element_class_set_static_metadata (gstelement_class, "DownloadBuffer",
       "Generic", "Download Buffer element",
@@ -390,25 +392,19 @@ reset_rate_timer (GstDownloadBuffer * dlbuf)
 #define AVG_OUT(avg,val) ((avg) * 3.0 + (val)) / 4.0
 
 static void
-update_time_level (GstDownloadBuffer * dlbuf)
+update_levels (GstDownloadBuffer * dlbuf, guint bytes)
 {
+  dlbuf->cur_level.bytes = bytes;
+
   if (dlbuf->byte_in_rate > 0.0) {
     dlbuf->cur_level.time =
         dlbuf->cur_level.bytes / dlbuf->byte_in_rate * GST_SECOND;
   }
+
   GST_DEBUG ("levels: bytes %u/%u, time %" GST_TIME_FORMAT "/%" GST_TIME_FORMAT,
       dlbuf->cur_level.bytes, dlbuf->max_level.bytes,
       GST_TIME_ARGS (dlbuf->cur_level.time),
       GST_TIME_ARGS (dlbuf->max_level.time));
-  /* update the buffering */
-  update_buffering (dlbuf);
-}
-
-static void
-update_levels (GstDownloadBuffer * dlbuf, guint bytes)
-{
-  dlbuf->cur_level.bytes = bytes;
-  update_time_level (dlbuf);
 }
 
 static void
@@ -566,14 +562,15 @@ get_buffering_stats (GstDownloadBuffer * dlbuf, gint percent,
   }
 }
 
-static void
+static GstMessage *
 update_buffering (GstDownloadBuffer * dlbuf)
 {
   gint percent;
   gboolean post = FALSE;
+  GstMessage *message = NULL;
 
   if (!get_buffering_percent (dlbuf, NULL, &percent))
-    return;
+    return NULL;
 
   if (dlbuf->is_buffering) {
     post = TRUE;
@@ -597,7 +594,6 @@ update_buffering (GstDownloadBuffer * dlbuf)
   }
 
   if (post) {
-    GstMessage *message;
     GstBufferingMode mode;
     gint avg_in, avg_out;
     gint64 buffering_left;
@@ -609,9 +605,9 @@ update_buffering (GstDownloadBuffer * dlbuf)
         (gint) percent);
     gst_message_set_buffering_stats (message, mode,
         avg_in, avg_out, buffering_left);
-
-    gst_element_post_message (GST_ELEMENT_CAST (dlbuf), message);
   }
+
+  return message;
 }
 
 static gboolean
@@ -844,6 +840,7 @@ hit_eos:
 out_flushing:
   {
     GST_DEBUG_OBJECT (dlbuf, "we are flushing");
+    g_clear_error (&error);
     gst_buffer_unmap (buf, &info);
     if (*buffer == NULL)
       gst_buffer_unref (buf);
@@ -873,7 +870,7 @@ gst_download_buffer_open_temp_location_file (GstDownloadBuffer * dlbuf)
 
   GST_DEBUG_OBJECT (dlbuf, "opening temp file %s", dlbuf->temp_template);
 
-  /* If temp_template was set, allocate a filename and open that filen */
+  /* If temp_template was set, allocate a filename and open that file */
 
   /* nothing to do */
   if (dlbuf->temp_template == NULL)
@@ -881,7 +878,11 @@ gst_download_buffer_open_temp_location_file (GstDownloadBuffer * dlbuf)
 
   /* make copy of the template, we don't want to change this */
   name = g_strdup (dlbuf->temp_template);
+#ifdef __BIONIC__
+  fd = g_mkstemp_full (name, O_RDWR | O_LARGEFILE, S_IRUSR | S_IWUSR);
+#else
   fd = g_mkstemp (name);
+#endif
   if (fd == -1)
     goto mkstemp_failed;
 
@@ -1051,6 +1052,8 @@ gst_download_buffer_handle_sink_event (GstPad * pad, GstObject * parent,
     }
     default:
       if (GST_EVENT_IS_SERIALIZED (event)) {
+        GstMessage *msg = NULL;
+
         /* serialized events go in the buffer */
         GST_DOWNLOAD_BUFFER_MUTEX_LOCK_CHECK (dlbuf, dlbuf->sinkresult,
             out_flushing);
@@ -1061,6 +1064,8 @@ gst_download_buffer_handle_sink_event (GstPad * pad, GstObject * parent,
              * filled and we can read all data from the dlbuf. */
             /* update the buffering status */
             update_levels (dlbuf, dlbuf->max_level.bytes);
+            /* update the buffering */
+            msg = update_buffering (dlbuf);
             /* wakeup the waiter and let it recheck */
             GST_DOWNLOAD_BUFFER_SIGNAL_ADD (dlbuf, -1);
             break;
@@ -1078,6 +1083,8 @@ gst_download_buffer_handle_sink_event (GstPad * pad, GstObject * parent,
         }
         gst_event_unref (event);
         GST_DOWNLOAD_BUFFER_MUTEX_UNLOCK (dlbuf);
+        if (msg != NULL)
+          gst_element_post_message (GST_ELEMENT_CAST (dlbuf), msg);
       } else {
         /* non-serialized events are passed upstream. */
         ret = gst_pad_push_event (dlbuf->srcpad, event);
@@ -1127,6 +1134,7 @@ gst_download_buffer_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
   guint64 offset;
   gsize res, available;
   GError *error = NULL;
+  GstMessage *msg = NULL;
 
   dlbuf = GST_DOWNLOAD_BUFFER (parent);
 
@@ -1208,7 +1216,13 @@ gst_download_buffer_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
       update_levels (dlbuf, 0);
   }
 
+  /* update the buffering */
+  msg = update_buffering (dlbuf);
+
   GST_DOWNLOAD_BUFFER_MUTEX_UNLOCK (dlbuf);
+
+  if (msg != NULL)
+    gst_element_post_message (GST_ELEMENT_CAST (dlbuf), msg);
 
   return GST_FLOW_OK;
 
@@ -1251,11 +1265,17 @@ completed:
     dlbuf->write_pos = dlbuf->upstream_size;
     dlbuf->filling = FALSE;
     update_levels (dlbuf, dlbuf->max_level.bytes);
+    msg = update_buffering (dlbuf);
+
     gst_element_post_message (GST_ELEMENT_CAST (dlbuf),
         gst_message_new_element (GST_OBJECT_CAST (dlbuf),
             gst_structure_new ("GstCacheDownloadComplete",
                 "location", G_TYPE_STRING, dlbuf->temp_location, NULL)));
+
     GST_DOWNLOAD_BUFFER_MUTEX_UNLOCK (dlbuf);
+
+    if (msg != NULL)
+      gst_element_post_message (GST_ELEMENT_CAST (dlbuf), msg);
 
     return GST_FLOW_EOS;
   }
@@ -1269,6 +1289,7 @@ gst_download_buffer_loop (GstPad * pad)
   GstDownloadBuffer *dlbuf;
   GstFlowReturn ret;
   GstBuffer *buffer = NULL;
+  GstMessage *msg = NULL;
 
   dlbuf = GST_DOWNLOAD_BUFFER (GST_PAD_PARENT (pad));
 
@@ -1288,8 +1309,14 @@ gst_download_buffer_loop (GstPad * pad)
   if (ret != GST_FLOW_OK)
     goto out_flushing;
 
+  /* update the buffering */
+  msg = update_buffering (dlbuf);
+
   g_atomic_int_set (&dlbuf->downstream_may_block, 1);
   GST_DOWNLOAD_BUFFER_MUTEX_UNLOCK (dlbuf);
+
+  if (msg != NULL)
+    gst_element_post_message (GST_ELEMENT_CAST (dlbuf), msg);
 
   ret = gst_pad_push (dlbuf->srcpad, buffer);
   g_atomic_int_set (&dlbuf->downstream_may_block, 0);
@@ -1318,10 +1345,7 @@ out_flushing:
        * file. */
       gst_pad_push_event (dlbuf->srcpad, gst_event_new_eos ());
     } else if ((ret == GST_FLOW_NOT_LINKED || ret < GST_FLOW_EOS)) {
-      GST_ELEMENT_ERROR (dlbuf, STREAM, FAILED,
-          (_("Internal data flow error.")),
-          ("streaming task paused, reason %s (%d)",
-              gst_flow_get_name (ret), ret));
+      GST_ELEMENT_FLOW_ERROR (dlbuf, ret);
       gst_pad_push_event (dlbuf->srcpad, gst_event_new_eos ());
     }
     return;
@@ -1410,9 +1434,13 @@ gst_download_buffer_handle_src_query (GstPad * pad, GstObject * parent,
       switch (format) {
         case GST_FORMAT_BYTES:
           peer_pos -= dlbuf->cur_level.bytes;
+          if (peer_pos < 0)     /* Clamp result to 0 */
+            peer_pos = 0;
           break;
         case GST_FORMAT_TIME:
           peer_pos -= dlbuf->cur_level.time;
+          if (peer_pos < 0)     /* Clamp result to 0 */
+            peer_pos = 0;
           break;
         default:
           GST_WARNING_OBJECT (dlbuf, "dropping query in %s format, don't "
@@ -1589,13 +1617,20 @@ gst_download_buffer_get_range (GstPad * pad, GstObject * parent, guint64 offset,
 {
   GstDownloadBuffer *dlbuf;
   GstFlowReturn ret;
+  GstMessage *msg = NULL;
 
   dlbuf = GST_DOWNLOAD_BUFFER_CAST (parent);
 
   GST_DOWNLOAD_BUFFER_MUTEX_LOCK_CHECK (dlbuf, dlbuf->srcresult, out_flushing);
   /* FIXME - function will block when the range is not yet available */
   ret = gst_download_buffer_read_buffer (dlbuf, offset, length, buffer);
+  /* update the buffering */
+  msg = update_buffering (dlbuf);
+
   GST_DOWNLOAD_BUFFER_MUTEX_UNLOCK (dlbuf);
+
+  if (msg != NULL)
+    gst_element_post_message (GST_ELEMENT_CAST (dlbuf), msg);
 
   return ret;
 
@@ -1835,6 +1870,7 @@ gst_download_buffer_set_property (GObject * object,
     guint prop_id, const GValue * value, GParamSpec * pspec)
 {
   GstDownloadBuffer *dlbuf = GST_DOWNLOAD_BUFFER (object);
+  GstMessage *msg = NULL;
 
   /* someone could change levels here, and since this
    * affects the get/put funcs, we need to lock for safety. */
@@ -1843,11 +1879,11 @@ gst_download_buffer_set_property (GObject * object,
   switch (prop_id) {
     case PROP_MAX_SIZE_BYTES:
       dlbuf->max_level.bytes = g_value_get_uint (value);
-      CAPACITY_CHANGE (dlbuf);
+      msg = CAPACITY_CHANGE (dlbuf);
       break;
     case PROP_MAX_SIZE_TIME:
       dlbuf->max_level.time = g_value_get_uint64 (value);
-      CAPACITY_CHANGE (dlbuf);
+      msg = CAPACITY_CHANGE (dlbuf);
       break;
     case PROP_LOW_PERCENT:
       dlbuf->low_percent = g_value_get_int (value);
@@ -1867,6 +1903,10 @@ gst_download_buffer_set_property (GObject * object,
   }
 
   GST_DOWNLOAD_BUFFER_MUTEX_UNLOCK (dlbuf);
+
+  if (msg != NULL)
+    gst_element_post_message (GST_ELEMENT_CAST (dlbuf), msg);
+
 }
 
 static void

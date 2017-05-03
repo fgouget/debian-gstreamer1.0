@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.10.30.3\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2014-11-06 12:20+0100\n"
+"POT-Creation-Date: 2017-02-23 15:12+0200\n"
 "PO-Revision-Date: 2010-11-04 19:41+0100\n"
 "Last-Translator: Jordi Mallach <jordi@sindominio.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -461,6 +461,12 @@ msgstr "compositor"
 msgid "person(s) who composed the recording"
 msgstr "persones que composaren la gravació"
 
+msgid "conductor"
+msgstr ""
+
+msgid "conductor/performer refinement"
+msgstr ""
+
 msgid "duration"
 msgstr "durada"
 
@@ -828,6 +834,12 @@ msgstr ""
 msgid "Midi note number of the audio track."
 msgstr ""
 
+msgid "private-data"
+msgstr ""
+
+msgid "Private data"
+msgstr ""
+
 msgid ", "
 msgstr ", "
 
@@ -867,6 +879,9 @@ msgstr "no hi ha cap propietat «%s» en l'element «%s»"
 msgid "could not set property \"%s\" in element \"%s\" to \"%s\""
 msgstr "no s'ha pogut establir la propietat «%s» en l'element «%s» a «%s»"
 
+msgid "Delayed linking failed."
+msgstr ""
+
 #, c-format
 msgid "could not link %s to %s"
 msgstr "no s'ha pogut enllaçar %s a %s"
@@ -898,9 +913,6 @@ msgstr "no hi ha cap element font per a l'URI «%s»"
 msgid "syntax error"
 msgstr ""
 
-msgid "bin"
-msgstr ""
-
 #, c-format
 msgid "specified empty bin \"%s\", not allowed"
 msgstr "el binari especificat «%s» és buit, no es permet"
@@ -917,9 +929,6 @@ msgstr "S'estan descartant moltes memòries intermèdies."
 
 msgid "Internal data flow problem."
 msgstr "Hi ha un problema intern de flux de dades."
-
-msgid "Internal data stream error."
-msgstr "S'ha produït un error intern de flux de dades."
 
 msgid "Internal data flow error."
 msgstr "S'ha produït un error intern de flux de dades."
@@ -940,6 +949,12 @@ msgid ""
 msgstr ""
 "Restringeix les capacitats que es poden permetre (NUL vol dir QUALSEVOL). "
 "Establir aquesta propietat pren una referència a l'objecte GstCaps proveït."
+
+msgid "Caps Change Mode"
+msgstr ""
+
+msgid "Filter caps change behaviour"
+msgstr ""
 
 msgid "No Temp directory specified."
 msgstr "No s'ha especificat un directori temporal."
@@ -1007,6 +1022,10 @@ msgstr "força les capacitats"
 msgid "force caps without doing a typefind"
 msgstr "força les capacitats sense fer un «typefind»"
 
+#, fuzzy
+msgid "Stream doesn't contain enough data."
+msgstr "El flux no conté dades."
+
 msgid "Stream contains no data."
 msgstr "El flux no conté dades."
 
@@ -1018,6 +1037,9 @@ msgstr "llegible"
 
 msgid "writable"
 msgstr "escrivible"
+
+msgid "deprecated"
+msgstr ""
 
 msgid "controllable"
 msgstr "controlable"
@@ -1221,11 +1243,13 @@ msgstr "No mostres informació del progrés"
 msgid "Output messages"
 msgstr "Missatges de sortida"
 
-msgid "Do not output status information of TYPE"
-msgstr "No mostres informació d'estat de TIPUS"
+msgid ""
+"Do not output status information for the specified property if verbose "
+"output is enabled (can be used multiple times)"
+msgstr ""
 
-msgid "TYPE1,TYPE2,..."
-msgstr "TIPUS1,TIPUS2,…"
+msgid "PROPERTY-NAME"
+msgstr ""
 
 msgid "Do not install a fault handler"
 msgstr "No instal·les un gestor de fallades"
@@ -1309,6 +1333,15 @@ msgstr "S'està establint el conducte a NUL…\n"
 
 msgid "Freeing pipeline ...\n"
 msgstr "S'està alliberant el conducte…\n"
+
+#~ msgid "Internal data stream error."
+#~ msgstr "S'ha produït un error intern de flux de dades."
+
+#~ msgid "Do not output status information of TYPE"
+#~ msgstr "No mostres informació d'estat de TIPUS"
+
+#~ msgid "TYPE1,TYPE2,..."
+#~ msgstr "TIPUS1,TIPUS2,…"
 
 #~ msgid "link without source element"
 #~ msgstr "l'enllaç no té un element font"

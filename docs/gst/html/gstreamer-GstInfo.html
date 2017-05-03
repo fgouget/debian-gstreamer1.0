@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstInfo</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<title>GstInfo: GStreamer 1.0 Core Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="gstreamer-support.html" title="GStreamer Core Support">
 <link rel="prev" href="gstreamer-support.html" title="GStreamer Core Support">
-<link rel="next" href="gstreamer-hierarchy.html" title="Object Hierarchy">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<link rel="next" href="GstTracer.html" title="GstTracer">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="gstreamer-support.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="gstreamer-support.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
-<td><a accesskey="n" href="gstreamer-hierarchy.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="GstTracer.html"><img src="right.png" width="16" height="16" border="0" alt="Next"></a></td>
 </tr></table>
 <div class="refentry">
 <a name="gstreamer-GstInfo"></a><div class="titlepage"></div>
@@ -33,7 +33,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="gstreamer-GstInfo.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -50,10 +50,6 @@
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-PAD-NAME:CAPS" title="GST_DEBUG_PAD_NAME()">GST_DEBUG_PAD_NAME</a><span class="c_punctuation">()</span>
 </td>
-</tr>
-<tr>
-<td class="define_keyword">#define</td>
-<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-FUNCTION:CAPS" title="GST_FUNCTION">GST_FUNCTION</a></td>
 </tr>
 <tr>
 <td class="function_type">
@@ -80,7 +76,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-message-get" title="gst_debug_message_get ()">gst_debug_message_get</a> <span class="c_punctuation">()</span>
@@ -95,7 +91,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-level-get-name" title="gst_debug_level_get_name ()">gst_debug_level_get_name</a> <span class="c_punctuation">()</span>
@@ -111,7 +107,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-remove-log-function" title="gst_debug_remove_log_function ()">gst_debug_remove_log_function</a> <span class="c_punctuation">()</span>
@@ -119,7 +115,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-remove-log-function-by-data" title="gst_debug_remove_log_function_by_data ()">gst_debug_remove_log_function_by_data</a> <span class="c_punctuation">()</span>
@@ -135,7 +131,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-is-active" title="gst_debug_is_active ()">gst_debug_is_active</a> <span class="c_punctuation">()</span>
@@ -167,7 +163,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-is-colored" title="gst_debug_is_colored ()">gst_debug_is_colored</a> <span class="c_punctuation">()</span>
@@ -284,7 +280,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-category-get-name" title="gst_debug_category_get_name ()">gst_debug_category_get_name</a> <span class="c_punctuation">()</span>
@@ -292,14 +288,14 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-category-get-color" title="gst_debug_category_get_color ()">gst_debug_category_get_color</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
-<td class="function_type">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-category-get-description" title="gst_debug_category_get_description ()">gst_debug_category_get_description</a> <span class="c_punctuation">()</span>
@@ -307,7 +303,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+<a href="/usr/share/gtk-doc/html/glibglib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-get-all-categories" title="gst_debug_get_all_categories ()">gst_debug_get_all_categories</a> <span class="c_punctuation">()</span>
@@ -315,7 +311,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-construct-term-color" title="gst_debug_construct_term_color ()">gst_debug_construct_term_color</a> <span class="c_punctuation">()</span>
@@ -323,7 +319,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-construct-win-color" title="gst_debug_construct_win_color ()">gst_debug_construct_win_color</a> <span class="c_punctuation">()</span>
@@ -572,6 +568,20 @@
 </td>
 </tr>
 <tr>
+<td class="define_keyword">#define</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#GST-STIME-ARGS:CAPS" title="GST_STIME_ARGS()">GST_STIME_ARGS</a><span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-debug-bin-to-dot-data" title="gst_debug_bin_to_dot_data ()">gst_debug_bin_to_dot_data</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
 <td class="function_type">
 <span class="returnvalue">void</span>
 </td>
@@ -587,12 +597,36 @@
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-bin-to-dot-file-with-ts" title="gst_debug_bin_to_dot_file_with_ts ()">gst_debug_bin_to_dot_file_with_ts</a> <span class="c_punctuation">()</span>
 </td>
 </tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-info-vasprintf" title="gst_info_vasprintf ()">gst_info_vasprintf</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-vprintf" title="gst_info_strdup_vprintf ()">gst_info_strdup_vprintf</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+</td>
+<td class="function_name">
+<a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-printf" title="gst_info_strdup_printf ()">gst_info_strdup_printf</a> <span class="c_punctuation">()</span>
+</td>
+</tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstInfo.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -605,6 +639,10 @@
 <tr>
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-LEVEL-DEFAULT:CAPS" title="GST_LEVEL_DEFAULT">GST_LEVEL_DEFAULT</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-LEVEL-MAX:CAPS" title="GST_LEVEL_MAX">GST_LEVEL_MAX</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword">enum</td>
@@ -623,12 +661,28 @@
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails">GstDebugGraphDetails</a></td>
 </tr>
 <tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-FUNCTION:CAPS" title="GST_FUNCTION">GST_FUNCTION</a></td>
+</tr>
+<tr>
 <td class="variable_type">extern</td>
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-CAT-DEFAULT:CAPS" title="GST_CAT_DEFAULT">GST_CAT_DEFAULT</a></td>
 </tr>
 <tr>
 <td class="define_keyword">#define</td>
 <td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-TIME-FORMAT:CAPS" title="GST_TIME_FORMAT">GST_TIME_FORMAT</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-STIME-FORMAT:CAPS" title="GST_STIME_FORMAT">GST_STIME_FORMAT</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT">GST_PTR_FORMAT</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT">GST_SEGMENT_FORMAT</a></td>
 </tr>
 </tbody>
 </table></div>
@@ -648,7 +702,7 @@ methods (g_warning and friends) for that.</p>
 <p>The debugging subsystem is used to log informational messages while the
 application runs.  Each messages has some properties attached to it. Among
 these properties are the debugging category, the severity (called "level"
-here) and an optional <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> it belongs to. Each of these messages is sent
+here) and an optional <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> it belongs to. Each of these messages is sent
 to all registered debugging handlers, which then handle the messages.
 GStreamer attaches a default handler on startup, which outputs requested
 messages to stderr.</p>
@@ -665,7 +719,7 @@ the variables and set the default category.</p>
       <tr>
         <td class="listing_lines" align="right"><pre>1
 2</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>my_category<span class="gtkdoc opt">);</span>  <span class="gtkdoc slc">// define category (statically)</span>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>my_category<span class="gtkdoc opt">);</span>  <span class="gtkdoc slc">// define category (statically)</span>
 <span class="gtkdoc ppc">#define GST_CAT_DEFAULT my_category</span>       <span class="gtkdoc slc">// set as default</span><span class="gtkdoc ppc"></span></pre></td>
       </tr>
     </tbody>
@@ -680,7 +734,7 @@ After that you only need to initialize the category.</p>
       <tr>
         <td class="listing_lines" align="right"><pre>1
 2</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-INIT:CAPS">GST_DEBUG_CATEGORY_INIT</a></span> <span class="gtkdoc opt">(</span>my_category<span class="gtkdoc opt">,</span> <span class="string">&quot;my category&quot;</span><span class="gtkdoc opt">,</span>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-INIT:CAPS">GST_DEBUG_CATEGORY_INIT</a></span> <span class="gtkdoc opt">(</span>my_category<span class="gtkdoc opt">,</span> <span class="string">&quot;my category&quot;</span><span class="gtkdoc opt">,</span>
                          <span class="number">0</span><span class="gtkdoc opt">,</span> <span class="string">&quot;This is my very own&quot;</span><span class="gtkdoc opt">);</span></pre></td>
       </tr>
     </tbody>
@@ -699,7 +753,7 @@ nothing at all.
 So don't take addresses of these functions or use other tricks.
 If you must do that for some reason, there is still an option.
 If the debugging
-subsystem was compiled out, <a class="link" href="gstreamer-gstconfig.html#GST-DISABLE-GST-DEBUG:CAPS" title="GST_DISABLE_GST_DEBUG"><span class="type">GST_DISABLE_GST_DEBUG</span></a> is defined in
+subsystem was compiled out, <a class="link" href="gstreamer-GstConfig.html#GST-DISABLE-GST-DEBUG:CAPS" title="GST_DISABLE_GST_DEBUG"><span class="type">GST_DISABLE_GST_DEBUG</span></a> is defined in
 &lt;gst/gst.h&gt;,
 so you can check that before doing your trick.
 Disabling the debugging subsystem will give you a slight (read: unnoticeable)
@@ -714,14 +768,14 @@ categories. These are explained at <a class="link" href="gstreamer-GstInfo.html#
 <a name="GST-STR-NULL:CAPS"></a><h3>GST_STR_NULL()</h3>
 <pre class="programlisting">#define GST_STR_NULL(str) ((str) ? (str) : "(NULL)")
 </pre>
-<p>Macro to use when a string must not be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, but may be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. If the string
-is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, "(NULL)" is printed instead.
-In GStreamer printf string arguments may not be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, because on some
+<p>Macro to use when a string must not be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, but may be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. If the string
+is <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, "(NULL)" is printed instead.
+In GStreamer printf string arguments may not be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, because on some
 platforms (ie Solaris) the libc crashes in that case. This includes debugging
 strings.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.2.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-STR-NULL.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -742,8 +796,8 @@ strings.</p>
 <p>Evaluates to 2 strings, that describe the pad. Often used in debugging
 statements.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.3.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-PAD-NAME.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -759,34 +813,22 @@ statements.</p>
 </div>
 <hr>
 <div class="refsect2">
-<a name="GST-FUNCTION:CAPS"></a><h3>GST_FUNCTION</h3>
-<pre class="programlisting">#  define GST_FUNCTION     ((const char*) (__FUNCTION__))
-</pre>
-<p>This macro should evaluate to the name of the current function and be should
-be defined when configuring your project, as it is compiler dependant. If it
-is not defined, some default value is used. It is used to provide debugging
-output with the function name of the message.</p>
-<p>Note that this is different from G_STRFUNC as we do not want the full
-function signature in C++ code.</p>
-</div>
-<hr>
-<div class="refsect2">
 <a name="GstLogFunction"></a><h3>GstLogFunction ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 <span class="c_punctuation">(</span>*GstLogFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>,
                    <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>,
-                   <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
-                   <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *function</code></em>,
-                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
-                   <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
+                   <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
+                   <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *function</code></em>,
+                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
+                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> *object</code></em>,
                    <em class="parameter"><code><span class="type">GstDebugMessage</span> *message</code></em>,
-                   <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>Function prototype for a logging function that can be registered with
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-add-log-function" title="gst_debug_add_log_function ()"><code class="function">gst_debug_add_log_function()</code></a>.
 Use G_GNUC_NO_INSTRUMENT on that function.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.5.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstLogFunction.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -820,7 +862,7 @@ Use G_GNUC_NO_INSTRUMENT on that function.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>object</p></td>
-<td class="parameter_description"><p>a <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a></p></td>
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -843,16 +885,16 @@ Use G_GNUC_NO_INSTRUMENT on that function.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_debug_log (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>,
                <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>,
-               <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
-               <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *function</code></em>,
-               <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
-               <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
-               <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+               <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
+               <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *function</code></em>,
+               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
+               <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> *object</code></em>,
+               <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
                <em class="parameter"><code>...</code></em>);</pre>
 <p>Logs the given message using the currently registered debugging handlers.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.6.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-log.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -887,7 +929,7 @@ gst_debug_log (<em class="parameter"><code><a class="link" href="gstreamer-GstIn
 <tr>
 <td class="parameter_name"><p>object</p></td>
 <td class="parameter_description"><p> the object this message relates to,
-or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -910,16 +952,16 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_debug_log_valist (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>,
                       <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>,
-                      <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
-                      <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *function</code></em>,
-                      <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
-                      <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
-                      <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                      <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
+                      <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *function</code></em>,
+                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
+                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> *object</code></em>,
+                      <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
                       <em class="parameter"><code><span class="type">va_list</span> args</code></em>);</pre>
 <p>Logs the given message using the currently registered debugging handlers.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.7.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-log-valist.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -954,7 +996,7 @@ gst_debug_log_valist (<em class="parameter"><code><a class="link" href="gstreame
 <tr>
 <td class="parameter_name"><p>object</p></td>
 <td class="parameter_description"><p> the object this message relates to,
-or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -974,13 +1016,13 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <hr>
 <div class="refsect2">
 <a name="gst-debug-message-get"></a><h3>gst_debug_message_get ()</h3>
-<pre class="programlisting">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_debug_message_get (<em class="parameter"><code><span class="type">GstDebugMessage</span> *message</code></em>);</pre>
 <p>Gets the string representation of a <span class="type">GstDebugMessage</span>. This function is used
 in debug handlers to extract the message.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.8.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-message-get.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -994,9 +1036,8 @@ in debug handlers to extract the message.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.8.6"></a><h4>Returns</h4>
+<a name="gst-debug-message-get.returns"></a><h4>Returns</h4>
 <p> the string representation of a <span class="type">GstDebugMessage</span>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1005,22 +1046,24 @@ in debug handlers to extract the message.</p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_debug_log_default (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>,
                        <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>,
-                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
-                       <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *function</code></em>,
-                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
-                       <em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> *object</code></em>,
+                       <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>,
+                       <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *function</code></em>,
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="type">gint</span></a> line</code></em>,
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> *object</code></em>,
                        <em class="parameter"><code><span class="type">GstDebugMessage</span> *message</code></em>,
-                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> unused</code></em>);</pre>
+                       <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>The default logging handler used by GStreamer. Logging functions get called
-whenever a macro like GST_DEBUG or similar is used. This function outputs the
-message and additional info to stderr (or the log file specified via the
-GST_DEBUG_FILE environment variable).</p>
+whenever a macro like GST_DEBUG or similar is used. By default this function
+is setup to output the message and additional info to stderr (or the log file
+specified via the GST_DEBUG_FILE environment variable) as received via
+<em class="parameter"><code>user_data</code></em>
+.</p>
 <p>You can add other handlers by using <a class="link" href="gstreamer-GstInfo.html#gst-debug-add-log-function" title="gst_debug_add_log_function ()"><code class="function">gst_debug_add_log_function()</code></a>.
 And you can remove this handler by calling
 gst_debug_remove_log_function(gst_debug_log_default);</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.9.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-log-default.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1060,12 +1103,12 @@ gst_debug_remove_log_function(gst_debug_log_default);</p>
 <tr>
 <td class="parameter_name"><p>object</p></td>
 <td class="parameter_description"><p> the object this message relates to,
-or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
-<td class="parameter_name"><p>unused</p></td>
-<td class="parameter_description"><p>an unused variable, reserved for some user_data.</p></td>
+<td class="parameter_name"><p>user_data</p></td>
+<td class="parameter_description"><p>the FILE* to log to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1075,12 +1118,12 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 <hr>
 <div class="refsect2">
 <a name="gst-debug-level-get-name"></a><h3>gst_debug_level_get_name ()</h3>
-<pre class="programlisting">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_debug_level_get_name (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>);</pre>
 <p>Get the string representation of a debugging level</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.10.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-level-get-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1094,9 +1137,8 @@ gst_debug_level_get_name (<em class="parameter"><code><a class="link" href="gstr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.10.6"></a><h4>Returns</h4>
+<a name="gst-debug-level-get-name.returns"></a><h4>Returns</h4>
 <p> the name</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1104,13 +1146,13 @@ gst_debug_level_get_name (<em class="parameter"><code><a class="link" href="gstr
 <a name="gst-debug-add-log-function"></a><h3>gst_debug_add_log_function ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_debug_add_log_function (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstLogFunction" title="GstLogFunction ()"><span class="type">GstLogFunction</span></a> func</code></em>,
-                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
-                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <p>Adds the logging function to the list of logging functions.
-Be sure to use <a href="https://developer.gnome.org/glib/unstable/glib-Miscellaneous-Macros.html#G-GNUC-NO-INSTRUMENT:CAPS"><span class="type">G_GNUC_NO_INSTRUMENT</span></a> on that function, it is needed.</p>
+Be sure to use <a href="/usr/share/gtk-doc/html/glibglib-Miscellaneous-Macros.html#G-GNUC-NO-INSTRUMENT:CAPS"><span class="type">G_GNUC_NO_INSTRUMENT</span></a> on that function, it is needed.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.11.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-add-log-function.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1140,12 +1182,12 @@ is not used anymore</p></td>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-remove-log-function"></a><h3>gst_debug_remove_log_function ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gst_debug_remove_log_function (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstLogFunction" title="GstLogFunction ()"><span class="type">GstLogFunction</span></a> func</code></em>);</pre>
 <p>Removes all registered instances of the given logging functions.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.12.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-remove-log-function.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1153,26 +1195,26 @@ gst_debug_remove_log_function (<em class="parameter"><code><a class="link" href=
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>func</p></td>
-<td class="parameter_description"><p> the log function to remove. </p></td>
-<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span></td>
+<td class="parameter_description"><p> the log function to remove, or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to
+remove the default log function. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>][<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.12.6"></a><h4>Returns</h4>
+<a name="gst-debug-remove-log-function.returns"></a><h4>Returns</h4>
 <p> How many instances of the function were removed</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-remove-log-function-by-data"></a><h3>gst_debug_remove_log_function_by_data ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
-gst_debug_remove_log_function_by_data (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+gst_debug_remove_log_function_by_data (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
 <p>Removes all registered instances of log functions with the given user data.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.13.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-remove-log-function-by-data.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1186,24 +1228,23 @@ gst_debug_remove_log_function_by_data (<em class="parameter"><code><a href="http
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.13.6"></a><h4>Returns</h4>
+<a name="gst-debug-remove-log-function-by-data.returns"></a><h4>Returns</h4>
 <p> How many instances of the function were removed</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-set-active"></a><h3>gst_debug_set_active ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_debug_set_active (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);</pre>
+gst_debug_set_active (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> active</code></em>);</pre>
 <p>If activated, debugging messages are sent to the debugging
 handlers.
 It makes sense to deactivate it for speed issues.</p>
 <div class="note"><p>This function is not threadsafe. It makes sense to only call it
 during initialization.</p></div>
 <div class="refsect3">
-<a name="id-1.5.3.7.14.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-set-active.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1220,27 +1261,26 @@ during initialization.</p></div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-is-active"></a><h3>gst_debug_is_active ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_debug_is_active (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Checks if debugging output is activated.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.15.5"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if debugging is activated</p>
-<p></p>
+<a name="gst-debug-is-active.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if debugging is activated</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-set-colored"></a><h3>gst_debug_set_colored ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_debug_set_colored (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> colored</code></em>);</pre>
+gst_debug_set_colored (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> colored</code></em>);</pre>
 <p>Sets or unsets the use of coloured debugging output.
 Same as <a class="link" href="gstreamer-GstInfo.html#gst-debug-set-color-mode" title="gst_debug_set_color_mode ()"><code class="function">gst_debug_set_color_mode()</code></a> with the argument being
 being GST_DEBUG_COLOR_MODE_ON or GST_DEBUG_COLOR_MODE_OFF.</p>
 <p>This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.16.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-set-colored.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1262,8 +1302,8 @@ gst_debug_set_color_mode (<em class="parameter"><code><a class="link" href="gstr
 <p>Changes the coloring mode for debug output.</p>
 <p>This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.17.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-set-color-mode.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1277,18 +1317,18 @@ gst_debug_set_color_mode (<em class="parameter"><code><a class="link" href="gstr
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-set-color-mode-from-string"></a><h3>gst_debug_set_color_mode_from_string ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_debug_set_color_mode_from_string (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mode</code></em>);</pre>
+gst_debug_set_color_mode_from_string (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mode</code></em>);</pre>
 <p>Changes the coloring mode for debug output.</p>
 <p>This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.18.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-set-color-mode-from-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1302,18 +1342,17 @@ gst_debug_set_color_mode_from_string (<em class="parameter"><code>const <a href=
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-is-colored"></a><h3>gst_debug_is_colored ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_debug_is_colored (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Checks if the debugging output should be colored.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.19.5"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the debug output should be colored.</p>
-<p></p>
+<a name="gst-debug-is-colored.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, if the debug output should be colored.</p>
 </div>
 </div>
 <hr>
@@ -1323,12 +1362,11 @@ gst_debug_is_colored (<em class="parameter"><code><span class="type">void</span>
 gst_debug_get_color_mode (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Changes the coloring mode for debug output.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.20.5"></a><h4>Returns</h4>
+<a name="gst-debug-get-color-mode.returns"></a><h4>Returns</h4>
 <p> see <em class="parameter"><code>GstDebugColorMode</code></em>
 for possible values.</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1339,8 +1377,8 @@ gst_debug_set_default_threshold (<em class="parameter"><code><a class="link" hre
 use this threshold.</p>
 <p>This function may be called before <a class="link" href="gstreamer-Gst.html#gst-init" title="gst_init ()"><code class="function">gst_init()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.21.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-set-default-threshold.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1358,15 +1396,15 @@ use this threshold.</p>
 <div class="refsect2">
 <a name="gst-debug-set-threshold-from-string"></a><h3>gst_debug_set_threshold_from_string ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_debug_set_threshold_from_string (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *list</code></em>,
-                                     <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> reset</code></em>);</pre>
+gst_debug_set_threshold_from_string (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *list</code></em>,
+                                     <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> reset</code></em>);</pre>
 <p>Sets the debug logging wanted in the same form as with the GST_DEBUG
 environment variable. You can use wildcards such as '*', but note that
 the order matters when you use wild cards, e.g. "foosrc:6,*src:3,*:2" sets
 everything to log level 2.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.22.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-set-threshold-from-string.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1381,16 +1419,16 @@ as debug logging levels</p></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>reset</p></td>
-<td class="parameter_description"><p><a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to clear all previously-set debug levels before setting
+<td class="parameter_description"><p><a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> to clear all previously-set debug levels before setting
 new thresholds
-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if adding the threshold described by <em class="parameter"><code>list</code></em>
+<a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> if adding the threshold described by <em class="parameter"><code>list</code></em>
 to the one already set.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -1399,22 +1437,21 @@ to the one already set.</p></td>
 gst_debug_get_default_threshold (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Returns the default threshold that is used for new categories.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.23.5"></a><h4>Returns</h4>
+<a name="gst-debug-get-default-threshold.returns"></a><h4>Returns</h4>
 <p> the default threshold level</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-set-threshold-for-name"></a><h3>gst_debug_set_threshold_for_name ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_debug_set_threshold_for_name (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+gst_debug_set_threshold_for_name (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                   <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> level</code></em>);</pre>
 <p>Sets all categories which match the given glob style pattern to the given
 level.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.24.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-set-threshold-for-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1439,11 +1476,11 @@ level.</p>
 <div class="refsect2">
 <a name="gst-debug-unset-threshold-for-name"></a><h3>gst_debug_unset_threshold_for_name ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-gst_debug_unset_threshold_for_name (<em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+gst_debug_unset_threshold_for_name (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>Resets all categories with the given name back to the default level.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.25.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-unset-threshold-for-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1465,8 +1502,8 @@ gst_debug_unset_threshold_for_name (<em class="parameter"><code>const <a href="h
 <p>Defines a GstDebugCategory variable.
 This macro expands to nothing if debugging is disabled.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.26.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-CATEGORY.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1488,8 +1525,8 @@ This macro expands to nothing if debugging is disabled.</p>
 <p>Declares a GstDebugCategory variable as extern. Use in header files.
 This macro expands to nothing if debugging is disabled.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.27.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-CATEGORY-EXTERN.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1511,8 +1548,8 @@ This macro expands to nothing if debugging is disabled.</p>
 <p>Defines a static GstDebugCategory variable.
 This macro expands to nothing if debugging is disabled.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.28.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-CATEGORY-STATIC.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1557,8 +1594,8 @@ to include uppercase letters.
 </p>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.29.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-CATEGORY-INIT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1599,7 +1636,7 @@ to include uppercase letters.
 category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 <em class="parameter"><code>cat</code></em>
 . Otherwise <em class="parameter"><code>cat</code></em>
- will be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+ will be <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -1610,12 +1647,12 @@ category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 4
 5
 6</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>gst_myplugin_debug<span class="gtkdoc opt">);</span>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>gst_myplugin_debug<span class="gtkdoc opt">);</span>
 <span class="gtkdoc ppc">#define GST_CAT_DEFAULT gst_myplugin_debug</span>
-<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>GST_CAT_PERFORMANCE<span class="gtkdoc opt">);</span>
+<span class="function"><a href="gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-STATIC:CAPS">GST_DEBUG_CATEGORY_STATIC</a></span> <span class="gtkdoc opt">(</span>GST_CAT_PERFORMANCE<span class="gtkdoc opt">);</span>
 <span class="gtkdoc opt">...</span>
-<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-INIT:CAPS">GST_DEBUG_CATEGORY_INIT</a></span> <span class="gtkdoc opt">(</span>gst_myplugin_debug<span class="gtkdoc opt">,</span> <span class="string">&quot;myplugin&quot;</span><span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">,</span> <span class="string">&quot;nice element&quot;</span><span class="gtkdoc opt">);</span>
-<span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-GET:CAPS">GST_DEBUG_CATEGORY_GET</a></span> <span class="gtkdoc opt">(</span>GST_CAT_PERFORMANCE<span class="gtkdoc opt">,</span> <span class="string">&quot;GST_PERFORMANCE&quot;</span><span class="gtkdoc opt">);</span></pre></td>
+<span class="function"><a href="gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-INIT:CAPS">GST_DEBUG_CATEGORY_INIT</a></span> <span class="gtkdoc opt">(</span>gst_myplugin_debug<span class="gtkdoc opt">,</span> <span class="string">&quot;myplugin&quot;</span><span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">,</span> <span class="string">&quot;nice element&quot;</span><span class="gtkdoc opt">);</span>
+<span class="function"><a href="gstreamer-GstInfo.html#GST-DEBUG-CATEGORY-GET:CAPS">GST_DEBUG_CATEGORY_GET</a></span> <span class="gtkdoc opt">(</span>GST_CAT_PERFORMANCE<span class="gtkdoc opt">,</span> <span class="string">&quot;GST_PERFORMANCE&quot;</span><span class="gtkdoc opt">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -1623,8 +1660,8 @@ category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 
 <p></p>
 <div class="refsect3">
-<a name="id-1.5.3.7.30.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-CATEGORY-GET.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1652,8 +1689,8 @@ category is not found, but GST_CAT_DEFAULT is defined, that is assigned to
 gst_debug_category_free (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>);</pre>
 <p>Removes and frees the category and all associated resources.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.31.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-category-free.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1682,8 +1719,8 @@ change the threshold of categories as side effect. It is however a nice
 function to use when debugging (even from gdb).
 </p></div>
 <div class="refsect3">
-<a name="id-1.5.3.7.32.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-category-set-threshold.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1715,8 +1752,8 @@ debugging message.
 Use this function to set the threshold back to where it was after using
 <a class="link" href="gstreamer-GstInfo.html#gst-debug-category-set-threshold" title="gst_debug_category_set_threshold ()"><code class="function">gst_debug_category_set_threshold()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.33.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-category-reset-threshold.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1737,8 +1774,8 @@ Use this function to set the threshold back to where it was after using
 gst_debug_category_get_threshold (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>);</pre>
 <p>Returns the threshold of a <a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.34.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-category-get-threshold.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1752,20 +1789,19 @@ gst_debug_category_get_threshold (<em class="parameter"><code><a class="link" hr
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.34.6"></a><h4>Returns</h4>
+<a name="gst-debug-category-get-threshold.returns"></a><h4>Returns</h4>
 <p> the <a class="link" href="gstreamer-GstInfo.html#GstDebugLevel" title="enum GstDebugLevel"><span class="type">GstDebugLevel</span></a> that is used as threshold.</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-category-get-name"></a><h3>gst_debug_category_get_name ()</h3>
-<pre class="programlisting">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_debug_category_get_name (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>);</pre>
 <p>Returns the name of a debug category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.35.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-category-get-name.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1779,21 +1815,20 @@ gst_debug_category_get_name (<em class="parameter"><code><a class="link" href="g
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.35.6"></a><h4>Returns</h4>
+<a name="gst-debug-category-get-name.returns"></a><h4>Returns</h4>
 <p> the name of the category.</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-category-get-color"></a><h3>gst_debug_category_get_color ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 gst_debug_category_get_color (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>);</pre>
 <p>Returns the color of a debug category used when printing output in this
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.36.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-category-get-color.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1807,20 +1842,19 @@ category.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.36.6"></a><h4>Returns</h4>
+<a name="gst-debug-category-get-color.returns"></a><h4>Returns</h4>
 <p> the color of the category.</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-category-get-description"></a><h3>gst_debug_category_get_description ()</h3>
-<pre class="programlisting">const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
 gst_debug_category_get_description (<em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugCategory" title="struct GstDebugCategory"><span class="type">GstDebugCategory</span></a> *category</code></em>);</pre>
 <p>Returns the description of a debug category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.37.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-category-get-description.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1834,21 +1868,20 @@ gst_debug_category_get_description (<em class="parameter"><code><a class="link" 
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.37.6"></a><h4>Returns</h4>
+<a name="gst-debug-category-get-description.returns"></a><h4>Returns</h4>
 <p> the description of the category.</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-get-all-categories"></a><h3>gst_debug_get_all_categories ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *
 gst_debug_get_all_categories (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <p>Returns a snapshot of a all categories that are currently in use . This list
 may change anytime.
 The caller has to free the list after use.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.38.5"></a><h4>Returns</h4>
+<a name="gst-debug-get-all-categories.returns"></a><h4>Returns</h4>
 <p> the list of
 debug categories. </p>
 <p><span class="annotation">[<acronym title="Free data container after the code is done."><span class="acronym">transfer container</span></acronym>][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> Gst.DebugCategory]</span></p>
@@ -1857,14 +1890,14 @@ debug categories. </p>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-construct-term-color"></a><h3>gst_debug_construct_term_color ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
-gst_debug_construct_term_color (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> colorinfo</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_debug_construct_term_color (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> colorinfo</code></em>);</pre>
 <p>Constructs a string that can be used for getting the desired color in color
 terminals.
 You need to free the string after use.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.39.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-construct-term-color.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1878,7 +1911,7 @@ You need to free the string after use.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.39.6"></a><h4>Returns</h4>
+<a name="gst-debug-construct-term-color.returns"></a><h4>Returns</h4>
 <p> a string containing the color
 definition. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="Override the parsed C type with given type."><span class="acronym">type</span></acronym> gchar*]</span></p>
@@ -1887,15 +1920,15 @@ definition. </p>
 <hr>
 <div class="refsect2">
 <a name="gst-debug-construct-win-color"></a><h3>gst_debug_construct_win_color ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
-gst_debug_construct_win_color (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> colorinfo</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+gst_debug_construct_win_color (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint"><span class="type">guint</span></a> colorinfo</code></em>);</pre>
 <p>Constructs an integer that can be used for getting the desired color in
 windows' terminals (cmd.exe). As there is no mean to underline, we simply
 ignore this attribute.</p>
 <p>This function returns 0 on non-windows machines.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.40.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-debug-construct-win-color.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1909,9 +1942,8 @@ ignore this attribute.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.40.7"></a><h4>Returns</h4>
+<a name="gst-debug-construct-win-color.returns"></a><h4>Returns</h4>
 <p> an integer containing the color definition</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1922,8 +1954,8 @@ ignore this attribute.</p>
 debugging messages. You will probably want to use one of the ones described
 below.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.41.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-LEVEL-LOG.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1942,7 +1974,7 @@ below.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>object</p></td>
-<td class="parameter_description"><p> the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
+<td class="parameter_description"><p> the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if none. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -1961,8 +1993,8 @@ below.</p>
 </pre>
 <p>Output an error message belonging to the given object in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.42.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-ERROR-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1976,7 +2008,7 @@ below.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -1995,8 +2027,8 @@ below.</p>
 </pre>
 <p>Output a warning message belonging to the given object in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.43.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-WARNING-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2010,7 +2042,7 @@ below.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2030,8 +2062,8 @@ below.</p>
 <p>Output an informational message belonging to the given object in the given
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.44.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-INFO-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2045,7 +2077,7 @@ category.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2064,8 +2096,8 @@ category.</p>
 </pre>
 <p>Output an debugging message belonging to the given object in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.45.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-DEBUG-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2079,7 +2111,7 @@ category.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2098,8 +2130,8 @@ category.</p>
 </pre>
 <p>Output an logging message belonging to the given object in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.46.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-LOG-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2113,7 +2145,7 @@ category.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2132,8 +2164,8 @@ category.</p>
 </pre>
 <p>Output a fixme message belonging to the given object in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.47.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-FIXME-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2147,7 +2179,7 @@ category.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2167,8 +2199,8 @@ category.</p>
 <p>Output a tracing message belonging to the given object in the given
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.48.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-TRACE-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2182,7 +2214,7 @@ category.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2202,8 +2234,8 @@ category.</p>
  relating to the given object in the given
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.49.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-MEMDUMP-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2217,7 +2249,7 @@ category.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2246,8 +2278,8 @@ category.</p>
 </pre>
 <p>Output an error message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.50.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-ERROR.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2275,8 +2307,8 @@ category.</p>
 </pre>
 <p>Output an warning message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.51.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-WARNING.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2304,8 +2336,8 @@ category.</p>
 </pre>
 <p>Output an informational message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.52.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-INFO.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2333,8 +2365,8 @@ category.</p>
 </pre>
 <p>Output an debugging message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.53.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-DEBUG.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2362,8 +2394,8 @@ category.</p>
 </pre>
 <p>Output an logging message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.54.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-LOG.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2391,8 +2423,8 @@ category.</p>
 </pre>
 <p>Output an fixme message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.55.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-FIXME.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2420,8 +2452,8 @@ category.</p>
 </pre>
 <p>Output a tracing message in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.56.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-TRACE.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2449,8 +2481,8 @@ category.</p>
 <p>Output a hexdump of <em class="parameter"><code>data</code></em>
  in the given category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.57.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-CAT-MEMDUMP.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2488,8 +2520,8 @@ category.</p>
 </pre>
 <p>Output an error message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.58.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-ERROR-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2498,7 +2530,7 @@ category.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2517,8 +2549,8 @@ category.</p>
 </pre>
 <p>Output a warning message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.59.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-WARNING-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2527,7 +2559,7 @@ category.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2547,8 +2579,8 @@ category.</p>
 <p>Output an informational message belonging to the given object in the default
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.60.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-INFO-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2557,7 +2589,7 @@ category.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2577,8 +2609,8 @@ category.</p>
 <p>Output a debugging message belonging to the given object in the default
 category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.61.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2587,7 +2619,7 @@ category.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2606,8 +2638,8 @@ category.</p>
 </pre>
 <p>Output a logging message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.62.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-LOG-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2616,7 +2648,7 @@ category.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2635,8 +2667,8 @@ category.</p>
 </pre>
 <p>Output a fixme message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.63.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-FIXME-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2645,7 +2677,7 @@ category.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2664,8 +2696,8 @@ category.</p>
 </pre>
 <p>Output a tracing message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.64.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-TRACE-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2674,7 +2706,7 @@ category.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2692,8 +2724,8 @@ category.</p>
 <pre class="programlisting">#define             GST_MEMDUMP_OBJECT(obj,msg,data,length)</pre>
 <p>Output a logging message belonging to the given object in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.65.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMDUMP-OBJECT.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2702,7 +2734,7 @@ category.</p>
 <tbody>
 <tr>
 <td class="parameter_name"><p>obj</p></td>
-<td class="parameter_description"><p>the <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject"><span class="type">GObject</span></a> the message belongs to</p></td>
+<td class="parameter_description"><p>the <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> the message belongs to</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
@@ -2731,8 +2763,8 @@ category.</p>
 </pre>
 <p>Output an error message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.66.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-ERROR.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2753,8 +2785,8 @@ category.</p>
 </pre>
 <p>Output a warning message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.67.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-WARNING.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2775,8 +2807,8 @@ category.</p>
 </pre>
 <p>Output an informational message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.68.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-INFO.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2797,8 +2829,8 @@ category.</p>
 </pre>
 <p>Output a debugging message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.69.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2819,8 +2851,8 @@ category.</p>
 </pre>
 <p>Output a logging message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.70.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-LOG.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2841,8 +2873,8 @@ category.</p>
 </pre>
 <p>Output a fixme message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.71.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-FIXME.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2863,8 +2895,8 @@ category.</p>
 </pre>
 <p>Output a tracing message in the default category.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.72.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-TRACE.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2885,8 +2917,8 @@ category.</p>
 <p>Output a hexdump of <em class="parameter"><code>data</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.73.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMDUMP.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2921,8 +2953,8 @@ category.</p>
 <p>Use this variant of <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-FUNCPTR:CAPS" title="GST_DEBUG_FUNCPTR()"><span class="type">GST_DEBUG_FUNCPTR</span></a> if you do not need to use <em class="parameter"><code>ptr</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.74.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-REGISTER-FUNCPTR.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2943,8 +2975,8 @@ category.</p>
 <p>Register a pointer to a function with its name, so it can later be used by
 <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-FUNCPTR-NAME:CAPS" title="GST_DEBUG_FUNCPTR_NAME()"><code class="function">GST_DEBUG_FUNCPTR_NAME()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.75.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-FUNCPTR.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2958,10 +2990,9 @@ category.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.5.3.7.75.6"></a><h4>Returns</h4>
+<a name="GST-DEBUG-FUNCPTR.returns"></a><h4>Returns</h4>
 <p> the value passed to <em class="parameter"><code>ptr</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -2973,8 +3004,8 @@ category.</p>
 <p>This macro returns a constant string which must not be modified or
 freed by the caller.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.76.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-FUNCPTR-NAME.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -2995,7 +3026,7 @@ freed by the caller.</p>
 </pre>
 <p>To aid debugging applications one can use this method to write out the whole
 network of gstreamer elements that form the pipeline into an dot file.
-This file can be processed with graphviz to get an image.</p>
+This file can be processed with graphviz to get an image, like this:</p>
 <div class="informalexample">
   <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
     <tbody>
@@ -3007,12 +3038,14 @@ This file can be processed with graphviz to get an image.</p>
   </table>
 </div>
 
+<p>There is also a utility called xdot which allows you to view the dot file
+directly without converting it first.</p>
 <p>The macro is only active if gstreamer is configured with
 "--gst-enable-gst-debug" and the environment variable
 GST_DEBUG_DUMP_DOT_DIR is set to a basepath (e.g. /tmp).</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.77.7"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-BIN-TO-DOT-FILE.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3047,8 +3080,8 @@ one or more other <a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDeta
 <p>This works like <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE()</code></a>, but adds the current timestamp
 to the filename, so that it can be used to take multiple snapshots.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.78.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-DEBUG-BIN-TO-DOT-FILE-WITH-TS.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3092,8 +3125,8 @@ gstreamer code, which can be printed with this function.</p>
  will be
 evaluated more than once.</p>
 <div class="refsect3">
-<a name="id-1.5.3.7.80.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-TIME-ARGS.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -3109,11 +3142,43 @@ evaluated more than once.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-STIME-ARGS:CAPS"></a><h3>GST_STIME_ARGS()</h3>
+<pre class="programlisting">#define             GST_STIME_ARGS(t)</pre>
+<p>Format <em class="parameter"><code>t</code></em>
+ for the <a class="link" href="gstreamer-GstInfo.html#GST-STIME-FORMAT:CAPS" title="GST_STIME_FORMAT"><span class="type">GST_STIME_FORMAT</span></a> format string. Note: <em class="parameter"><code>t</code></em>
+ will be
+evaluated more than once.</p>
+<div class="refsect3">
+<a name="GST-STIME-ARGS.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody><tr>
+<td class="parameter_name"><p>t</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstClock.html#GstClockTimeDiff" title="GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> or <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint64"><span class="type">gint64</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr></tbody>
+</table></div>
+</div>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-debug-bin-to-dot-data"></a><h3>gst_debug_bin_to_dot_data ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_debug_bin_to_dot_data (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
+                           <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
 <a name="gst-debug-bin-to-dot-file"></a><h3>gst_debug_bin_to_dot_file ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_debug_bin_to_dot_file (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
                            <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>,
-                           <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
+                           <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
 </div>
 <hr>
 <div class="refsect2">
@@ -3121,7 +3186,141 @@ gst_debug_bin_to_dot_file (<em class="parameter"><code><a class="link" href="Gst
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_debug_bin_to_dot_file_with_ts (<em class="parameter"><code><a class="link" href="GstBin.html" title="GstBin"><span class="type">GstBin</span></a> *bin</code></em>,
                                    <em class="parameter"><code><a class="link" href="gstreamer-GstInfo.html#GstDebugGraphDetails" title="enum GstDebugGraphDetails"><span class="type">GstDebugGraphDetails</span></a> details</code></em>,
-                                   <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
+                                   <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file_name</code></em>);</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-info-vasprintf"></a><h3>gst_info_vasprintf ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>
+gst_info_vasprintf (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **result</code></em>,
+                    <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                    <em class="parameter"><code><span class="type">va_list</span> args</code></em>);</pre>
+<p>Allocates and fills a string large enough (including the terminating null
+byte) to hold the specified printf style <em class="parameter"><code>format</code></em>
+ and <em class="parameter"><code>args</code></em>
+.</p>
+<p>This function deals with the GStreamer specific printf specifiers
+<a class="link" href="gstreamer-GstInfo.html#GST-PTR-FORMAT:CAPS" title="GST_PTR_FORMAT"><span class="type">GST_PTR_FORMAT</span></a> and <a class="link" href="gstreamer-GstInfo.html#GST-SEGMENT-FORMAT:CAPS" title="GST_SEGMENT_FORMAT"><span class="type">GST_SEGMENT_FORMAT</span></a>.  If you do not have these specifiers
+in your <em class="parameter"><code>format</code></em>
+ string, you do not need to use this function and can use
+alternatives such as <a href="/usr/share/gtk-doc/html/glibglib-String-Utility-Functions.html#g-vasprintf"><code class="function">g_vasprintf()</code></a>.</p>
+<p>Free <em class="parameter"><code>result</code></em>
+ with <a href="/usr/share/gtk-doc/html/glibglib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-info-vasprintf.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>result</p></td>
+<td class="parameter_description"><p> the resulting string. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
+</tr>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>args</p></td>
+<td class="parameter_description"><p>the va_list of printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-info-vasprintf.returns"></a><h4>Returns</h4>
+<p> the length of the string allocated into <em class="parameter"><code>result</code></em>
+or -1 on any error</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-info-strdup-vprintf"></a><h3>gst_info_strdup_vprintf ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_info_strdup_vprintf (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                         <em class="parameter"><code><span class="type">va_list</span> args</code></em>);</pre>
+<p>Allocates, fills and returns a null terminated string from the printf style
+<em class="parameter"><code>format</code></em>
+ string and <em class="parameter"><code>args</code></em>
+.</p>
+<p>See <a class="link" href="gstreamer-GstInfo.html#gst-info-vasprintf" title="gst_info_vasprintf ()"><code class="function">gst_info_vasprintf()</code></a> for when this function is required.</p>
+<p>Free with <a href="/usr/share/gtk-doc/html/glibglib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-info-strdup-vprintf.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>args</p></td>
+<td class="parameter_description"><p>the va_list of printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-info-strdup-vprintf.returns"></a><h4>Returns</h4>
+<p> a newly allocated null terminated string or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on any error</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="gst-info-strdup-printf"></a><h3>gst_info_strdup_printf ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *
+gst_info_strdup_printf (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                        <em class="parameter"><code>...</code></em>);</pre>
+<p>Allocates, fills and returns a null terminated string from the printf style
+<em class="parameter"><code>format</code></em>
+ string and corresponding arguments.</p>
+<p>See <a class="link" href="gstreamer-GstInfo.html#gst-info-vasprintf" title="gst_info_vasprintf ()"><code class="function">gst_info_vasprintf()</code></a> for when this function is required.</p>
+<p>Free with <a href="/usr/share/gtk-doc/html/glibglib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>.</p>
+<div class="refsect3">
+<a name="gst-info-strdup-printf.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>format</p></td>
+<td class="parameter_description"><p>a printf style format string</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>...</p></td>
+<td class="parameter_description"><p>the printf arguments for <em class="parameter"><code>format</code></em>
+</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="gst-info-strdup-printf.returns"></a><h4>Returns</h4>
+<p> a newly allocated null terminated string or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> on any error</p>
+</div>
+<p class="since">Since: <a class="link" href="ix04.html#api-index-1.8">1.8</a></p>
 </div>
 </div>
 <div class="refsect1">
@@ -3131,8 +3330,8 @@ gst_debug_bin_to_dot_file_with_ts (<em class="parameter"><code><a class="link" h
 <p>The level defines the importance of a debugging message. The more important a
 message is, the greater the probability that the debugging system outputs it.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.2.4"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstDebugLevel.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -3205,10 +3404,10 @@ message is, the greater the probability that the debugging system outputs it.</p
 <td class="enum_member_name"><p><a name="GST-LEVEL-LOG:CAPS"></a>GST_LEVEL_LOG</p></td>
 <td class="enum_member_description">
 <p>Log messages are messages that are very common but might be
- useful to know. As a rule of thumb a pipeline that is iterating as expected
- should never output anything else but LOG messages. Use this log level to
- log recurring information in chain functions and loop functions, for
- example.</p>
+ useful to know. As a rule of thumb a pipeline that is running as expected
+ should never output anything else but LOG messages whilst processing data.
+ Use this log level to log recurring information in chain functions and
+ loop functions, for example.</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3254,12 +3453,24 @@ reset the debugging output to default behaviour.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-LEVEL-MAX:CAPS"></a><h3>GST_LEVEL_MAX</h3>
+<pre class="programlisting">#define GST_LEVEL_MAX GST_LEVEL_COUNT
+</pre>
+<p>Defines the maximum debugging level to be enabled at compilation time. By default
+it is set such that all debugging statements will be enabled.</p>
+<p>If you wish to compile GStreamer and plugins with only some debugging statements
+(Such as just warnings and errors), you can define it at compile time to the
+maximum debug level. Any debug statements above that level will be compiled out.</p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstDebugColorFlags"></a><h3>enum GstDebugColorFlags</h3>
 <p>These are some terminal style flags you can use when creating your
 debugging categories to make them stand out in debugging output.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.4.4"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstDebugColorFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -3400,8 +3611,8 @@ debugging categories to make them stand out in debugging output.</p>
 <div class="refsect2">
 <a name="GstDebugColorMode"></a><h3>enum GstDebugColorMode</h3>
 <div class="refsect3">
-<a name="id-1.5.3.8.5.3"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstDebugColorMode.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -3449,8 +3660,8 @@ debugging categories to make them stand out in debugging output.</p>
 <p>Available details for pipeline graphs produced by <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE()</code></a>
 and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-TS:CAPS" title="GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()"><code class="function">GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.5.3.8.7.4"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstDebugGraphDetails.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -3474,7 +3685,8 @@ and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-
 <tr>
 <td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-NON-DEFAULT-PARAMS:CAPS"></a>GST_DEBUG_GRAPH_SHOW_NON_DEFAULT_PARAMS</p></td>
 <td class="enum_member_description">
-<p>show modified parameters on elements</p>
+<p>show modified parameters on
+                                          elements</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -3486,15 +3698,43 @@ and <a class="link" href="gstreamer-GstInfo.html#GST-DEBUG-BIN-TO-DOT-FILE-WITH-
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
+<td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-FULL-PARAMS:CAPS"></a>GST_DEBUG_GRAPH_SHOW_FULL_PARAMS</p></td>
+<td class="enum_member_description">
+<p>show full element parameter values even
+                                   if they are very long</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
 <td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-ALL:CAPS"></a>GST_DEBUG_GRAPH_SHOW_ALL</p></td>
 <td class="enum_member_description">
-<p>show all details</p>
+<p>show all the typical details that one might want</p>
+</td>
+<td class="enum_member_annotations"> </td>
+</tr>
+<tr>
+<td class="enum_member_name"><p><a name="GST-DEBUG-GRAPH-SHOW-VERBOSE:CAPS"></a>GST_DEBUG_GRAPH_SHOW_VERBOSE</p></td>
+<td class="enum_member_description">
+<p>show all details regardless of how large or
+                               verbose they make the resulting output</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-FUNCTION:CAPS"></a><h3>GST_FUNCTION</h3>
+<pre class="programlisting">#  define GST_FUNCTION     ((const char*) (__func__))
+</pre>
+<p>This macro should evaluate to the name of the current function and be should
+be defined when configuring your project, as it is compiler dependant. If it
+is not defined, some default value is used. It is used to provide debugging
+output with the function name of the message.</p>
+<p>Note that this is different from G_STRFUNC as we do not want the full
+function signature in C++ code.</p>
 </div>
 <hr>
 <div class="refsect2">
@@ -3517,7 +3757,7 @@ the matching arguments.</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function">printf</span><span class="gtkdoc opt">(</span><span class="string">&quot;%&quot;</span> GST_TIME_FORMAT <span class="string">&quot;</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS">GST_TIME_ARGS</a></span><span class="gtkdoc opt">(</span>ts<span class="gtkdoc opt">));</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function">printf</span><span class="gtkdoc opt">(</span><span class="string">&quot;%&quot;</span> GST_TIME_FORMAT <span class="string">&quot;</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS">GST_TIME_ARGS</a></span><span class="gtkdoc opt">(</span>ts<span class="gtkdoc opt">));</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -3525,15 +3765,63 @@ the matching arguments.</p>
 
 <p></p>
 </div>
+<hr>
+<div class="refsect2">
+<a name="GST-STIME-FORMAT:CAPS"></a><h3>GST_STIME_FORMAT</h3>
+<pre class="programlisting">#define GST_STIME_FORMAT "c%" GST_TIME_FORMAT
+</pre>
+<p>A string that can be used in printf-like format strings to display a signed
+<a class="link" href="GstClock.html#GstClockTimeDiff" title="GstClockTimeDiff"><span class="type">GstClockTimeDiff</span></a> or <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gint64"><span class="type">gint64</span></a> value in h:m:s format.  Use <a class="link" href="gstreamer-GstInfo.html#GST-TIME-ARGS:CAPS" title="GST_TIME_ARGS()"><code class="function">GST_TIME_ARGS()</code></a> to
+construct the matching arguments.</p>
+<p>Example:</p>
+<div class="informalexample">
+  <table class="listing_frame" border="0" cellpadding="0" cellspacing="0">
+    <tbody>
+      <tr>
+        <td class="listing_lines" align="right"><pre>1</pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function">printf</span><span class="gtkdoc opt">(</span><span class="string">&quot;%&quot;</span> GST_STIME_FORMAT <span class="string">&quot;</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> <span class="function"><a href="gstreamer-GstInfo.html#GST-STIME-ARGS:CAPS">GST_STIME_ARGS</a></span><span class="gtkdoc opt">(</span>ts<span class="gtkdoc opt">));</span></pre></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p></p>
+<p class="since">Since: <a class="link" href="ix05.html#api-index-1.6">1.6</a></p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-PTR-FORMAT:CAPS"></a><h3>GST_PTR_FORMAT</h3>
+<pre class="programlisting">#define GST_PTR_FORMAT     "p\aA"
+</pre>
+<p>printf format type used to debug GStreamer types. You can use this in
+combination with GStreamer's debug logging system as well as the functions
+<a class="link" href="gstreamer-GstInfo.html#gst-info-vasprintf" title="gst_info_vasprintf ()"><code class="function">gst_info_vasprintf()</code></a>, <a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-vprintf" title="gst_info_strdup_vprintf ()"><code class="function">gst_info_strdup_vprintf()</code></a> and <a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-printf" title="gst_info_strdup_printf ()"><code class="function">gst_info_strdup_printf()</code></a>
+to pretty-print the following types: <a class="link" href="GstCaps.html" title="GstCaps"><span class="type">GstCaps</span></a>, <a class="link" href="GstStructure.html" title="GstStructure"><span class="type">GstStructure</span></a>,
+<a class="link" href="GstCapsFeatures.html" title="GstCapsFeatures"><span class="type">GstCapsFeatures</span></a>, <a class="link" href="GstTagList.html" title="GstTagList"><span class="type">GstTagList</span></a>, <a class="link" href="GstDateTime.html" title="GstDateTime"><span class="type">GstDateTime</span></a>, <a class="link" href="GstBuffer.html" title="GstBuffer"><span class="type">GstBuffer</span></a>, <a class="link" href="GstBufferList.html" title="GstBufferList"><span class="type">GstBufferList</span></a>,
+<a class="link" href="GstMessage.html" title="GstMessage"><span class="type">GstMessage</span></a>, <a class="link" href="GstEvent.html" title="GstEvent"><span class="type">GstEvent</span></a>, <a class="link" href="GstQuery.html" title="GstQuery"><span class="type">GstQuery</span></a>, <a class="link" href="GstContext.html" title="GstContext"><span class="type">GstContext</span></a>, <a class="link" href="GstPad.html" title="GstPad"><span class="type">GstPad</span></a>, <a class="link" href="GstObject.html" title="GstObject"><span class="type">GstObject</span></a>. All
+<a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct"><span class="type">GObject</span></a> types will be printed as typename plus pointer, and everything
+else will simply be printed as pointer address.</p>
+<p>This can only be used on types whose size is &gt;= sizeof(gpointer).</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GST-SEGMENT-FORMAT:CAPS"></a><h3>GST_SEGMENT_FORMAT</h3>
+<pre class="programlisting">#define GST_SEGMENT_FORMAT "p\aB"
+</pre>
+<p>printf format type used to debug GStreamer segments. You can use this in
+combination with GStreamer's debug logging system as well as the functions
+<a class="link" href="gstreamer-GstInfo.html#gst-info-vasprintf" title="gst_info_vasprintf ()"><code class="function">gst_info_vasprintf()</code></a>, <a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-vprintf" title="gst_info_strdup_vprintf ()"><code class="function">gst_info_strdup_vprintf()</code></a> and <a class="link" href="gstreamer-GstInfo.html#gst-info-strdup-printf" title="gst_info_strdup_printf ()"><code class="function">gst_info_strdup_printf()</code></a>
+to pretty-print <a class="link" href="GstSegment.html" title="GstSegment"><span class="type">GstSegment</span></a> structures.
+This can only be used on pointers to GstSegment structures.</p>
+</div>
 </div>
 <div class="refsect1">
 <a name="gstreamer-GstInfo.see-also"></a><h2>See Also</h2>
-<p><a class="link" href="gstreamer-gstconfig.html" title="gstconfig"><span class="type">gstreamer-gstconfig</span></a>, <a class="link" href="gstreamer-Gst.html" title="Gst"><span class="type">gstreamer-Gst</span></a> for command line parameters
+<p><a class="link" href="gst-running.html" title="Running GStreamer Applications"><span class="type">gst-running</span></a> for command line parameters
 and environment variables that affect the debugging output.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>

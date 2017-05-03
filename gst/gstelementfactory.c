@@ -386,6 +386,9 @@ gst_element_factory_create (GstElementFactory * factory, const gchar * name)
   if (!g_atomic_pointer_compare_and_exchange (&oclass->elementfactory, NULL,
           factory))
     gst_object_unref (factory);
+  else
+    /* This ref will never be dropped as the class is never destroyed */
+    GST_OBJECT_FLAG_SET (factory, GST_OBJECT_FLAG_MAY_BE_LEAKED);
 
   GST_DEBUG ("created element \"%s\"", GST_OBJECT_NAME (factory));
 
@@ -448,6 +451,7 @@ gst_element_factory_make (const gchar * factoryname, const gchar * name)
     goto create_failed;
 
   gst_object_unref (factory);
+
   return element;
 
   /* ERRORS */
@@ -728,6 +732,12 @@ gst_element_factory_list_is_type (GstElementFactory * factory,
 
   if (!res && (type & GST_ELEMENT_FACTORY_TYPE_FORMATTER))
     res = (strstr (klass, "Formatter") != NULL);
+
+  if (!res && (type & GST_ELEMENT_FACTORY_TYPE_DECRYPTOR))
+    res = (strstr (klass, "Decryptor") != NULL);
+
+  if (!res && (type & GST_ELEMENT_FACTORY_TYPE_ENCRYPTOR))
+    res = (strstr (klass, "Encryptor") != NULL);
 
   /* Filter by media type now, we only test if it
    * matched any of the types above or only checking the media

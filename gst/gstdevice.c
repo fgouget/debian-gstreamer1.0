@@ -46,7 +46,8 @@ enum
 {
   PROP_DISPLAY_NAME = 1,
   PROP_CAPS,
-  PROP_DEVICE_CLASS
+  PROP_DEVICE_CLASS,
+  PROP_PROPERTIES
 };
 
 enum
@@ -60,6 +61,7 @@ struct _GstDevicePrivate
   GstCaps *caps;
   gchar *device_class;
   gchar *display_name;
+  GstStructure *properties;
 };
 
 
@@ -97,6 +99,10 @@ gst_device_class_init (GstDeviceClass * klass)
       g_param_spec_string ("device-class", "Device Class",
           "The Class of the device", "",
           G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+  g_object_class_install_property (object_class, PROP_PROPERTIES,
+      g_param_spec_boxed ("properties", "Properties",
+          "The extra properties of the device", GST_TYPE_STRUCTURE,
+          G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
   signals[REMOVED] = g_signal_new ("removed", G_TYPE_FROM_CLASS (klass),
       G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0);
@@ -116,6 +122,8 @@ gst_device_finalize (GObject * object)
 
   gst_caps_replace (&device->priv->caps, NULL);
 
+  if (device->priv->properties)
+    gst_structure_free (device->priv->properties);
   g_free (device->priv->display_name);
   g_free (device->priv->device_class);
 
@@ -140,6 +148,10 @@ gst_device_get_property (GObject * object, guint prop_id,
       break;
     case PROP_DEVICE_CLASS:
       g_value_take_string (value, gst_device_get_device_class (gstdevice));
+      break;
+    case PROP_PROPERTIES:
+      if (gstdevice->priv->properties)
+        g_value_take_boxed (value, gst_device_get_properties (gstdevice));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -166,6 +178,11 @@ gst_device_set_property (GObject * object, guint prop_id,
     case PROP_DEVICE_CLASS:
       gstdevice->priv->device_class = g_value_dup_string (value);
       break;
+    case PROP_PROPERTIES:
+      if (gstdevice->priv->properties)
+        gst_structure_free (gstdevice->priv->properties);
+      gstdevice->priv->properties = g_value_dup_boxed (value);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -178,7 +195,7 @@ gst_device_set_property (GObject * object, guint prop_id,
  * @name: (allow-none): name of new element, or %NULL to automatically
  * create a unique name.
  *
- * Creates the element with all of the required paramaters set to use
+ * Creates the element with all of the required parameters set to use
  * this device.
  *
  * Returns: (transfer full): a new #GstElement configured to use this device
@@ -263,6 +280,28 @@ gst_device_get_device_class (GstDevice * device)
 }
 
 /**
+ * gst_device_get_properties:
+ * @device: a #GstDevice
+ *
+ * Gets the extra properties of a device.
+ *
+ * Returns: The extra properties or %NULL when there are none.
+ *          Free with gst_structure_free() after use.
+ *
+ * Since: 1.6
+ */
+GstStructure *
+gst_device_get_properties (GstDevice * device)
+{
+  g_return_val_if_fail (GST_IS_DEVICE (device), NULL);
+
+  if (device->priv->properties != NULL)
+    return gst_structure_copy (device->priv->properties);
+  else
+    return NULL;
+}
+
+/**
  * gst_device_reconfigure_element:
  * @device: a #GstDevice
  * @element: a #GstElement
@@ -295,8 +334,8 @@ gst_device_reconfigure_element (GstDevice * device, GstElement * element)
 /**
  * gst_device_has_classesv:
  * @device: a #GstDevice
- * @classes: (array zero-terminated=1): a %NULL terminated array of classes to match, only match if all
- *   classes are matched
+ * @classes: (array zero-terminated=1): a %NULL terminated array of classes
+ *   to match, only match if all classes are matched
  *
  * Check if @factory matches all of the given classes
  *
@@ -313,20 +352,21 @@ gst_device_has_classesv (GstDevice * device, gchar ** classes)
     return TRUE;
 
   for (; classes[0]; classes++) {
+    const gchar *klass = classes[0];
     const gchar *found;
     guint len;
 
-    if (classes[0] == '\0')
+    if (*klass == '\0')
       continue;
 
-    found = strstr (device->priv->device_class, classes[0]);
+    found = strstr (device->priv->device_class, klass);
 
     if (!found)
       return FALSE;
     if (found != device->priv->device_class && *(found - 1) != '/')
       return FALSE;
 
-    len = strlen (classes[0]);
+    len = strlen (klass);
     if (found[len] != 0 && found[len] != '/')
       return FALSE;
   }
@@ -337,7 +377,7 @@ gst_device_has_classesv (GstDevice * device, gchar ** classes)
 /**
  * gst_device_has_classes:
  * @device: a #GstDevice
- * @classes: a "/" separate list of device classes to match, only match if
+ * @classes: a "/"-separated list of device classes to match, only match if
  *  all classes are matched
  *
  * Check if @device matches all of the given classes

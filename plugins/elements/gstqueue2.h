@@ -87,6 +87,9 @@ struct _GstQueue2
   GstClockTime sinktime, srctime;
   /* TRUE if either position needs to be recalculated */
   gboolean sink_tainted, src_tainted;
+  /* Bitrates taken from tags */
+  guint sink_tags_bitrate;
+  guint src_tags_bitrate;
 
   /* flowreturn when srcpad is paused */
   GstFlowReturn srcresult;
@@ -103,10 +106,13 @@ struct _GstQueue2
   GstQueue2Size cur_level;       /* currently in the queue */
   GstQueue2Size max_level;       /* max. amount of data allowed in the queue */
   gboolean use_buffering;
+  gboolean use_tags_bitrate;
   gboolean use_rate_estimate;
   GstClockTime buffering_interval;
-  gint low_percent;             /* low/high watermarks for buffering */
-  gint high_percent;
+
+  /* low/high watermarks for buffering */
+  gint low_watermark;
+  gint high_watermark;
 
   /* current buffering state */
   gboolean is_buffering;
@@ -115,6 +121,7 @@ struct _GstQueue2
   /* for measuring input/output rates */
   GTimer *in_timer;
   gboolean in_timer_started;
+  gdouble last_update_in_rates_elapsed;
   gdouble last_in_elapsed;
   guint64 bytes_in;
   gdouble byte_in_rate;

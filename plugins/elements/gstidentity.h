@@ -65,6 +65,7 @@ struct _GstIdentity {
   gboolean 	 check_imperfect_timestamp;
   gboolean 	 check_imperfect_offset;
   gboolean	 single_segment;
+  GstBufferFlags drop_buffer_flags;
   GstClockTime   prev_timestamp;
   GstClockTime   prev_duration;
   guint64        prev_offset;
@@ -72,6 +73,9 @@ struct _GstIdentity {
   gchar 	*last_message;
   guint64        offset;
   gboolean       signal_handoffs;
+  GstClockTime   upstream_latency;
+  GCond          blocked_cond;
+  gboolean       blocked;
 };
 
 struct _GstIdentityClass {

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer 0.8.4\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2014-11-06 12:20+0100\n"
+"POT-Creation-Date: 2017-02-23 15:12+0200\n"
 "PO-Revision-Date: 2004-08-07 23:46+0200\n"
 "Last-Translator: Laurent Dhima <laurenti@alblinux.net>\n"
 "Language-Team: Albanian <begraj@hotmail.com>\n"
@@ -473,6 +473,12 @@ msgstr ""
 msgid "person(s) who composed the recording"
 msgstr "personi(at) përgjegjës për regjistrimin"
 
+msgid "conductor"
+msgstr ""
+
+msgid "conductor/performer refinement"
+msgstr ""
+
 msgid "duration"
 msgstr "kohëzgjatja"
 
@@ -837,6 +843,12 @@ msgstr ""
 msgid "Midi note number of the audio track."
 msgstr ""
 
+msgid "private-data"
+msgstr ""
+
+msgid "Private data"
+msgstr ""
+
 msgid ", "
 msgstr ", "
 
@@ -876,6 +888,9 @@ msgstr "asnjë pronësi \"%s\" tek elementi \"%s\""
 msgid "could not set property \"%s\" in element \"%s\" to \"%s\""
 msgstr "e pamundur vendosja e pronësisë \"%s\" tek elementi \"%s\" në \"%s"
 
+msgid "Delayed linking failed."
+msgstr ""
+
 #, c-format
 msgid "could not link %s to %s"
 msgstr "e pamundur lidhja e %s me %s"
@@ -907,9 +922,6 @@ msgstr "asnjë element burues për URI \"%s\""
 msgid "syntax error"
 msgstr ""
 
-msgid "bin"
-msgstr ""
-
 #, c-format
 msgid "specified empty bin \"%s\", not allowed"
 msgstr "u specifikua bin bosh \"%s\", nuk lejohet"
@@ -927,9 +939,6 @@ msgstr ""
 msgid "Internal data flow problem."
 msgstr ""
 
-msgid "Internal data stream error."
-msgstr ""
-
 msgid "Internal data flow error."
 msgstr ""
 
@@ -945,6 +954,12 @@ msgstr ""
 msgid ""
 "Restrict the possible allowed capabilities (NULL means ANY). Setting this "
 "property takes a reference to the supplied GstCaps object."
+msgstr ""
+
+msgid "Caps Change Mode"
+msgstr ""
+
+msgid "Filter caps change behaviour"
 msgstr ""
 
 msgid "No Temp directory specified."
@@ -1015,6 +1030,10 @@ msgid "force caps without doing a typefind"
 msgstr ""
 
 #, fuzzy
+msgid "Stream doesn't contain enough data."
+msgstr "albumi që përmban këtë të dhënë"
+
+#, fuzzy
 msgid "Stream contains no data."
 msgstr "albumi që përmban këtë të dhënë"
 
@@ -1027,6 +1046,9 @@ msgstr ""
 #, fuzzy
 msgid "writable"
 msgstr "titulli"
+
+msgid "deprecated"
+msgstr ""
 
 msgid "controllable"
 msgstr ""
@@ -1218,11 +1240,13 @@ msgstr "Mos jep informacionin e gjendjes së LLOJIT"
 msgid "Output messages"
 msgstr ""
 
-msgid "Do not output status information of TYPE"
-msgstr "Mos jep informacionin e gjendjes së LLOJIT"
+msgid ""
+"Do not output status information for the specified property if verbose "
+"output is enabled (can be used multiple times)"
+msgstr ""
 
-msgid "TYPE1,TYPE2,..."
-msgstr "LLOJI1,LLOJI2,..."
+msgid "PROPERTY-NAME"
+msgstr ""
 
 msgid "Do not install a fault handler"
 msgstr "Mos instalo një ushqyes të dëmtuar"
@@ -1303,6 +1327,12 @@ msgstr ""
 #, fuzzy
 msgid "Freeing pipeline ...\n"
 msgstr "DUKE ZBATUAR pipeline ...\n"
+
+#~ msgid "Do not output status information of TYPE"
+#~ msgstr "Mos jep informacionin e gjendjes së LLOJIT"
+
+#~ msgid "TYPE1,TYPE2,..."
+#~ msgstr "LLOJI1,LLOJI2,..."
 
 #~ msgid "link without source element"
 #~ msgstr "lidhje ma element burues"

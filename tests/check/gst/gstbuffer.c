@@ -24,12 +24,6 @@
 # include "config.h"
 #endif
 
-#ifdef HAVE_VALGRIND_H
-# include <valgrind/valgrind.h>
-#else
-# define RUNNING_ON_VALGRIND FALSE
-#endif
-
 #include <gst/check/gstcheck.h>
 
 GST_START_TEST (test_subbuffer)
@@ -340,6 +334,8 @@ GST_START_TEST (test_copy)
 
   /* NOTE that data is refcounted */
   fail_unless (info.size == sinfo.size);
+  /* GstBuffer was copied but the underlying GstMemory should be the same */
+  fail_unless (info.data == sinfo.data);
 
   gst_buffer_unmap (copy, &sinfo);
   gst_buffer_unmap (buffer, &info);
@@ -379,12 +375,12 @@ GST_START_TEST (test_copy)
   /* copy should still be independent if copied when mapped */
   buffer = gst_buffer_new_and_alloc (4);
   gst_buffer_memset (buffer, 0, 0, 4);
-  gst_buffer_map (buffer, &info, GST_MAP_WRITE);
+  fail_unless (gst_buffer_map (buffer, &info, GST_MAP_WRITE));
   copy = gst_buffer_copy (buffer);
   fail_unless (gst_buffer_is_writable (copy));
   gst_buffer_memset (copy, 0, 0x80, 4);
   gst_buffer_unmap (buffer, &info);
-  gst_buffer_map (buffer, &info, GST_MAP_READ);
+  fail_unless (gst_buffer_map (buffer, &info, GST_MAP_READ));
   fail_if (gst_buffer_memcmp (copy, 0, info.data, info.size) == 0);
   gst_buffer_unmap (buffer, &info);
 
@@ -400,6 +396,37 @@ GST_START_TEST (test_copy)
   gst_buffer_memset (copy, 0, 0x80, 4);
   gst_buffer_map (buffer, &info, GST_MAP_READ);
   fail_if (gst_buffer_memcmp (copy, 0, info.data, info.size) == 0);
+  gst_buffer_unmap (buffer, &info);
+
+  gst_buffer_unref (copy);
+  gst_buffer_unref (buffer);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_copy_deep)
+{
+  GstBuffer *buffer, *copy;
+  GstMapInfo info, sinfo;
+
+  buffer = gst_buffer_new_and_alloc (4);
+  ASSERT_BUFFER_REFCOUNT (buffer, "buffer", 1);
+
+  copy = gst_buffer_copy_deep (buffer);
+  ASSERT_BUFFER_REFCOUNT (buffer, "buffer", 1);
+  ASSERT_BUFFER_REFCOUNT (copy, "copy", 1);
+  /* buffers are copied and must point to different memory */
+  fail_if (buffer == copy);
+
+  fail_unless (gst_buffer_map (buffer, &info, GST_MAP_READ));
+  fail_unless (gst_buffer_map (copy, &sinfo, GST_MAP_READ));
+
+  /* NOTE that data is refcounted */
+  fail_unless (info.size == sinfo.size);
+  /* copy_deep() forces new GstMemory to be used */
+  fail_unless (info.data != sinfo.data);
+
+  gst_buffer_unmap (copy, &sinfo);
   gst_buffer_unmap (buffer, &info);
 
   gst_buffer_unref (copy);
@@ -433,20 +460,6 @@ GST_START_TEST (test_try_new_and_alloc)
   gst_buffer_unmap (buf, &info);
 
   gst_buffer_unref (buf);
-
-#if 0
-  /* Disabled this part of the test, because it happily succeeds on 64-bit
-   * machines that have enough memory+swap, because the address space is large
-   * enough. There's not really any way to test the failure case except by 
-   * allocating chunks of memory until it fails, which would suck. */
-
-  /* now this better fail (don't run in valgrind, it will abort
-   * or warn when passing silly arguments to malloc) */
-  if (!RUNNING_ON_VALGRIND) {
-    buf = gst_buffer_new_and_alloc ((guint) - 1);
-    fail_unless (buf == NULL);
-  }
-#endif
 }
 
 GST_END_TEST;
@@ -857,6 +870,26 @@ GST_START_TEST (test_fill)
 
 GST_END_TEST;
 
+GST_START_TEST (test_parent_buffer_meta)
+{
+  GstBuffer *buf, *parent;
+  GstParentBufferMeta *meta;
+
+  buf = gst_buffer_new ();
+  parent = gst_buffer_new ();
+
+  gst_buffer_add_parent_buffer_meta (buf, parent);
+  meta = gst_buffer_get_parent_buffer_meta (buf);
+  fail_unless (meta);
+  fail_unless (parent == meta->buffer);
+
+  gst_buffer_unref (buf);
+  gst_buffer_unref (parent);
+}
+
+GST_END_TEST;
+
+
 static Suite *
 gst_buffer_suite (void)
 {
@@ -871,6 +904,7 @@ gst_buffer_suite (void)
   tcase_add_test (tc_chain, test_metadata_writable);
   tcase_add_test (tc_chain, test_memcmp);
   tcase_add_test (tc_chain, test_copy);
+  tcase_add_test (tc_chain, test_copy_deep);
   tcase_add_test (tc_chain, test_try_new_and_alloc);
   tcase_add_test (tc_chain, test_size);
   tcase_add_test (tc_chain, test_resize);
@@ -878,6 +912,7 @@ gst_buffer_suite (void)
   tcase_add_test (tc_chain, test_map_range);
   tcase_add_test (tc_chain, test_find);
   tcase_add_test (tc_chain, test_fill);
+  tcase_add_test (tc_chain, test_parent_buffer_meta);
 
   return s;
 }

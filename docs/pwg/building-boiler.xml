@@ -73,7 +73,7 @@ Resolving deltas: 100% (240/240), done.
       and fill in some structures. As mentioned in the previous section, the
       easiest way to do this is to copy a template and add functionality
       according to your needs. To help you do so, there is a tool in the
-      <filename class="directory">./gst-plugins/tools/</filename> directory.
+      <filename class="directory">./gst-plugin/tools/</filename> directory.
       This tool, <filename>make_element</filename>, is a command line utility
       that creates the boilerplate code for you.
     </para>
@@ -159,9 +159,6 @@ Resolving deltas: 100% (240/240), done.
       file (although since the interface to the code is entirely defined by the
       plugin system, and doesn't depend on reading a header file, this is not
       crucial.)
-
-      The code here can be found in
-      <filename>examples/pwg/examplefilter/boiler/gstexamplefilter.h</filename>.
     </para>
 
     <example id="ex-boiler-examine-h">

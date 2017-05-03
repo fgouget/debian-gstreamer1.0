@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Core Reference Manual: GstMemory</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<title>GstMemory: GStreamer 1.0 Core Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="up" href="libgstreamer.html" title="GStreamer Core Library">
 <link rel="prev" href="gstreamer-GstIterator.html" title="GstIterator">
 <link rel="next" href="GstMessage.html" title="GstMessage">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="GstMemory.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -95,15 +95,19 @@
 </td>
 </tr>
 <tr>
-<td class="define_keyword">#define</td>
-<td class="function_name"><a class="link" href="GstMemory.html#GST-MAP-READWRITE:CAPS" title="GST_MAP_READWRITE">GST_MAP_READWRITE</a></td>
-</tr>
-<tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 </td>
 <td class="function_name">
 <span class="c_punctuation">(</span><a class="link" href="GstMemory.html#GstMemoryMapFunction" title="GstMemoryMapFunction ()">*GstMemoryMapFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="GstMemory.html#GstMemoryMapFullFunction" title="GstMemoryMapFullFunction ()">*GstMemoryMapFullFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -112,6 +116,14 @@
 </td>
 <td class="function_name">
 <span class="c_punctuation">(</span><a class="link" href="GstMemory.html#GstMemoryUnmapFunction" title="GstMemoryUnmapFunction ()">*GstMemoryUnmapFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
+</td>
+</tr>
+<tr>
+<td class="function_type">
+<span class="returnvalue">void</span>
+</td>
+<td class="function_name">
+<span class="c_punctuation">(</span><a class="link" href="GstMemory.html#GstMemoryUnmapFullFunction" title="GstMemoryUnmapFullFunction ()">*GstMemoryUnmapFullFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
 </td>
 </tr>
 <tr>
@@ -132,7 +144,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <span class="c_punctuation">(</span><a class="link" href="GstMemory.html#GstMemoryIsSpanFunction" title="GstMemoryIsSpanFunction ()">*GstMemoryIsSpanFunction</a><span class="c_punctuation">)</span> <span class="c_punctuation">()</span>
@@ -148,7 +160,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstMemory.html#gst-memory-is-type" title="gst_memory_is_type ()">gst_memory_is_type</a> <span class="c_punctuation">()</span>
@@ -172,7 +184,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">gsize</span>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="returnvalue">gsize</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstMemory.html#gst-memory-get-sizes" title="gst_memory_get_sizes ()">gst_memory_get_sizes</a> <span class="c_punctuation">()</span>
@@ -220,7 +232,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstMemory.html#gst-memory-map" title="gst_memory_map ()">gst_memory_map</a> <span class="c_punctuation">()</span>
@@ -252,7 +264,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="GstMemory.html#gst-memory-is-span" title="gst_memory_is_span ()">gst_memory_is_span</a> <span class="c_punctuation">()</span>
@@ -263,7 +275,7 @@
 </div>
 <div class="refsect1">
 <a name="GstMemory.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -280,6 +292,10 @@
 <tr>
 <td class="datatype_keyword">enum</td>
 <td class="function_name"><a class="link" href="GstMemory.html#GstMapFlags" title="enum GstMapFlags">GstMapFlags</a></td>
+</tr>
+<tr>
+<td class="define_keyword">#define</td>
+<td class="function_name"><a class="link" href="GstMemory.html#GST-MAP-READWRITE:CAPS" title="GST_MAP_READWRITE">GST_MAP_READWRITE</a></td>
 </tr>
 <tr>
 <td class="datatype_keyword"> </td>
@@ -312,7 +328,7 @@ size does not change during the lifetime of the memory object. The memory
 also has an offset and size property that specifies the valid range of memory
 in the allocated region.</p>
 <p>Memory is usually created by allocators with a <a class="link" href="GstAllocator.html#gst-allocator-alloc" title="gst_allocator_alloc ()"><code class="function">gst_allocator_alloc()</code></a>
-method call. When <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is used as the allocator, the default allocator will
+method call. When <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> is used as the allocator, the default allocator will
 be used.</p>
 <p>New allocators can be registered with <a class="link" href="GstAllocator.html#gst-allocator-register" title="gst_allocator_register ()"><code class="function">gst_allocator_register()</code></a>.
 Allocators are identified by name and can be retrieved with
@@ -331,7 +347,7 @@ After the memory access is completed, <a class="link" href="GstMemory.html#gst-m
 copy. <a class="link" href="GstMemory.html#gst-memory-share" title="gst_memory_share ()"><code class="function">gst_memory_share()</code></a> will create a new memory block that shares the
 memory with an existing memory block at a custom offset and with a custom
 size.</p>
-<p>Memory can be efficiently merged when <a class="link" href="GstMemory.html#gst-memory-is-span" title="gst_memory_is_span ()"><code class="function">gst_memory_is_span()</code></a> returns <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
+<p>Memory can be efficiently merged when <a class="link" href="GstMemory.html#gst-memory-is-span" title="gst_memory_is_span ()"><code class="function">gst_memory_is_span()</code></a> returns <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>.</p>
 </div>
 <div class="refsect1">
 <a name="GstMemory.functions_details"></a><h2>Functions</h2>
@@ -342,8 +358,8 @@ size.</p>
 <p>A flags word containing <a class="link" href="GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> flags set on <em class="parameter"><code>mem</code></em>
 </p>
 <div class="refsect3">
-<a name="id-1.3.28.8.2.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMORY-FLAGS.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -365,8 +381,8 @@ size.</p>
 <p>Gives the status of a specific flag on a <em class="parameter"><code>mem</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.3.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMORY-FLAG-IS-SET.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -395,8 +411,8 @@ size.</p>
 <p>Clear a specific flag on a <em class="parameter"><code>mem</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.4.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMORY-FLAG-UNSET.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -425,8 +441,8 @@ size.</p>
 <p>Check if <em class="parameter"><code>mem</code></em>
  is readonly.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.5.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMORY-IS-READONLY.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -448,8 +464,8 @@ size.</p>
 <p>Check if <em class="parameter"><code>mem</code></em>
  cannot be shared between buffers</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.6.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMORY-IS-NO-SHARE.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -471,8 +487,8 @@ size.</p>
 <p>Check if the padding in <em class="parameter"><code>mem</code></em>
  is 0 filled.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.7.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMORY-IS-ZERO-PADDED.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -494,8 +510,8 @@ size.</p>
 <p>Check if the prefix in <em class="parameter"><code>mem</code></em>
  is 0 filled.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.8.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMORY-IS-ZERO-PREFIXED.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -517,8 +533,8 @@ size.</p>
 <p>Check if <em class="parameter"><code>mem</code></em>
  is physically contiguous.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.9.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMORY-IS-PHYSICALLY-CONTIGUOUS.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -531,7 +547,7 @@ size.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -541,8 +557,8 @@ size.</p>
 <p>Check if <em class="parameter"><code>mem</code></em>
  can't be mapped via <a class="link" href="GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a> without any preconditions</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.10.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GST-MEMORY-IS-NOT-MAPPABLE.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -555,21 +571,14 @@ size.</p>
 </tr></tbody>
 </table></div>
 </div>
-<p class="since">Since 1.2</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="GST-MAP-READWRITE:CAPS"></a><h3>GST_MAP_READWRITE</h3>
-<pre class="programlisting">#define GST_MAP_READWRITE      (GST_MAP_READ | GST_MAP_WRITE)
-</pre>
-<p>GstMapFlags value alias for GST_MAP_READ | GST_MAP_WRITE</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GstMemoryMapFunction"></a><h3>GstMemoryMapFunction ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 <span class="c_punctuation">(</span>*GstMemoryMapFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
-                         <em class="parameter"><code><span class="type">gsize</span> maxsize</code></em>,
+                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> maxsize</code></em>,
                          <em class="parameter"><code><a class="link" href="GstMemory.html#GstMapFlags" title="enum GstMapFlags"><span class="type">GstMapFlags</span></a> flags</code></em>);</pre>
 <p>Get the memory of <em class="parameter"><code>mem</code></em>
  that can be accessed according to the mode specified
@@ -578,8 +587,8 @@ in <em class="parameter"><code>flags</code></em>
 <em class="parameter"><code>maxsize</code></em>
  bytes.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.12.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstMemoryMapFunction.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -605,12 +614,59 @@ in <em class="parameter"><code>flags</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.12.6"></a><h4>Returns</h4>
+<a name="GstMemoryMapFunction.returns"></a><h4>Returns</h4>
 <p> a pointer to memory of which at least <em class="parameter"><code>maxsize</code></em>
 bytes can be
 accessed according to the access pattern in <em class="parameter"><code>flags</code></em>
 .</p>
-<p></p>
+</div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstMemoryMapFullFunction"></a><h3>GstMemoryMapFullFunction ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<span class="c_punctuation">(</span>*GstMemoryMapFullFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
+                             <em class="parameter"><code><a class="link" href="GstMemory.html#GstMapInfo" title="GstMapInfo"><span class="type">GstMapInfo</span></a> *info</code></em>,
+                             <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> maxsize</code></em>);</pre>
+<p>Get the memory of <em class="parameter"><code>mem</code></em>
+ that can be accessed according to the mode specified
+in <em class="parameter"><code>info</code></em>
+'s flags. The function should return a pointer that contains at least
+<em class="parameter"><code>maxsize</code></em>
+ bytes.</p>
+<div class="refsect3">
+<a name="GstMemoryMapFullFunction.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>mem</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>info</p></td>
+<td class="parameter_description"><p>the <a class="link" href="GstMemory.html#GstMapInfo" title="GstMapInfo"><span class="type">GstMapInfo</span></a> to map with</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>maxsize</p></td>
+<td class="parameter_description"><p>size to map</p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<div class="refsect3">
+<a name="GstMemoryMapFullFunction.returns"></a><h4>Returns</h4>
+<p> a pointer to memory of which at least <em class="parameter"><code>maxsize</code></em>
+bytes can be
+accessed according to the access pattern in <em class="parameter"><code>info</code></em>
+'s flags.</p>
 </div>
 </div>
 <hr>
@@ -620,8 +676,8 @@ accessed according to the access pattern in <em class="parameter"><code>flags</c
 <span class="c_punctuation">(</span>*GstMemoryUnmapFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>);</pre>
 <p>Return the pointer previously retrieved with <a class="link" href="GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.13.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstMemoryUnmapFunction.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -634,10 +690,36 @@ accessed according to the access pattern in <em class="parameter"><code>flags</c
 </tr></tbody>
 </table></div>
 </div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="GstMemoryUnmapFullFunction"></a><h3>GstMemoryUnmapFullFunction ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>
+<span class="c_punctuation">(</span>*GstMemoryUnmapFullFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
+                               <em class="parameter"><code><a class="link" href="GstMemory.html#GstMapInfo" title="GstMapInfo"><span class="type">GstMapInfo</span></a> *info</code></em>);</pre>
+<p>Return the pointer previously retrieved with <a class="link" href="GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a> with <em class="parameter"><code>info</code></em>
+.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.13.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> on success.</p>
-<p></p>
+<a name="GstMemoryUnmapFullFunction.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="150px" class="parameters_name">
+<col class="parameters_description">
+<col width="200px" class="parameters_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="parameter_name"><p>mem</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+<tr>
+<td class="parameter_name"><p>info</p></td>
+<td class="parameter_description"><p>a <a class="link" href="GstMemory.html#GstMapInfo" title="GstMapInfo"><span class="type">GstMapInfo</span></a></p></td>
+<td class="parameter_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
 </div>
 </div>
 <hr>
@@ -645,8 +727,8 @@ accessed according to the access pattern in <em class="parameter"><code>flags</c
 <a name="GstMemoryCopyFunction"></a><h3>GstMemoryCopyFunction ()</h3>
 <pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 <span class="c_punctuation">(</span>*GstMemoryCopyFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
-                          <em class="parameter"><code><span class="type">gssize</span> offset</code></em>,
-                          <em class="parameter"><code><span class="type">gssize</span> size</code></em>);</pre>
+                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gssize"><span class="type">gssize</span></a> offset</code></em>,
+                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gssize"><span class="type">gssize</span></a> size</code></em>);</pre>
 <p>Copy <em class="parameter"><code>size</code></em>
  bytes from <em class="parameter"><code>mem</code></em>
  starting at <em class="parameter"><code>offset</code></em>
@@ -656,8 +738,8 @@ If <em class="parameter"><code>size</code></em>
  is set to -1, all bytes starting at <em class="parameter"><code>offset</code></em>
  are copied.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.14.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstMemoryCopyFunction.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -683,11 +765,10 @@ If <em class="parameter"><code>size</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.14.6"></a><h4>Returns</h4>
+<a name="GstMemoryCopyFunction.returns"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> object wrapping a copy of the requested region in
 <em class="parameter"><code>mem</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -695,8 +776,8 @@ If <em class="parameter"><code>size</code></em>
 <a name="GstMemoryShareFunction"></a><h3>GstMemoryShareFunction ()</h3>
 <pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 <span class="c_punctuation">(</span>*GstMemoryShareFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
-                           <em class="parameter"><code><span class="type">gssize</span> offset</code></em>,
-                           <em class="parameter"><code><span class="type">gssize</span> size</code></em>);</pre>
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gssize"><span class="type">gssize</span></a> offset</code></em>,
+                           <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gssize"><span class="type">gssize</span></a> size</code></em>);</pre>
 <p>Share <em class="parameter"><code>size</code></em>
  bytes from <em class="parameter"><code>mem</code></em>
  starting at <em class="parameter"><code>offset</code></em>
@@ -707,8 +788,8 @@ new GstMemory object. If <em class="parameter"><code>size</code></em>
 shared. This function does not make a copy of the bytes in <em class="parameter"><code>mem</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.15.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstMemoryShareFunction.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -734,19 +815,18 @@ shared. This function does not make a copy of the bytes in <em class="parameter"
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.15.6"></a><h4>Returns</h4>
+<a name="GstMemoryShareFunction.returns"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> object sharing the requested region in <em class="parameter"><code>mem</code></em>
 .</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="GstMemoryIsSpanFunction"></a><h3>GstMemoryIsSpanFunction ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 <span class="c_punctuation">(</span>*GstMemoryIsSpanFunction<span class="c_punctuation">)</span> (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem1</code></em>,
                             <em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem2</code></em>,
-                            <em class="parameter"><code><span class="type">gsize</span> *offset</code></em>);</pre>
+                            <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> *offset</code></em>);</pre>
 <p>Check if <em class="parameter"><code>mem1</code></em>
  and <em class="parameter"><code>mem2</code></em>
  occupy contiguous memory and return the offset of
@@ -754,8 +834,8 @@ shared. This function does not make a copy of the bytes in <em class="parameter"
  in the parent buffer in <em class="parameter"><code>offset</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.16.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstMemoryIsSpanFunction.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -781,11 +861,10 @@ shared. This function does not make a copy of the bytes in <em class="parameter"
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.16.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>mem1</code></em>
+<a name="GstMemoryIsSpanFunction.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>mem1</code></em>
 and <em class="parameter"><code>mem2</code></em>
 are in contiguous memory.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -796,16 +875,17 @@ gst_memory_init (<em class="parameter"><code><a class="link" href="GstMemory.htm
                  <em class="parameter"><code><a class="link" href="GstMemory.html#GstMemoryFlags" title="enum GstMemoryFlags"><span class="type">GstMemoryFlags</span></a> flags</code></em>,
                  <em class="parameter"><code><a class="link" href="GstAllocator.html" title="GstAllocator"><span class="type">GstAllocator</span></a> *allocator</code></em>,
                  <em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *parent</code></em>,
-                 <em class="parameter"><code><span class="type">gsize</span> maxsize</code></em>,
-                 <em class="parameter"><code><span class="type">gsize</span> align</code></em>,
-                 <em class="parameter"><code><span class="type">gsize</span> offset</code></em>,
-                 <em class="parameter"><code><span class="type">gsize</span> size</code></em>);</pre>
+                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> maxsize</code></em>,
+                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> align</code></em>,
+                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> offset</code></em>,
+                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>);</pre>
 <p>Initializes a newly allocated <em class="parameter"><code>mem</code></em>
  with the given parameters. This function
 will call <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-init" title="gst_mini_object_init ()"><code class="function">gst_mini_object_init()</code></a> with the default memory parameters.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
-<a name="id-1.3.28.8.17.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-init.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -860,15 +940,15 @@ will call <a class="link" href="gstreamer-GstMiniObject.html#gst-mini-object-ini
 <hr>
 <div class="refsect2">
 <a name="gst-memory-is-type"></a><h3>gst_memory_is_type ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_memory_is_type (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
-                    <em class="parameter"><code>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mem_type</code></em>);</pre>
+                    <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *mem_type</code></em>);</pre>
 <p>Check if <em class="parameter"><code>mem</code></em>
  if allocated with an allocator for <em class="parameter"><code>mem_type</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.18.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-is-type.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -889,13 +969,12 @@ gst_memory_is_type (<em class="parameter"><code><a class="link" href="GstMemory.
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.18.6"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>mem</code></em>
+<a name="gst-memory-is-type.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>mem</code></em>
 was allocated from an allocator for <em class="parameter"><code>mem_type</code></em>
 .</p>
-<p></p>
 </div>
-<p class="since">Since 1.2</p>
+<p class="since">Since: <a class="link" href="ix08.html#api-index-1.2">1.2</a></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -904,8 +983,8 @@ was allocated from an allocator for <em class="parameter"><code>mem_type</code><
 gst_memory_ref (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *memory</code></em>);</pre>
 <p>Increase the refcount of this memory.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.19.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-ref.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -919,7 +998,7 @@ gst_memory_ref (<em class="parameter"><code><a class="link" href="GstMemory.html
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.19.6"></a><h4>Returns</h4>
+<a name="gst-memory-ref.returns"></a><h4>Returns</h4>
 <p> <em class="parameter"><code>memory</code></em>
 (for convenience when doing assignments). </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -932,8 +1011,8 @@ gst_memory_ref (<em class="parameter"><code><a class="link" href="GstMemory.html
 gst_memory_unref (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *memory</code></em>);</pre>
 <p>Decrease the refcount of an memory, freeing it if the refcount reaches 0.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.20.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-unref.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -950,18 +1029,18 @@ gst_memory_unref (<em class="parameter"><code><a class="link" href="GstMemory.ht
 <hr>
 <div class="refsect2">
 <a name="gst-memory-get-sizes"></a><h3>gst_memory_get_sizes ()</h3>
-<pre class="programlisting"><span class="returnvalue">gsize</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="returnvalue">gsize</span></a>
 gst_memory_get_sizes (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
-                      <em class="parameter"><code><span class="type">gsize</span> *offset</code></em>,
-                      <em class="parameter"><code><span class="type">gsize</span> *maxsize</code></em>);</pre>
+                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> *offset</code></em>,
+                      <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> *maxsize</code></em>);</pre>
 <p>Get the current <em class="parameter"><code>size</code></em>
 , <em class="parameter"><code>offset</code></em>
  and <em class="parameter"><code>maxsize</code></em>
  of <em class="parameter"><code>mem</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.21.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-get-sizes.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -987,10 +1066,9 @@ gst_memory_get_sizes (<em class="parameter"><code><a class="link" href="GstMemor
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.21.6"></a><h4>Returns</h4>
+<a name="gst-memory-get-sizes.returns"></a><h4>Returns</h4>
 <p> the current sizes of <em class="parameter"><code>mem</code></em>
 </p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -998,8 +1076,8 @@ gst_memory_get_sizes (<em class="parameter"><code><a class="link" href="GstMemor
 <a name="gst-memory-resize"></a><h3>gst_memory_resize ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 gst_memory_resize (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
-                   <em class="parameter"><code><span class="type">gssize</span> offset</code></em>,
-                   <em class="parameter"><code><span class="type">gsize</span> size</code></em>);</pre>
+                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gssize"><span class="type">gssize</span></a> offset</code></em>,
+                   <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> size</code></em>);</pre>
 <p>Resize the memory region. <em class="parameter"><code>mem</code></em>
  should be writable and offset + size should be
 less than the maxsize of <em class="parameter"><code>mem</code></em>
@@ -1007,8 +1085,8 @@ less than the maxsize of <em class="parameter"><code>mem</code></em>
 <p><a class="link" href="GstMemory.html#GST-MEMORY-FLAG-ZERO-PREFIXED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PREFIXED</span></a> and <a class="link" href="GstMemory.html#GST-MEMORY-FLAG-ZERO-PADDED:CAPS"><span class="type">GST_MEMORY_FLAG_ZERO_PADDED</span></a> will be
 cleared when offset or padding is increased respectively.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.22.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-resize.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1077,8 +1155,8 @@ mapped copy of <em class="parameter"><code>mem</code></em>
  and returns a reference to a new
 <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a>.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.27.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-make-mapped.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1104,17 +1182,17 @@ mapped copy of <em class="parameter"><code>mem</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.27.7"></a><h4>Returns</h4>
+<a name="gst-memory-make-mapped.returns"></a><h4>Returns</h4>
 <p> a <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> object mapped
 with <em class="parameter"><code>flags</code></em>
-or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when a mapping is not possible. </p>
+or <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> when a mapping is not possible. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-memory-map"></a><h3>gst_memory_map ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_memory_map (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
                 <em class="parameter"><code><a class="link" href="GstMemory.html#GstMapInfo" title="GstMapInfo"><span class="type">GstMapInfo</span></a> *info</code></em>,
                 <em class="parameter"><code><a class="link" href="GstMemory.html#GstMapFlags" title="enum GstMapFlags"><span class="type">GstMapFlags</span></a> flags</code></em>);</pre>
@@ -1123,7 +1201,7 @@ gst_memory_map (<em class="parameter"><code><a class="link" href="GstMemory.html
  that can be
 accessed according to <em class="parameter"><code>flags</code></em>
 .</p>
-<p>This function can return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> for various reasons:</p>
+<p>This function can return <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> for various reasons:</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem"><p>the memory backed by <em class="parameter"><code>mem</code></em>
  is not accessible with the given <em class="parameter"><code>flags</code></em>
@@ -1137,8 +1215,8 @@ until <a class="link" href="GstMemory.html#gst-memory-unmap" title="gst_memory_u
 <p>For each <a class="link" href="GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a> call, a corresponding <a class="link" href="GstMemory.html#gst-memory-unmap" title="gst_memory_unmap ()"><code class="function">gst_memory_unmap()</code></a> call
 should be done.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.28.9"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-map.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1164,9 +1242,8 @@ should be done.</p>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.28.10"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the map operation was successful.</p>
-<p></p>
+<a name="gst-memory-map.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the map operation was successful.</p>
 </div>
 </div>
 <hr>
@@ -1177,8 +1254,8 @@ gst_memory_unmap (<em class="parameter"><code><a class="link" href="GstMemory.ht
                   <em class="parameter"><code><a class="link" href="GstMemory.html#GstMapInfo" title="GstMapInfo"><span class="type">GstMapInfo</span></a> *info</code></em>);</pre>
 <p>Release the memory obtained with <a class="link" href="GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a></p>
 <div class="refsect3">
-<a name="id-1.3.28.8.29.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-unmap.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1204,19 +1281,19 @@ gst_memory_unmap (<em class="parameter"><code><a class="link" href="GstMemory.ht
 <a name="gst-memory-copy"></a><h3>gst_memory_copy ()</h3>
 <pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 gst_memory_copy (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
-                 <em class="parameter"><code><span class="type">gssize</span> offset</code></em>,
-                 <em class="parameter"><code><span class="type">gssize</span> size</code></em>);</pre>
+                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gssize"><span class="type">gssize</span></a> offset</code></em>,
+                 <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gssize"><span class="type">gssize</span></a> size</code></em>);</pre>
 <p>Return a copy of <em class="parameter"><code>size</code></em>
  bytes from <em class="parameter"><code>mem</code></em>
  starting from <em class="parameter"><code>offset</code></em>
 . This copy is
 guaranteed to be writable. <em class="parameter"><code>size</code></em>
- can be set to -1 to return a copy all bytes
+ can be set to -1 to return a copy
 from <em class="parameter"><code>offset</code></em>
-.</p>
+ to the end of the memory region.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.30.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-copy.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1230,21 +1307,20 @@ from <em class="parameter"><code>offset</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>offset</p></td>
-<td class="parameter_description"><p>an offset to copy</p></td>
+<td class="parameter_description"><p>offset to copy from</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>size</p></td>
-<td class="parameter_description"><p>size to copy or -1 to copy all bytes from offset</p></td>
+<td class="parameter_description"><p>size to copy, or -1 to copy to the end of the memory region</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.30.6"></a><h4>Returns</h4>
+<a name="gst-memory-copy.returns"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
@@ -1252,20 +1328,20 @@ from <em class="parameter"><code>offset</code></em>
 <a name="gst-memory-share"></a><h3>gst_memory_share ()</h3>
 <pre class="programlisting"><a class="link" href="GstMemory.html" title="GstMemory"><span class="returnvalue">GstMemory</span></a> *
 gst_memory_share (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem</code></em>,
-                  <em class="parameter"><code><span class="type">gssize</span> offset</code></em>,
-                  <em class="parameter"><code><span class="type">gssize</span> size</code></em>);</pre>
+                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gssize"><span class="type">gssize</span></a> offset</code></em>,
+                  <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gssize"><span class="type">gssize</span></a> size</code></em>);</pre>
 <p>Return a shared copy of <em class="parameter"><code>size</code></em>
  bytes from <em class="parameter"><code>mem</code></em>
  starting from <em class="parameter"><code>offset</code></em>
 . No
 memory copy is performed and the memory region is simply shared. The result
-is guaranteed to be not-writable. <em class="parameter"><code>size</code></em>
- can be set to -1 to return a share
-all bytes from <em class="parameter"><code>offset</code></em>
-.</p>
+is guaranteed to be non-writable. <em class="parameter"><code>size</code></em>
+ can be set to -1 to return a shared
+copy from <em class="parameter"><code>offset</code></em>
+ to the end of the memory region.</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.31.5"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-share.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1279,30 +1355,29 @@ all bytes from <em class="parameter"><code>offset</code></em>
 </tr>
 <tr>
 <td class="parameter_name"><p>offset</p></td>
-<td class="parameter_description"><p>an offset to share</p></td>
+<td class="parameter_description"><p>offset to share from</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 <tr>
 <td class="parameter_name"><p>size</p></td>
-<td class="parameter_description"><p>size to share or -1 to share bytes from offset</p></td>
+<td class="parameter_description"><p>size to share, or -1 to share to the end of the memory region</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.31.6"></a><h4>Returns</h4>
+<a name="gst-memory-share.returns"></a><h4>Returns</h4>
 <p> a new <a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a>.</p>
-<p></p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="gst-memory-is-span"></a><h3>gst_memory_is_span ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 gst_memory_is_span (<em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem1</code></em>,
                     <em class="parameter"><code><a class="link" href="GstMemory.html" title="GstMemory"><span class="type">GstMemory</span></a> *mem2</code></em>,
-                    <em class="parameter"><code><span class="type">gsize</span> *offset</code></em>);</pre>
+                    <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> *offset</code></em>);</pre>
 <p>Check if <em class="parameter"><code>mem1</code></em>
  and mem2 share the memory with a common parent memory object
 and that the memory is contiguous.</p>
@@ -1313,8 +1388,8 @@ efficiently by performing <a class="link" href="GstMemory.html#gst-memory-share"
 the returned <em class="parameter"><code>offset</code></em>
 .</p>
 <div class="refsect3">
-<a name="id-1.3.28.8.32.6"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="gst-memory-is-span.parameters"></a><h4>Parameters</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -1340,9 +1415,8 @@ the returned <em class="parameter"><code>offset</code></em>
 </table></div>
 </div>
 <div class="refsect3">
-<a name="id-1.3.28.8.32.7"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the memory is contiguous and of a common parent.</p>
-<p></p>
+<a name="gst-memory-is-span.returns"></a><h4>Returns</h4>
+<p> <a href="/usr/share/gtk-doc/html/glibglib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the memory is contiguous and of a common parent.</p>
 </div>
 </div>
 </div>
@@ -1352,8 +1426,8 @@ the returned <em class="parameter"><code>offset</code></em>
 <a name="GstMemoryFlags"></a><h3>enum GstMemoryFlags</h3>
 <p>Flags for wrapped memory.</p>
 <div class="refsect3">
-<a name="id-1.3.28.9.2.4"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstMemoryFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -1393,14 +1467,14 @@ made when this memory needs to be shared between buffers.</p>
 <tr>
 <td class="enum_member_name"><p><a name="GST-MEMORY-FLAG-PHYSICALLY-CONTIGUOUS:CAPS"></a>GST_MEMORY_FLAG_PHYSICALLY_CONTIGUOUS</p></td>
 <td class="enum_member_description">
-<p>the memory is physically contiguous. Since 1.2</p>
+<p>the memory is physically contiguous. (Since 1.2)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
 <tr>
 <td class="enum_member_name"><p><a name="GST-MEMORY-FLAG-NOT-MAPPABLE:CAPS"></a>GST_MEMORY_FLAG_NOT_MAPPABLE</p></td>
 <td class="enum_member_description">
-<p>the memory can't be mapped via <a class="link" href="GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a> without any preconditions. Since 1.2</p>
+<p>the memory can't be mapped via <a class="link" href="GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a> without any preconditions. (Since 1.2)</p>
 </td>
 <td class="enum_member_annotations"> </td>
 </tr>
@@ -1433,8 +1507,8 @@ made when this memory needs to be shared between buffers.</p>
 <p>Base structure for memory implementations. Custom memory will put this structure
 as the first member of their structure.</p>
 <div class="refsect3">
-<a name="id-1.3.28.9.3.5"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstMemory.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
@@ -1457,22 +1531,22 @@ as the first member of their structure.</p>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">gsize</span> <em class="structfield"><code><a name="GstMemory-struct.maxsize"></a>maxsize</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstMemory-struct.maxsize"></a>maxsize</code></em>;</p></td>
 <td class="struct_member_description"><p>the maximum size allocated</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">gsize</span> <em class="structfield"><code><a name="GstMemory-struct.align"></a>align</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstMemory-struct.align"></a>align</code></em>;</p></td>
 <td class="struct_member_description"><p>the alignment of the memory</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">gsize</span> <em class="structfield"><code><a name="GstMemory-struct.offset"></a>offset</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstMemory-struct.offset"></a>offset</code></em>;</p></td>
 <td class="struct_member_description"><p>the offset where valid data starts</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">gsize</span> <em class="structfield"><code><a name="GstMemory-struct.size"></a>size</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstMemory-struct.size"></a>size</code></em>;</p></td>
 <td class="struct_member_description"><p>the size of valid data</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -1485,8 +1559,8 @@ as the first member of their structure.</p>
 <a name="GstMapFlags"></a><h3>enum GstMapFlags</h3>
 <p>Flags used when mapping memory</p>
 <div class="refsect3">
-<a name="id-1.3.28.9.4.4"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstMapFlags.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">
@@ -1520,6 +1594,13 @@ as the first member of their structure.</p>
 </div>
 <hr>
 <div class="refsect2">
+<a name="GST-MAP-READWRITE:CAPS"></a><h3>GST_MAP_READWRITE</h3>
+<pre class="programlisting">#define GST_MAP_READWRITE      (GST_MAP_READ | GST_MAP_WRITE)
+</pre>
+<p>GstMapFlags value alias for GST_MAP_READ | GST_MAP_WRITE</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="GstMapInfo"></a><h3>GstMapInfo</h3>
 <pre class="programlisting">typedef struct {
   GstMemory *memory;
@@ -1532,8 +1613,8 @@ as the first member of their structure.</p>
 <p>A structure containing the result of a map operation such as
 <a class="link" href="GstMemory.html#gst-memory-map" title="gst_memory_map ()"><code class="function">gst_memory_map()</code></a>. It contains the data and size.</p>
 <div class="refsect3">
-<a name="id-1.3.28.9.5.5"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<a name="GstMapInfo.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
@@ -1551,18 +1632,18 @@ as the first member of their structure.</p>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">guint8</span> *<em class="structfield"><code><a name="GstMapInfo.data"></a>data</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#guint8"><span class="type">guint8</span></a> *<em class="structfield"><code><a name="GstMapInfo.data"></a>data</code></em>;</p></td>
 <td class="struct_member_description"><p> a pointer to the mapped data. </p></td>
 <td class="struct_member_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=size]</span></td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">gsize</span> <em class="structfield"><code><a name="GstMapInfo.size"></a>size</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstMapInfo.size"></a>size</code></em>;</p></td>
 <td class="struct_member_description"><p>the valid size in <em class="parameter"><code>data</code></em>
 </p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><span class="type">gsize</span> <em class="structfield"><code><a name="GstMapInfo.maxsize"></a>maxsize</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="/usr/share/gtk-doc/html/glibglib-Basic-Types.html#gsize"><span class="type">gsize</span></a> <em class="structfield"><code><a name="GstMapInfo.maxsize"></a>maxsize</code></em>;</p></td>
 <td class="struct_member_description"><p>the maximum bytes in <em class="parameter"><code>data</code></em>
 </p></td>
 <td class="struct_member_annotations"> </td>
@@ -1574,7 +1655,7 @@ as the first member of their structure.</p>
 <hr>
 <div class="refsect2">
 <a name="GST-MAP-INFO-INIT:CAPS"></a><h3>GST_MAP_INFO_INIT</h3>
-<pre class="programlisting">#define GST_MAP_INFO_INIT { NULL, 0, NULL, 0, 0, }
+<pre class="programlisting">#define GST_MAP_INFO_INIT { NULL, (GstMapFlags) 0, NULL, 0, 0, { NULL, NULL, NULL, NULL}, {NULL, NULL, NULL, NULL}}
 </pre>
 <p>Initializer for <a class="link" href="GstMemory.html#GstMapInfo" title="GstMapInfo"><span class="type">GstMapInfo</span></a></p>
 </div>
@@ -1585,7 +1666,6 @@ as the first member of their structure.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>

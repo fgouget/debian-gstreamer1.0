@@ -3,10 +3,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>GStreamer 1.0 Core Reference Manual: GStreamer 1.0 Core Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Core Reference Manual">
 <link rel="next" href="gstreamer.html" title="GStreamer Overview">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -15,7 +15,7 @@
 <div>
 <div><table class="navigation" id="top" width="100%" cellpadding="2" cellspacing="0"><tr><th valign="middle"><p class="title">GStreamer 1.0 Core Reference Manual</p></th></tr></table></div>
 <div><p class="releaseinfo">
-      for GStreamer Core 1.0 (1.4.4)
+      for GStreamer Core 1.0 (1.10.4)
       The latest version of this documentation can be found on-line at
       <a class="ulink" href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/" target="_top">http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/</a>.
     </p></div>
@@ -79,7 +79,7 @@ How to run and debug your GStreamer application
 <span class="refentrytitle"><a href="GstClock.html">GstClock</a></span><span class="refpurpose"> — Abstract class for global clocks</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="gstreamer-gstconfig.html">gstconfig</a></span><span class="refpurpose"> — Build configuration options</span>
+<span class="refentrytitle"><a href="gstreamer-GstConfig.html">GstConfig</a></span><span class="refpurpose"> — Build configuration options</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GstContext.html">GstContext</a></span><span class="refpurpose"> — Lightweight objects to represent element contexts</span>
@@ -164,15 +164,24 @@ to GStreamer</span>
 <span class="refentrytitle"><a href="GstPreset.html">GstPreset</a></span><span class="refpurpose"> — helper interface for element presets</span>
 </dt>
 <dt>
+<span class="refentrytitle"><a href="gstreamer-GstProtectionMeta.html">GstProtectionMeta</a></span><span class="refpurpose"> — Functions and classes to support encrypted streams.</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="GstQuery.html">GstQuery</a></span><span class="refpurpose"> — Provide functions to create queries, and to set and parse
                     values in them.</span>
 </dt>
 <dt>
-<span class="refentrytitle"><a href="GstRegistry.html">GstRegistry</a></span><span class="refpurpose">Abstract base class for management of <span class="type">GstPlugin</span> objects</span>
+<span class="refentrytitle"><a href="GstRegistry.html">GstRegistry</a></span><span class="refpurpose"> — Abstract base class for management of <span class="type">GstPlugin</span> objects</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GstSegment.html">GstSegment</a></span><span class="refpurpose"> — Structure describing the configured region of interest
                     in a media file.</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gstreamer-GstStream.html">GstStream</a></span><span class="refpurpose"> — Base class for stream objects</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="gstreamer-GstStreamCollection.html">GstStreamCollection</a></span><span class="refpurpose"> — Base class for collection of streams</span>
 </dt>
 <dt>
 <span class="refentrytitle"><a href="GstStructure.html">GstStructure</a></span><span class="refpurpose"> — Generic structure containing fields of names and values</span>
@@ -207,6 +216,9 @@ to GStreamer</span>
 <span class="refentrytitle"><a href="GstTypeFindFactory.html">GstTypeFindFactory</a></span><span class="refpurpose"> — Information about registered typefind functions</span>
 </dt>
 <dt>
+<span class="refentrytitle"><a href="gstreamer-GstUri.html">GstUri</a></span><span class="refpurpose"> — URI parsing and manipulation.</span>
+</dt>
+<dt>
 <span class="refentrytitle"><a href="gstreamer-GstUriHandler.html">GstUriHandler</a></span><span class="refpurpose"> — Interface to ease URI handling in plugins.</span>
 </dt>
 <dt>
@@ -236,17 +248,35 @@ to GStreamer</span>
 </dt>
 </dl></dd>
 <dt><span class="chapter"><a href="gstreamer-support.html">GStreamer Core Support</a></span></dt>
-<dd><dl><dt>
+<dd><dl>
+<dt>
 <span class="refentrytitle"><a href="gstreamer-GstInfo.html">GstInfo</a></span><span class="refpurpose"> — Debugging and logging facilities</span>
-</dt></dl></dd>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GstTracer.html">GstTracer</a></span><span class="refpurpose"> — Tracing base class</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GstTracerFactory.html">GstTracerFactory</a></span><span class="refpurpose"> — Information about registered tracer functions</span>
+</dt>
+<dt>
+<span class="refentrytitle"><a href="GstTracerRecord.html">GstTracerRecord</a></span><span class="refpurpose"> — Trace log entry class</span>
+</dt>
+</dl></dd>
 <dt><span class="chapter"><a href="gstreamer-hierarchy.html">Object Hierarchy</a></span></dt>
-<dt><span class="index"><a href="api-index-full.html">API Index</a></span></dt>
-<dt><span class="index"><a href="api-index-deprecated.html">Index of deprecated API</a></span></dt>
+<dt><span class="index"><a href="ix01.html">API Index</a></span></dt>
+<dt><span class="index"><a href="ix02.html">Index of deprecated API</a></span></dt>
+<dt><span class="index"><a href="ix03.html">Index of new API in 1.10</a></span></dt>
+<dt><span class="index"><a href="ix04.html">Index of new API in 1.8</a></span></dt>
+<dt><span class="index"><a href="ix05.html">Index of new API in 1.6</a></span></dt>
+<dt><span class="index"><a href="ix06.html">Index of new API in 1.4</a></span></dt>
+<dt><span class="index"><a href="ix07.html">Index of new API in 1.2.3</a></span></dt>
+<dt><span class="index"><a href="ix08.html">Index of new API in 1.2</a></span></dt>
+<dt><span class="index"><a href="ix09.html">Index of new API in 1.0.10</a></span></dt>
+<dt><span class="index"><a href="ix10.html">Index of new API in 1.0.5</a></span></dt>
 <dt><span class="glossary"><a href="annotation-glossary.html">Annotation Glossary</a></span></dt>
 </dl></div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>

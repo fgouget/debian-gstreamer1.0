@@ -21,9 +21,9 @@
  * SECTION:gstnetaddressmeta
  * @short_description: Network address metadata
  *
- * #GstNetAddress can be used to store a network address. #GstNetAddressMeta can
- * be used to store a network address in a #GstBuffer so that it network
- * elements can track the to and from address of the buffer.
+ * #GstNetAddressMeta can be used to store a network address (a #GSocketAddress)
+ * in a #GstBuffer so that it network elements can track the to and from address
+ * of the buffer.
  */
 
 #include <string.h>
@@ -44,10 +44,13 @@ static gboolean
 net_address_meta_transform (GstBuffer * transbuf, GstMeta * meta,
     GstBuffer * buffer, GQuark type, gpointer data)
 {
-  GstNetAddressMeta *nmeta = (GstNetAddressMeta *) meta;
+  GstNetAddressMeta *smeta, *dmeta;
+  smeta = (GstNetAddressMeta *) meta;
 
   /* we always copy no matter what transform */
-  gst_buffer_add_net_address_meta (transbuf, nmeta->addr);
+  dmeta = gst_buffer_add_net_address_meta (transbuf, smeta->addr);
+  if (!dmeta)
+    return FALSE;
 
   return TRUE;
 }
@@ -115,4 +118,20 @@ gst_buffer_add_net_address_meta (GstBuffer * buffer, GSocketAddress * addr)
   meta->addr = g_object_ref (addr);
 
   return meta;
+}
+
+/**
+ * gst_buffer_get_net_address_meta:
+ * @buffer: a #GstBuffer
+ *
+ * Find the #GstNetAddressMeta on @buffer.
+ *
+ * Returns: (transfer none): the #GstNetAddressMeta or %NULL when there
+ * is no such metadata on @buffer.
+ */
+GstNetAddressMeta *
+gst_buffer_get_net_address_meta (GstBuffer * buffer)
+{
+  return (GstNetAddressMeta *)
+      gst_buffer_get_meta (buffer, GST_NET_ADDRESS_META_API_TYPE);
 }

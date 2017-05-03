@@ -80,8 +80,7 @@ static char *_gst_plugin_fault_handler_filename = NULL;
 
 /* list of valid licenses.
  * One of these must be specified or the plugin won't be loaded
- * Contact gstreamer-devel@lists.sourceforge.net if your license should be
- * added.
+ * Please file a bug to request any additional license be added.
  *
  * GPL: http://www.gnu.org/copyleft/gpl.html
  * LGPL: http://www.gnu.org/copyleft/lesser.html
@@ -441,7 +440,7 @@ priv_gst_plugin_loading_get_whitelist_hash (void)
     gchar **w;
 
     for (w = _plugin_loading_whitelist; *w != NULL; ++w)
-      hash = (hash << 1) ^ g_str_hash (*w);
+      hash ^= g_str_hash (*w);
   }
 
   return hash;
@@ -480,16 +479,18 @@ gst_plugin_register_func (GstPlugin * plugin, const GstPluginDesc * desc,
 {
   if (!gst_plugin_check_version (desc->major_version, desc->minor_version)) {
     if (GST_CAT_DEFAULT)
-      GST_WARNING ("plugin \"%s\" has incompatible version, not loading",
-          GST_STR_NULL (plugin->filename));
+      GST_WARNING ("plugin \"%s\" has incompatible version "
+          "(plugin: %d.%d, gst: %d,%d), not loading",
+          GST_STR_NULL (plugin->filename), desc->major_version,
+          desc->minor_version, GST_VERSION_MAJOR, GST_VERSION_MINOR);
     return NULL;
   }
 
   if (!desc->license || !desc->description || !desc->source ||
       !desc->package || !desc->origin) {
     if (GST_CAT_DEFAULT)
-      GST_WARNING ("plugin \"%s\" has incorrect GstPluginDesc, not loading",
-          GST_STR_NULL (plugin->filename));
+      GST_WARNING ("plugin \"%s\" has missing detail in GstPluginDesc, not "
+          "loading", GST_STR_NULL (plugin->filename));
     return NULL;
   }
 
@@ -676,19 +677,27 @@ static GMutex gst_plugin_loading_mutex;
 GstPlugin *
 gst_plugin_load_file (const gchar * filename, GError ** error)
 {
+  return _priv_gst_plugin_load_file_for_registry (filename, NULL, error);
+}
+
+GstPlugin *
+_priv_gst_plugin_load_file_for_registry (const gchar * filename,
+    GstRegistry * registry, GError ** error)
+{
   GstPluginDesc *desc;
   GstPlugin *plugin;
   GModule *module;
   gboolean ret;
   gpointer ptr;
   GStatBuf file_status;
-  GstRegistry *registry;
   gboolean new_plugin = TRUE;
   GModuleFlags flags;
 
   g_return_val_if_fail (filename != NULL, NULL);
 
-  registry = gst_registry_get ();
+  if (registry == NULL)
+    registry = gst_registry_get ();
+
   g_mutex_lock (&gst_plugin_loading_mutex);
 
   plugin = gst_registry_lookup (registry, filename);
@@ -706,7 +715,7 @@ gst_plugin_load_file (const gchar * filename, GError ** error)
   GST_CAT_DEBUG (GST_CAT_PLUGIN_LOADING, "attempt to load plugin \"%s\"",
       filename);
 
-  if (g_module_supported () == FALSE) {
+  if (!g_module_supported ()) {
     GST_CAT_DEBUG (GST_CAT_PLUGIN_LOADING, "module loading not supported");
     g_set_error (error,
         GST_PLUGIN_ERROR,
@@ -834,7 +843,7 @@ gst_plugin_load_file (const gchar * filename, GError ** error)
 
   if (new_plugin) {
     gst_object_ref (plugin);
-    gst_registry_add_plugin (gst_registry_get (), plugin);
+    gst_registry_add_plugin (registry, plugin);
   }
 
   g_mutex_unlock (&gst_plugin_loading_mutex);
@@ -1483,7 +1492,12 @@ gst_plugin_ext_dep_extract_env_vars_paths (GstPlugin * plugin,
 static guint
 gst_plugin_ext_dep_get_hash_from_stat_entry (GStatBuf * s)
 {
-  if (!(s->st_mode & (S_IFDIR | S_IFREG)))
+#ifdef S_IFBLK
+  if (!(s->st_mode & (S_IFDIR | S_IFREG | S_IFBLK | S_IFCHR)))
+#else
+  /* MSVC does not have S_IFBLK */
+  if (!(s->st_mode & (S_IFDIR | S_IFREG | S_IFCHR)))
+#endif
     return (guint) - 1;
 
   /* completely random formula */
@@ -1503,6 +1517,9 @@ gst_plugin_ext_dep_direntry_matches (GstPlugin * plugin, const gchar * entry,
     /* suffix match? */
     if (((flags & GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_SUFFIX)) &&
         g_str_has_suffix (entry, *filenames)) {
+      return TRUE;
+    } else if (((flags & GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_PREFIX)) &&
+        g_str_has_prefix (entry, *filenames)) {
       return TRUE;
       /* else it's an exact match that's needed */
     } else if (strcmp (entry, *filenames) == 0) {
@@ -1566,7 +1583,7 @@ gst_plugin_ext_dep_scan_dir_and_match_names (GstPlugin * plugin,
       continue;
     }
 
-    hash = (hash + fhash) << 1;
+    hash = hash + fhash;
     g_free (full_path);
   }
 
@@ -1580,7 +1597,7 @@ gst_plugin_ext_dep_scan_path_with_filenames (GstPlugin * plugin,
     GstPluginDependencyFlags flags)
 {
   const gchar *empty_filenames[] = { "", NULL };
-  gboolean recurse_into_dirs, partial_names;
+  gboolean recurse_into_dirs, partial_names = FALSE;
   guint i, hash = 0;
 
   /* to avoid special-casing below (FIXME?) */
@@ -1588,7 +1605,10 @@ gst_plugin_ext_dep_scan_path_with_filenames (GstPlugin * plugin,
     filenames = empty_filenames;
 
   recurse_into_dirs = ! !(flags & GST_PLUGIN_DEPENDENCY_FLAG_RECURSE);
-  partial_names = ! !(flags & GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_SUFFIX);
+
+  if ((flags & GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_SUFFIX) ||
+      (flags & GST_PLUGIN_DEPENDENCY_FLAG_FILE_NAME_IS_PREFIX))
+    partial_names = TRUE;
 
   /* if we can construct the exact paths to check with the data we have, just
    * stat them one by one; this is more efficient than opening the directory
@@ -1608,7 +1628,7 @@ gst_plugin_ext_dep_scan_path_with_filenames (GstPlugin * plugin,
         fhash = gst_plugin_ext_dep_get_hash_from_stat_entry (&s);
         GST_LOG_OBJECT (plugin, "stat: %s (result: %08x)", full_path, fhash);
       }
-      hash = (hash + fhash) << 1;
+      hash += fhash;
       g_free (full_path);
     }
   } else {
@@ -1652,7 +1672,6 @@ gst_plugin_ext_dep_get_stat_hash (GstPlugin * plugin, GstPluginDep * dep)
   while ((path = g_queue_pop_head (&scan_paths))) {
     scan_hash += gst_plugin_ext_dep_scan_path_with_filenames (plugin, path,
         (const gchar **) dep->names, dep->flags);
-    scan_hash = scan_hash << 1;
     g_free (path);
   }
 

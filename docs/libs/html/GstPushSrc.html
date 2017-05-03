@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>GStreamer 1.0 Library Reference Manual: GstPushSrc</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<title>GstPushSrc: GStreamer 1.0 Library Reference Manual</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.79.1">
 <link rel="home" href="index.html" title="GStreamer 1.0 Library Reference Manual">
 <link rel="up" href="gstreamer-base.html" title="GStreamer Base and Utillity Classes">
 <link rel="prev" href="GstBaseTransform.html" title="GstBaseTransform">
 <link rel="next" href="GstAdapter.html" title="GstAdapter">
-<meta name="generator" content="GTK-Doc V1.21 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="GstPushSrc.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -53,10 +53,10 @@
 </div>
 <div class="refsect1">
 <a name="GstPushSrc.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject">GObject</a>
-    <span class="lineart">╰──</span> <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-        <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstObject.html">GstObject</a>
-            <span class="lineart">╰──</span> <a href="http://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer/html/GstElement.html">GstElement</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    <span class="lineart">╰──</span> <a href="/usr/share/gtk-doc/html/gobjectgobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+        <span class="lineart">╰──</span> <a href="../html/GstObject.html#GstObject-struct">GstObject</a>
+            <span class="lineart">╰──</span> <a href="../html/GstElement.html#GstElement-struct">GstElement</a>
                 <span class="lineart">╰──</span> <a class="link" href="GstBaseSrc.html" title="GstBaseSrc">GstBaseSrc</a>
                     <span class="lineart">╰──</span> GstPushSrc
 </pre>
@@ -86,6 +86,7 @@ base class.</p>
 </div>
 <div class="refsect1">
 <a name="GstPushSrc.functions_details"></a><h2>Functions</h2>
+<p></p>
 </div>
 <div class="refsect1">
 <a name="GstPushSrc.other_details"></a><h2>Types and Values</h2>
@@ -109,6 +110,44 @@ base class.</p>
   GstFlowReturn (*fill)   (GstPushSrc *src, GstBuffer *buf);
 };
 </pre>
+<p>Subclasses can override any of the available virtual methods or not, as
+needed. At the minimum, the <em class="parameter"><code>fill</code></em>
+ method should be overridden to produce
+buffers.</p>
+<div class="refsect3">
+<a name="GstPushSrcClass.members"></a><h4>Members</h4>
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
+<colgroup>
+<col width="300px" class="struct_members_name">
+<col class="struct_members_description">
+<col width="200px" class="struct_members_annotations">
+</colgroup>
+<tbody>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstPushSrcClass.create"></a>create</code></em> ()</p></td>
+<td class="struct_member_description"><p>Ask the subclass to create a buffer. The subclass decides which
+size this buffer should be. Other then that, refer to
+<a class="link" href="GstBaseSrc.html" title="GstBaseSrc"><span class="type">GstBaseSrc</span></a>.create() for more details. If this method is
+not implemented, <em class="parameter"><code>alloc</code></em>
+followed by <em class="parameter"><code>fill</code></em>
+will be called.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstPushSrcClass.alloc"></a>alloc</code></em> ()</p></td>
+<td class="struct_member_description"><p>Ask the subclass to allocate a buffer. The subclass decides which
+size this buffer should be. The default implementation will create
+a new buffer from the negotiated allocator.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+<tr>
+<td class="struct_member_name"><p><em class="structfield"><code><a name="GstPushSrcClass.fill"></a>fill</code></em> ()</p></td>
+<td class="struct_member_description"><p>Ask the subclass to fill the buffer with data.</p></td>
+<td class="struct_member_annotations"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
 </div>
 </div>
 <div class="refsect1">
@@ -117,7 +156,6 @@ base class.</p>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.21</div>
+<hr>Generated by GTK-Doc V1.25</div>
 </body>
 </html>

@@ -157,7 +157,7 @@ event_loop (GstElement * bin)
         gst_message_parse_warning (msg, &err, &dbg);
         GST_WARNING_OBJECT (GST_MESSAGE_SRC (msg), "%s (%s)", err->message,
             (dbg ? dbg : "no details"));
-        g_error_free (err);
+        g_clear_error (&err);
         g_free (dbg);
         break;
       }
@@ -168,7 +168,7 @@ event_loop (GstElement * bin)
         gst_message_parse_error (msg, &err, &dbg);
         GST_ERROR_OBJECT (GST_MESSAGE_SRC (msg), "%s (%s)", err->message,
             (dbg ? dbg : "no details"));
-        g_error_free (err);
+        g_clear_error (&err);
         g_free (dbg);
         running = FALSE;
         break;
@@ -185,7 +185,7 @@ gint
 main (gint argc, gchar * argv[])
 {
   /* default parameters */
-  const gchar *flavour_str = "audio";
+  gchar *flavour_str = g_strdup("audio");
   gint flavour = FLAVOUR_AUDIO;
   gint children = 3;
   gint depth = 4;
@@ -218,6 +218,8 @@ main (gint argc, gchar * argv[])
   g_option_context_add_group (ctx, gst_init_get_option_group ());
   if (!g_option_context_parse (ctx, &argc, &argv, &err)) {
     g_print ("Error initializing: %s\n", GST_STR_NULL (err->message));
+    g_clear_error (&err);
+    g_option_context_free (ctx);
     return 1;
   }
   g_option_context_free (ctx);
@@ -228,6 +230,8 @@ main (gint argc, gchar * argv[])
   /* build pipeline */
   g_print ("building %s pipeline with depth = %d and children = %d\n",
       flavour_str, depth, children);
+  g_free (flavour_str);
+
   start = gst_util_get_timestamp ();
   bin = GST_BIN (gst_pipeline_new ("pipeline"));
   sink = gst_element_factory_make ("fakesink", NULL);

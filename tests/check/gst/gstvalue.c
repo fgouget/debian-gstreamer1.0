@@ -28,6 +28,8 @@ GST_START_TEST (test_deserialize_buffer)
 {
   GValue value = { 0 };
   GstBuffer *buf;
+  guint8 data[8];
+  guint64 val;
 
   g_value_init (&value, GST_TYPE_BUFFER);
   fail_unless (gst_value_deserialize (&value, "1234567890abcdef"));
@@ -38,6 +40,10 @@ GST_START_TEST (test_deserialize_buffer)
   /* does not increase the refcount */
   buf = gst_value_get_buffer (&value);
   ASSERT_MINI_OBJECT_REFCOUNT (buf, "buffer", 1);
+
+  gst_buffer_extract (buf, 0, data, 8);
+  val = GST_READ_UINT64_BE (data);
+  fail_unless_equals_uint64 (val, G_GUINT64_CONSTANT (0x1234567890abcdef));
 
   /* cleanup */
   g_value_unset (&value);
@@ -51,13 +57,13 @@ GST_START_TEST (test_serialize_buffer)
   GValue value = { 0 };
   GstBuffer *buf;
   gchar *serialized;
-  static const char *buf_data = "1234567890abcdef";
+  const guint8 buf_data[8] = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xab, 0xcd, 0xef };
   gint len;
 
-  len = strlen (buf_data);
+  len = sizeof (buf_data);
   buf = gst_buffer_new_and_alloc (len);
 
-  gst_buffer_fill (buf, 0, buf_data, len);
+  gst_buffer_fill (buf, 0, (gchar *) buf_data, len);
 
   ASSERT_MINI_OBJECT_REFCOUNT (buf, "buffer", 1);
 
@@ -70,6 +76,7 @@ GST_START_TEST (test_serialize_buffer)
   serialized = gst_value_serialize (&value);
   GST_DEBUG ("serialized buffer to %s", serialized);
   fail_unless (serialized != NULL);
+  fail_unless_equals_string (serialized, "1234567890abcdef");
 
   /* refcount should not change */
   ASSERT_MINI_OBJECT_REFCOUNT (buf, "buffer", 1);
@@ -446,6 +453,8 @@ GST_START_TEST (test_deserialize_flags)
     "0",
     "GST_SEEK_FLAG_NONE",
     "GST_SEEK_FLAG_FLUSH",
+    "0xf",
+    "15",
     "GST_SEEK_FLAG_FLUSH+GST_SEEK_FLAG_ACCURATE",
   };
   GstSeekFlags results[] = {
@@ -453,6 +462,8 @@ GST_START_TEST (test_deserialize_flags)
     GST_SEEK_FLAG_NONE,
     GST_SEEK_FLAG_NONE,
     GST_SEEK_FLAG_FLUSH,
+    0xf,
+    15,
     GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
   };
   int i;
@@ -466,6 +477,14 @@ GST_START_TEST (test_deserialize_flags)
         "resulting value is %d, not %d, for string %s (%d)",
         g_value_get_flags (&value), results[i], strings[i], i);
   }
+
+  fail_if (gst_value_deserialize (&value, "foo"),
+      "flag deserializing for bogus value should have failed!");
+  fail_if (gst_value_deserialize (&value, "GST_SEEK_FLAG_FLUSH+foo"),
+      "flag deserializing for bogus value should have failed!");
+  fail_if (gst_value_deserialize (&value,
+          "GST_SEEK_FLAG_FLUSH+foo+GST_SEEK_FLAG_ACCURATE"),
+      "flag deserializing for bogus value should have failed!");
 }
 
 GST_END_TEST;
@@ -496,6 +515,195 @@ GST_START_TEST (test_deserialize_bitmask)
 }
 
 GST_END_TEST;
+
+static void
+check_flagset_mask_serialisation (GValue * value, guint test_flags,
+    guint test_mask)
+{
+  gchar *string;
+  gst_value_set_flagset (value, test_flags, test_mask);
+
+  /* Normalise our test flags against the mask now for easier testing,
+   * as that's what we expect to get back from the flagset after it
+   * normalises internally */
+  test_flags &= test_mask;
+
+  /* Check the values got stored correctly */
+  fail_unless (gst_value_get_flagset_flags (value) == test_flags,
+      "resulting flags value is 0x%u, not 0x%x",
+      gst_value_get_flagset_flags (value), test_flags);
+  fail_unless (gst_value_get_flagset_mask (value) == test_mask,
+      "resulting mask is 0x%u, not 0x%x",
+      gst_value_get_flagset_mask (value), test_mask);
+
+  string = gst_value_serialize (value);
+  fail_if (string == NULL, "could not serialize flagset");
+
+  GST_DEBUG ("Serialized flagset to: %s", string);
+
+  fail_unless (gst_value_deserialize (value, string),
+      "could not deserialize %s", string);
+
+  fail_unless (gst_value_get_flagset_flags (value) == test_flags,
+      "resulting flags value is 0x%u, not 0x%x, for string %s",
+      gst_value_get_flagset_flags (value), test_flags, string);
+
+  fail_unless (gst_value_get_flagset_mask (value) == test_mask,
+      "resulting mask is 0x%u, not 0x%x, for string %s",
+      gst_value_get_flagset_mask (value), test_mask, string);
+
+  g_free (string);
+}
+
+GST_START_TEST (test_flagset)
+{
+  GValue value = G_VALUE_INIT;
+  GValue value2 = G_VALUE_INIT;
+  GValue dest = G_VALUE_INIT;
+  gchar *string;
+  GType test_flagset_type;
+  guint test_flags, test_mask;
+
+  /* Test serialisation of abstract type */
+  g_value_init (&value, GST_TYPE_FLAG_SET);
+
+  test_flags = 0xf1f1;
+  test_mask = 0xffff;
+
+  gst_value_set_flagset (&value, test_flags, test_mask);
+  string = gst_value_serialize (&value);
+  fail_if (string == NULL, "could not serialize flagset");
+
+  fail_unless (gst_value_deserialize (&value, string),
+      "could not deserialize %s", string);
+
+  fail_unless (gst_value_get_flagset_flags (&value) == test_flags,
+      "resulting value is 0x%u, not 0x%x, for string %s",
+      gst_value_get_flagset_flags (&value), test_flags, string);
+
+  fail_unless (gst_value_get_flagset_mask (&value) == test_mask,
+      "resulting value is 0x%u, not 0x%x, for string %s",
+      gst_value_get_flagset_mask (&value), test_mask, string);
+
+  g_free (string);
+  g_value_unset (&value);
+
+  /* Check we can't wrap a random non-flags type */
+  ASSERT_CRITICAL (gst_flagset_register (GST_TYPE_OBJECT));
+
+  test_flagset_type = gst_flagset_register (GST_TYPE_SEEK_FLAGS);
+
+  fail_unless (g_type_is_a (test_flagset_type, GST_TYPE_FLAG_SET));
+
+  g_value_init (&value, test_flagset_type);
+
+  test_flags =
+      GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_TRICKMODE |
+      GST_SEEK_FLAG_TRICKMODE_KEY_UNITS;
+  test_mask =
+      GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_TRICKMODE |
+      GST_SEEK_FLAG_TRICKMODE_NO_AUDIO;
+
+  check_flagset_mask_serialisation (&value, test_flags, test_mask);
+  /* Check serialisation works with the generic 'exact' flag */
+  check_flagset_mask_serialisation (&value, test_flags,
+      GST_FLAG_SET_MASK_EXACT);
+
+  /* Check deserialisation of flagset in 'flags' form, without
+   * the hex strings at the start */
+  test_flags = GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_TRICKMODE;
+  test_mask = GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_TRICKMODE |
+      GST_SEEK_FLAG_TRICKMODE_NO_AUDIO;
+  string = g_strdup ("+flush+trickmode/trickmode-no-audio");
+
+  fail_unless (gst_value_deserialize (&value, string),
+      "could not deserialize %s", string);
+
+  GST_DEBUG ("Deserialized %s to 0x%x:0x%x", string,
+      gst_value_get_flagset_flags (&value),
+      gst_value_get_flagset_mask (&value));
+
+  fail_unless (gst_value_get_flagset_flags (&value) == test_flags,
+      "resulting flags value is 0x%u, not 0x%x, for string %s",
+      gst_value_get_flagset_flags (&value), (test_flags & test_mask), string);
+
+  fail_unless (gst_value_get_flagset_mask (&value) == test_mask,
+      "resulting mask is 0x%u, not 0x%x, for string %s",
+      gst_value_get_flagset_mask (&value), test_mask, string);
+
+  g_free (string);
+  g_value_unset (&value);
+
+  /* Test that fixating don't-care fields works, using our
+   * sub-type flagset for good measure  */
+  g_value_init (&value, test_flagset_type);
+  gst_value_set_flagset (&value, test_flags, test_mask);
+
+  fail_unless (gst_value_fixate (&dest, &value));
+  fail_unless (gst_value_get_flagset_flags (&dest) == test_flags);
+  fail_unless (gst_value_get_flagset_mask (&dest) == GST_FLAG_SET_MASK_EXACT);
+
+  g_value_unset (&value);
+
+  /* Intersection tests */
+  g_value_init (&value, GST_TYPE_FLAG_SET);
+  g_value_init (&value2, test_flagset_type);
+
+  /* We want Accurate, but not Snap-Before */
+  gst_value_set_flagset (&value, GST_SEEK_FLAG_ACCURATE,
+      GST_SEEK_FLAG_ACCURATE | GST_SEEK_FLAG_SNAP_BEFORE);
+
+  /* This only cares that things are flushing */
+  gst_value_set_flagset (&value2, GST_SEEK_FLAG_FLUSH, GST_SEEK_FLAG_FLUSH);
+
+  test_flags = GST_SEEK_FLAG_ACCURATE | GST_SEEK_FLAG_FLUSH;
+  test_mask =
+      GST_SEEK_FLAG_ACCURATE | GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SNAP_BEFORE;
+
+  /* GstFlagSet should always intersect with itself */
+  g_value_unset (&dest);
+  fail_unless (gst_value_can_intersect (&value, &value));
+  fail_unless (gst_value_intersect (&dest, &value, &value));
+
+  /* GstFlagSet subtype should intersect with itself */
+  g_value_unset (&dest);
+  fail_unless (gst_value_can_intersect (&value2, &value2));
+  fail_unless (gst_value_intersect (&dest, &value2, &value2));
+
+  /* Check we can intersect custom flagset subtype with flagset */
+  g_value_unset (&dest);
+  fail_unless (gst_value_can_intersect (&value2, &value));
+  fail_unless (gst_value_intersect (&dest, &value2, &value));
+
+  /* and in the other order */
+  g_value_unset (&dest);
+  fail_unless (gst_value_can_intersect (&value, &value2));
+  fail_unless (gst_value_intersect (&dest, &value, &value2));
+
+  fail_unless (gst_value_get_flagset_flags (&dest) == test_flags,
+      "resulting flags value is 0x%u, not 0x%x",
+      gst_value_get_flagset_flags (&dest), test_flags);
+
+  fail_unless (gst_value_get_flagset_mask (&dest) == test_mask,
+      "resulting mask is 0x%u, not 0x%x",
+      gst_value_get_flagset_mask (&dest), test_mask);
+
+  gst_value_set_flagset (&value,
+      GST_SEEK_FLAG_ACCURATE, GST_SEEK_FLAG_ACCURATE);
+  gst_value_set_flagset (&value2, GST_SEEK_FLAG_ACCURATE | GST_SEEK_FLAG_FLUSH,
+      GST_SEEK_FLAG_ACCURATE | GST_SEEK_FLAG_SNAP_BEFORE | GST_SEEK_FLAG_FLUSH);
+  /* Check that accurate alone is a subset of accurate+!snap_before+flush,
+   * but not vice-versa */
+  fail_unless (gst_value_is_subset (&value, &value2));
+  fail_if (gst_value_is_subset (&value2, &value));
+
+  g_value_unset (&dest);
+  g_value_unset (&value);
+  g_value_unset (&value2);
+}
+
+GST_END_TEST;
+
 
 GST_START_TEST (test_string)
 {
@@ -542,20 +750,17 @@ GST_START_TEST (test_deserialize_string)
     "\"foo\\%\"", "foo%"}, {
     "\"0123456789_-+/:.\"", "0123456789_-+/:."}, {
     "\"Hello\\ World\"", "Hello World"}, {
+    "\"Hello\\ World", "\"Hello\\ World"}, {
+    "\"\\", "\"\\"}, {
+    "\"\\0", "\"\\0"}, {
     "", ""},                    /* empty strings */
     {
     "\"\"", ""},                /* quoted empty string -> empty string */
         /* Expected FAILURES: */
     {
-    "\"", NULL},                /* missing second quote */
-    {
-    "\"Hello\\ World", NULL},   /* missing second quote */
-    {
-    "\"\\", NULL},              /* quote at end, missing second quote */
-    {
-    "\"\\0", NULL},             /* missing second quote */
-    {
     "\"\\0\"", NULL},           /* unfinished escaped character */
+    {
+    "\"", NULL},                /* solitary quote */
     {
     "\" \"", NULL},             /* spaces must be escaped */
 #if 0
@@ -2907,6 +3112,7 @@ gst_value_suite (void)
   tcase_add_test (tc_chain, test_stepped_range_collection);
   tcase_add_test (tc_chain, test_stepped_int_range_parsing);
   tcase_add_test (tc_chain, test_stepped_int_range_ops);
+  tcase_add_test (tc_chain, test_flagset);
 
   return s;
 }

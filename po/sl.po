@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gstreamer-1.2.1\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/\n"
-"POT-Creation-Date: 2014-11-06 12:20+0100\n"
+"POT-Creation-Date: 2017-02-23 15:12+0200\n"
 "PO-Revision-Date: 2014-04-09 22:38+0100\n"
 "Last-Translator: Klemen Košir <klemen913@gmail.com>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
@@ -455,6 +455,12 @@ msgstr "skladatelj"
 msgid "person(s) who composed the recording"
 msgstr "oseba, ki je skladatelj posnetka"
 
+msgid "conductor"
+msgstr ""
+
+msgid "conductor/performer refinement"
+msgstr ""
+
 msgid "duration"
 msgstr "trajanje"
 
@@ -816,6 +822,12 @@ msgstr ""
 msgid "Midi note number of the audio track."
 msgstr ""
 
+msgid "private-data"
+msgstr ""
+
+msgid "Private data"
+msgstr ""
+
 msgid ", "
 msgstr ", "
 
@@ -856,6 +868,9 @@ msgid "could not set property \"%s\" in element \"%s\" to \"%s\""
 msgstr ""
 "lastnosti \"%s\" v predmetu \"%s\" ni mogoče nastaviti na vrednost \"%s\""
 
+msgid "Delayed linking failed."
+msgstr ""
+
 #, c-format
 msgid "could not link %s to %s"
 msgstr "%s in %s ni mogoče povezati"
@@ -887,9 +902,6 @@ msgstr "izvorni predmet za naslov URI \"%s\" ne obstaja"
 msgid "syntax error"
 msgstr ""
 
-msgid "bin"
-msgstr ""
-
 #, c-format
 msgid "specified empty bin \"%s\", not allowed"
 msgstr "določena je prazna dvojiška datoteka \"%s\", kar ni dovoljeno"
@@ -906,9 +918,6 @@ msgstr "Veliko medpomnilnikov se prazni."
 
 msgid "Internal data flow problem."
 msgstr "Notranja težava toka podatkov."
-
-msgid "Internal data stream error."
-msgstr "Notranja napaka pretoka podatkov."
 
 msgid "Internal data flow error."
 msgstr "Notranja napaka toka podatkov."
@@ -928,6 +937,12 @@ msgid ""
 msgstr ""
 "Omeji možne dovoljene zmožnosti (NULL pomeni ANY, vse). S tem naslavljate "
 "priloženi predmet GstCaps."
+
+msgid "Caps Change Mode"
+msgstr ""
+
+msgid "Filter caps change behaviour"
+msgstr ""
 
 msgid "No Temp directory specified."
 msgstr "Začasna mapa ni določena."
@@ -995,6 +1010,10 @@ msgstr "vsili velike črke"
 msgid "force caps without doing a typefind"
 msgstr "vsili velike črke brez potrjevanja pisave"
 
+#, fuzzy
+msgid "Stream doesn't contain enough data."
+msgstr "Pretok ne vsebuje podatkov."
+
 msgid "Stream contains no data."
 msgstr "Pretok ne vsebuje podatkov."
 
@@ -1006,6 +1025,9 @@ msgstr "berljivo"
 
 msgid "writable"
 msgstr "zapisljivo"
+
+msgid "deprecated"
+msgstr ""
 
 msgid "controllable"
 msgstr "nadzorljivo"
@@ -1212,11 +1234,13 @@ msgstr "Ne izpiši podrobnosti napredka"
 msgid "Output messages"
 msgstr "Izhodna sporočila"
 
-msgid "Do not output status information of TYPE"
-msgstr "Ne izpiši podrobnosti stanja VRSTE"
+msgid ""
+"Do not output status information for the specified property if verbose "
+"output is enabled (can be used multiple times)"
+msgstr ""
 
-msgid "TYPE1,TYPE2,..."
-msgstr "VRSTA1, VRSTA2 ..."
+msgid "PROPERTY-NAME"
+msgstr ""
 
 msgid "Do not install a fault handler"
 msgstr "Na namesti ročnika napak"
@@ -1294,6 +1318,15 @@ msgstr "Nastavljanje cevovoda na NULL ...\n"
 
 msgid "Freeing pipeline ...\n"
 msgstr "Sproščanje cevovoda ...\n"
+
+#~ msgid "Internal data stream error."
+#~ msgstr "Notranja napaka pretoka podatkov."
+
+#~ msgid "Do not output status information of TYPE"
+#~ msgstr "Ne izpiši podrobnosti stanja VRSTE"
+
+#~ msgid "TYPE1,TYPE2,..."
+#~ msgstr "VRSTA1, VRSTA2 ..."
 
 #~ msgid "link without source element"
 #~ msgstr "povezava brez predmeta vira"

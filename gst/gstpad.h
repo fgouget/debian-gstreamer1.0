@@ -61,6 +61,8 @@ typedef enum {
   GST_PAD_MODE_PULL
 } GstPadMode;
 
+#include <glib.h>
+
 const gchar   * gst_pad_mode_get_name (GstPadMode mode);
 
 #include <gst/gstobject.h>
@@ -254,7 +256,7 @@ typedef gboolean		(*GstPadActivateModeFunction)	(GstPad *pad, GstObject *parent,
  * @parent: (allow-none): the parent of @pad. If the #GST_PAD_FLAG_NEED_PARENT
  *          flag is set, @parent is guaranteed to be not-%NULL and remain valid
  *          during the execution of this function.
- * @buffer: the #GstBuffer that is chained, not %NULL.
+ * @buffer: (transfer full): the #GstBuffer that is chained, not %NULL.
  *
  * A function that will be called on sinkpads when chaining buffers.
  * The function typically processes the data contained in the buffer and
@@ -277,7 +279,7 @@ typedef GstFlowReturn		(*GstPadChainFunction)		(GstPad *pad, GstObject *parent,
  * @parent: (allow-none): the parent of @pad. If the #GST_PAD_FLAG_NEED_PARENT
  *          flag is set, @parent is guaranteed to be not-%NULL and remain valid
  *          during the execution of this function.
- * @list: the #GstBufferList that is chained, not %NULL.
+ * @list: (transfer full): the #GstBufferList that is chained, not %NULL.
  *
  * A function that will be called on sinkpads when chaining buffer lists.
  * The function typically processes the data contained in the buffer list and
@@ -351,13 +353,35 @@ typedef GstFlowReturn		(*GstPadGetRangeFunction)	(GstPad *pad, GstObject *parent
  * @parent: (allow-none): the parent of @pad. If the #GST_PAD_FLAG_NEED_PARENT
  *          flag is set, @parent is guaranteed to be not-%NULL and remain valid
  *          during the execution of this function.
- * @event: the #GstEvent to handle.
+ * @event: (transfer full): the #GstEvent to handle.
  *
  * Function signature to handle an event for the pad.
  *
  * Returns: %TRUE if the pad could handle the event.
  */
 typedef gboolean		(*GstPadEventFunction)		(GstPad *pad, GstObject *parent,
+                                                                 GstEvent *event);
+
+/**
+ * GstPadEventFullFunction:
+ * @pad: the #GstPad to handle the event.
+ * @parent: (allow-none): the parent of @pad. If the #GST_PAD_FLAG_NEED_PARENT
+ *          flag is set, @parent is guaranteed to be not-%NULL and remain valid
+ *          during the execution of this function.
+ * @event: (transfer full): the #GstEvent to handle.
+ *
+ * Function signature to handle an event for the pad.
+ *
+ * This variant is for specific elements that will take into account the
+ * last downstream flow return (from a pad push), in which case they can
+ * return it.
+ *
+ * Returns: %GST_FLOW_OK if the event was handled properly, or any other
+ * #GstFlowReturn dependent on downstream state.
+ *
+ * Since: 1.8
+ */
+typedef GstFlowReturn		(*GstPadEventFullFunction)	(GstPad *pad, GstObject *parent,
                                                                  GstEvent *event);
 
 
@@ -437,7 +461,7 @@ typedef gboolean		(*GstPadForwardFunction)	(GstPad *pad, gpointer user_data);
 /**
  * GstPadProbeType:
  * @GST_PAD_PROBE_TYPE_INVALID: invalid probe type
- * @GST_PAD_PROBE_TYPE_IDLE: probe idle pads and block
+ * @GST_PAD_PROBE_TYPE_IDLE: probe idle pads and block while the callback is called
  * @GST_PAD_PROBE_TYPE_BLOCK: probe and block pads
  * @GST_PAD_PROBE_TYPE_BUFFER: probe buffers
  * @GST_PAD_PROBE_TYPE_BUFFER_LIST: probe buffer lists
@@ -500,14 +524,26 @@ typedef enum
 
 /**
  * GstPadProbeReturn:
- * @GST_PAD_PROBE_OK: normal probe return value
+ * @GST_PAD_PROBE_OK: normal probe return value. This leaves the probe in
+ *        place, and defers decisions about dropping or passing data to other
+ *        probes, if any. If there are no other probes, the default behaviour
+ *        for the probe type applies (block for blocking probes, and pass for
+ *        non-blocking probes).
  * @GST_PAD_PROBE_DROP: drop data in data probes. For push mode this means that
- *        the data item is not sent downstream. For pull mode, it means that the
- *        data item is not passed upstream. In both cases, this result code
- *        means that #GST_FLOW_OK or %TRUE is returned to the caller.
- * @GST_PAD_PROBE_REMOVE: remove probe
- * @GST_PAD_PROBE_PASS: pass the data item in the block probe and block on
- *                         the next item
+ *        the data item is not sent downstream. For pull mode, it means that
+ *        the data item is not passed upstream. In both cases, no more probes
+ *        are called and #GST_FLOW_OK or %TRUE is returned to the caller.
+ * @GST_PAD_PROBE_REMOVE: remove this probe.
+ * @GST_PAD_PROBE_PASS: pass the data item in the block probe and block on the
+ *        next item.
+ * @GST_PAD_PROBE_HANDLED: Data has been handled in the probe and will not be
+ *        forwarded further. For events and buffers this is the same behaviour as
+ *        @GST_PAD_PROBE_DROP (except that in this case you need to unref the buffer
+ *        or event yourself). For queries it will also return %TRUE to the caller.
+ *        The probe can also modify the #GstFlowReturn value by using the
+ *        #GST_PAD_PROBE_INFO_FLOW_RETURN() accessor.
+ *        Note that the resulting query must contain valid entries.
+ *        Since: 1.6
  *
  * Different return values for the #GstPadProbeCallback.
  */
@@ -517,6 +553,7 @@ typedef enum
   GST_PAD_PROBE_OK,
   GST_PAD_PROBE_REMOVE,
   GST_PAD_PROBE_PASS,
+  GST_PAD_PROBE_HANDLED
 } GstPadProbeReturn;
 
 
@@ -542,12 +579,18 @@ struct _GstPadProbeInfo
   guint size;
 
   /*< private >*/
-  gpointer _gst_reserved[GST_PADDING];
+  union {
+    gpointer _gst_reserved[GST_PADDING];
+    struct {
+      GstFlowReturn flow_ret;
+    } abi;
+  } ABI;
 };
 
 #define GST_PAD_PROBE_INFO_TYPE(d)         ((d)->type)
 #define GST_PAD_PROBE_INFO_ID(d)           ((d)->id)
 #define GST_PAD_PROBE_INFO_DATA(d)         ((d)->data)
+#define GST_PAD_PROBE_INFO_FLOW_RETURN(d)  ((d)->ABI.abi.flow_ret)
 
 #define GST_PAD_PROBE_INFO_BUFFER(d)       GST_BUFFER_CAST(GST_PAD_PROBE_INFO_DATA(d))
 #define GST_PAD_PROBE_INFO_BUFFER_LIST(d)  GST_BUFFER_LIST_CAST(GST_PAD_PROBE_INFO_DATA(d))
@@ -627,6 +670,10 @@ typedef gboolean  (*GstPadStickyEventsForeachFunction) (GstPad *pad, GstEvent **
  *                      it the caps intersect the query-caps result instead
  *                      of checking for a subset. This is interesting for
  *                      parsers that can accept incompletely specified caps.
+ * @GST_PAD_FLAG_ACCEPT_TEMPLATE: the default accept-caps handler will use
+ *                      the template pad caps instead of query caps to
+ *                      compare with the accept caps. Use this in combination
+ *                      with %GST_PAD_FLAG_ACCEPT_INTERSECT. (Since 1.6)
  * @GST_PAD_FLAG_LAST: offset to define more flags
  *
  * Pad state flags
@@ -644,6 +691,7 @@ typedef enum {
   GST_PAD_FLAG_PROXY_ALLOCATION = (GST_OBJECT_FLAG_LAST << 9),
   GST_PAD_FLAG_PROXY_SCHEDULING = (GST_OBJECT_FLAG_LAST << 10),
   GST_PAD_FLAG_ACCEPT_INTERSECT = (GST_OBJECT_FLAG_LAST << 11),
+  GST_PAD_FLAG_ACCEPT_TEMPLATE  = (GST_OBJECT_FLAG_LAST << 12),
   /* padding */
   GST_PAD_FLAG_LAST        = (GST_OBJECT_FLAG_LAST << 16)
 } GstPadFlags;
@@ -730,6 +778,7 @@ struct _GstPad {
     gpointer _gst_reserved[GST_PADDING];
     struct {
       GstFlowReturn last_flowret;
+      GstPadEventFullFunction eventfullfunc;
     } abi;
   } ABI;
 };
@@ -854,6 +903,19 @@ struct _GstPadClass {
  * class, use the base class's virtual functions instead.
  */
 #define GST_PAD_EVENTFUNC(pad)		(GST_PAD_CAST(pad)->eventfunc)
+/**
+ * GST_PAD_EVENTFULLFUNC:
+ * @pad: a #GstPad
+ *
+ * Get the #GstPadEventFullFunction from the given @pad, which
+ * is the function that handles events on the pad. You can
+ * use this to set your own event handling function on a pad
+ * after you create it.  If your element derives from a base
+ * class, use the base class's virtual functions instead.
+ *
+ * Since: 1.8
+ */
+#define GST_PAD_EVENTFULLFUNC(pad)	(GST_PAD_CAST(pad)->ABI.abi.eventfullfunc)
 /**
  * GST_PAD_QUERYFUNC:
  * @pad: a #GstPad
@@ -1091,7 +1153,7 @@ struct _GstPadClass {
  * @pad: a #GstPad
  *
  * Check if the pad's accept intersect flag is set. The default accept-caps
- * handler will check it the caps intersect the query-caps result instead of
+ * handler will check if the caps intersect the query-caps result instead of
  * checking for a subset. This is interesting for parser elements that can
  * accept incompletely specified caps.
  */
@@ -1112,6 +1174,38 @@ struct _GstPadClass {
  * Unset accept intersect flag.
  */
 #define GST_PAD_UNSET_ACCEPT_INTERSECT(pad) (GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_ACCEPT_INTERSECT))
+/**
+ * GST_PAD_IS_ACCEPT_TEMPLATE:
+ * @pad: a #GstPad
+ *
+ * Check if the pad's accept caps operation will use the pad template caps.
+ * The default accept-caps will do a query caps to get the caps, which might
+ * be querying downstream causing unnecessary overhead. It is recommended to
+ * implement a proper accept-caps query handler or to use this flag to prevent
+ * recursive accept-caps handling.
+ *
+ * Since: 1.6
+ */
+#define GST_PAD_IS_ACCEPT_TEMPLATE(pad)    (GST_OBJECT_FLAG_IS_SET (pad, GST_PAD_FLAG_ACCEPT_TEMPLATE))
+/**
+ * GST_PAD_SET_ACCEPT_TEMPLATE:
+ * @pad: a #GstPad
+ *
+ * Set @pad to by default use the pad template caps to compare with
+ * the accept caps instead of using a caps query result.
+ *
+ * Since: 1.6
+ */
+#define GST_PAD_SET_ACCEPT_TEMPLATE(pad)   (GST_OBJECT_FLAG_SET (pad, GST_PAD_FLAG_ACCEPT_TEMPLATE))
+/**
+ * GST_PAD_UNSET_ACCEPT_TEMPLATE:
+ * @pad: a #GstPad
+ *
+ * Unset accept template flag.
+ *
+ * Since: 1.6
+ */
+#define GST_PAD_UNSET_ACCEPT_TEMPLATE(pad) (GST_OBJECT_FLAG_UNSET (pad, GST_PAD_FLAG_ACCEPT_TEMPLATE))
 /**
  * GST_PAD_GET_STREAM_LOCK:
  * @pad: a #GstPad
@@ -1248,6 +1342,10 @@ void			gst_pad_set_event_function_full		(GstPad *pad,
                                                                  GstPadEventFunction event,
                                                                  gpointer user_data,
                                                                  GDestroyNotify notify);
+void			gst_pad_set_event_full_function_full	(GstPad *pad,
+                                                                 GstPadEventFullFunction event,
+                                                                 gpointer user_data,
+                                                                 GDestroyNotify notify);
 
 #define gst_pad_set_activate_function(p,f)      gst_pad_set_activate_function_full((p),(f),NULL,NULL)
 #define gst_pad_set_activatemode_function(p,f)  gst_pad_set_activatemode_function_full((p),(f),NULL,NULL)
@@ -1255,6 +1353,7 @@ void			gst_pad_set_event_function_full		(GstPad *pad,
 #define gst_pad_set_chain_list_function(p,f)    gst_pad_set_chain_list_function_full((p),(f),NULL,NULL)
 #define gst_pad_set_getrange_function(p,f)      gst_pad_set_getrange_function_full((p),(f),NULL,NULL)
 #define gst_pad_set_event_function(p,f)         gst_pad_set_event_function_full((p),(f),NULL,NULL)
+#define gst_pad_set_event_full_function(p,f)    gst_pad_set_event_full_function_full((p),(f),NULL,NULL)
 
 /* pad links */
 void			gst_pad_set_link_function_full		(GstPad *pad,
@@ -1337,6 +1436,10 @@ gboolean		gst_pad_query_default			(GstPad *pad, GstObject *parent,
 /* misc helper functions */
 gboolean		gst_pad_forward                         (GstPad *pad, GstPadForwardFunction forward,
 								 gpointer user_data);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstPad, gst_object_unref)
+#endif
 
 G_END_DECLS
 

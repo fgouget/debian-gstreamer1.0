@@ -28,8 +28,8 @@
  * <refsect2>
  * <title>Example launch line</title>
  * |[
- * gst-launch filesrc location=song.ogg ! decodebin ! autoaudiosink
- * ]| Play a song.ogg from local dir.
+ * gst-launch-1.0 filesrc location=song.ogg ! decodebin ! audioconvert ! audioresample ! autoaudiosink
+ * ]| Play song.ogg audio file which must be in the current working directory.
  * </refsect2>
  */
 
@@ -65,6 +65,15 @@
 #  include <unistd.h>
 #endif
 
+#ifdef __BIONIC__               /* Android */
+#undef lseek
+#define lseek lseek64
+#undef fstat
+#define fstat fstat64
+#undef off_t
+#define off_t guint64
+#endif
+
 #include <errno.h>
 #include <string.h>
 
@@ -75,7 +84,6 @@ static GstStaticPadTemplate srctemplate = GST_STATIC_PAD_TEMPLATE ("src",
     GST_PAD_ALWAYS,
     GST_STATIC_CAPS_ANY);
 
-/* FIXME we should be using glib for this */
 #ifndef S_ISREG
 #define S_ISREG(mode) ((mode)&_S_IFREG)
 #endif
@@ -112,6 +120,8 @@ gst_open (const gchar * filename, int flags, int mode)
 
   errno = save_errno;
   return retval;
+#elif defined (__BIONIC__)
+  return open (filename, flags | O_LARGEFILE, mode);
 #else
   return open (filename, flags, mode);
 #endif
@@ -186,8 +196,7 @@ gst_file_src_class_init (GstFileSrcClass * klass)
       "Source/File",
       "Read from arbitrary point in a file",
       "Erik Walthinsen <omega@cse.ogi.edu>");
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&srctemplate));
+  gst_element_class_add_static_pad_template (gstelement_class, &srctemplate);
 
   gstbasesrc_class->start = GST_DEBUG_FUNCPTR (gst_file_src_start);
   gstbasesrc_class->stop = GST_DEBUG_FUNCPTR (gst_file_src_stop);
@@ -227,7 +236,8 @@ gst_file_src_finalize (GObject * object)
 }
 
 static gboolean
-gst_file_src_set_location (GstFileSrc * src, const gchar * location)
+gst_file_src_set_location (GstFileSrc * src, const gchar * location,
+    GError ** err)
 {
   GstState state;
 
@@ -254,7 +264,7 @@ gst_file_src_set_location (GstFileSrc * src, const gchar * location)
     GST_INFO ("uri      : %s", src->uri);
   }
   g_object_notify (G_OBJECT (src), "location");
-  /* FIXME 0.11: notify "uri" property once there is one */
+  /* FIXME 2.0: notify "uri" property once there is one */
 
   return TRUE;
 
@@ -263,6 +273,10 @@ wrong_state:
   {
     g_warning ("Changing the `location' property on filesrc when a file is "
         "open is not supported.");
+    if (err)
+      g_set_error (err, GST_URI_ERROR, GST_URI_ERROR_BAD_STATE,
+          "Changing the `location' property on filesrc when a file is "
+          "open is not supported.");
     GST_OBJECT_UNLOCK (src);
     return FALSE;
   }
@@ -280,7 +294,7 @@ gst_file_src_set_property (GObject * object, guint prop_id,
 
   switch (prop_id) {
     case PROP_LOCATION:
-      gst_file_src_set_location (src, g_value_get_string (value));
+      gst_file_src_set_location (src, g_value_get_string (value), NULL);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -340,7 +354,8 @@ gst_file_src_fill (GstBaseSrc * basesrc, guint64 offset, guint length,
     src->read_position = offset;
   }
 
-  gst_buffer_map (buf, &info, GST_MAP_WRITE);
+  if (!gst_buffer_map (buf, &info, GST_MAP_WRITE))
+    goto buffer_write_fail;
   data = info.data;
 
   bytes_read = 0;
@@ -398,6 +413,11 @@ eos:
     gst_buffer_unmap (buf, &info);
     gst_buffer_resize (buf, 0, 0);
     return GST_FLOW_EOS;
+  }
+buffer_write_fail:
+  {
+    GST_ELEMENT_ERROR (src, RESOURCE, WRITE, (NULL), ("Can't write to buffer"));
+    return GST_FLOW_ERROR;
   }
 }
 
@@ -606,7 +626,7 @@ gst_file_src_uri_set_uri (GstURIHandler * handler, const gchar * uri,
     /* Special case for "file://" as this is used by some applications
      *  to test with gst_element_make_from_uri if there's an element
      *  that supports the URI protocol. */
-    gst_file_src_set_location (src, NULL);
+    gst_file_src_set_location (src, NULL, NULL);
     return TRUE;
   }
 
@@ -635,7 +655,7 @@ gst_file_src_uri_set_uri (GstURIHandler * handler, const gchar * uri,
     memmove (location, location + 1, strlen (location + 1) + 1);
 #endif
 
-  ret = gst_file_src_set_location (src, location);
+  ret = gst_file_src_set_location (src, location, err);
 
 beach:
   if (location)

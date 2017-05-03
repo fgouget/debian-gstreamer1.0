@@ -41,12 +41,16 @@ G_BEGIN_DECLS
 
 /**
  * GstObjectFlags:
+ * @GST_OBJECT_FLAG_MAY_BE_LEAKED: the object is expected to stay alive even
+ * after gst_deinit() has been called and so should be ignored by leak
+ * detection tools. (Since 1.10)
  * @GST_OBJECT_FLAG_LAST: subclasses can add additional flags starting from this flag
  *
  * The standard flags that an gstobject may have.
  */
 typedef enum
 {
+  GST_OBJECT_FLAG_MAY_BE_LEAKED = (1 << 0),
   /* padding */
   GST_OBJECT_FLAG_LAST = (1<<4)
 } GstObjectFlags;
@@ -105,14 +109,18 @@ typedef enum
  * GST_OBJECT_NAME:
  * @obj: a #GstObject
  *
- * Get the name of this object
+ * Get the name of this object. This is not thread-safe by default
+ * (i.e. you will have to make sure the object lock is taken yourself).
+ * If in doubt use gst_object_get_name() instead.
  */
 #define GST_OBJECT_NAME(obj)            (GST_OBJECT_CAST(obj)->name)
 /**
  * GST_OBJECT_PARENT:
  * @obj: a #GstObject
  *
- * Get the parent of this object
+ * Get the parent of this object. This is not thread-safe by default
+ * (i.e. you will have to make sure the object lock is taken yourself).
+ * If in doubt use gst_object_get_parent() instead.
  */
 #define GST_OBJECT_PARENT(obj)          (GST_OBJECT_CAST(obj)->parent)
 
@@ -212,7 +220,11 @@ gchar*		gst_object_get_name		(GstObject *object);
 gboolean	gst_object_set_parent		(GstObject *object, GstObject *parent);
 GstObject*	gst_object_get_parent		(GstObject *object);
 void		gst_object_unparent		(GstObject *object);
+gboolean	gst_object_has_as_parent		(GstObject *object, GstObject *parent);
+gboolean	gst_object_has_as_ancestor	(GstObject *object, GstObject *ancestor);
+#ifndef GST_DISABLE_DEPRECATED
 gboolean	gst_object_has_ancestor		(GstObject *object, GstObject *ancestor);
+#endif
 
 void            gst_object_default_deep_notify  (GObject *object, GstObject *orig,
                                                  GParamSpec *pspec, gchar **excluded_props);
@@ -260,6 +272,10 @@ gboolean        gst_object_get_g_value_array      (GstObject * object, const gch
 
 GstClockTime    gst_object_get_control_rate       (GstObject * object);
 void            gst_object_set_control_rate       (GstObject * object, GstClockTime control_rate);
+
+#ifdef G_DEFINE_AUTOPTR_CLEANUP_FUNC
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(GstObject, gst_object_unref)
+#endif
 
 G_END_DECLS
 

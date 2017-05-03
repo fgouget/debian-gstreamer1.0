@@ -24,12 +24,6 @@
 # include "config.h"
 #endif
 
-#ifdef HAVE_VALGRIND_H
-# include <valgrind/valgrind.h>
-#else
-# define RUNNING_ON_VALGRIND FALSE
-#endif
-
 #include <gst/check/gstcheck.h>
 
 GST_START_TEST (test_submemory)
@@ -87,6 +81,13 @@ GST_START_TEST (test_submemory)
 
   /* clean up */
   gst_memory_unref (sub);
+
+  gst_memory_unmap (memory, &info);
+
+  /* test write map + share failure */
+  fail_unless (gst_memory_map (memory, &info, GST_MAP_WRITE));
+  sub = gst_memory_share (memory, 0, 4);
+  fail_unless (sub == NULL, "share with a write map succeeded");
 
   gst_memory_unmap (memory, &info);
   gst_memory_unref (memory);
@@ -264,20 +265,6 @@ GST_START_TEST (test_try_new_and_alloc)
   gst_memory_unmap (mem, &info);
 
   gst_memory_unref (mem);
-
-#if 0
-  /* Disabled this part of the test, because it happily succeeds on 64-bit
-   * machines that have enough memory+swap, because the address space is large
-   * enough. There's not really any way to test the failure case except by
-   * allocating chunks of memory until it fails, which would suck. */
-
-  /* now this better fail (don't run in valgrind, it will abort
-   * or warn when passing silly arguments to malloc) */
-  if (!RUNNING_ON_VALGRIND) {
-    mem = gst_allocator_alloc (NULL, (guint) - 1, 0);
-    fail_unless (mem == NULL);
-  }
-#endif
 }
 
 GST_END_TEST;
@@ -508,6 +495,88 @@ GST_START_TEST (test_map_resize)
 
 GST_END_TEST;
 
+GST_START_TEST (test_alloc_params)
+{
+  GstMemory *mem;
+  GstMapInfo info;
+  gsize size, offset, maxalloc;
+  GstAllocationParams params;
+  guint8 arr[10];
+
+  memset (arr, 0, 10);
+
+  gst_allocation_params_init (&params);
+  params.padding = 10;
+  params.prefix = 10;
+  params.flags = GST_MEMORY_FLAG_ZERO_PREFIXED | GST_MEMORY_FLAG_ZERO_PADDED;
+  mem = gst_allocator_alloc (NULL, 100, &params);
+
+  /*Checking size and offset */
+  size = gst_memory_get_sizes (mem, &offset, &maxalloc);
+  fail_unless (size == 100);
+  fail_unless (offset == 10);
+  fail_unless (maxalloc >= 120);
+
+  fail_unless (GST_MEMORY_FLAG_IS_SET (mem, GST_MEMORY_FLAG_ZERO_PREFIXED));
+  fail_unless (GST_MEMORY_FLAG_IS_SET (mem, GST_MEMORY_FLAG_ZERO_PADDED));
+
+  fail_unless (gst_memory_map (mem, &info, GST_MAP_READ));
+  fail_unless (info.data != NULL);
+  fail_unless (info.size == 100);
+
+  /*Checking prefix */
+  fail_unless (memcmp (info.data - 10, arr, 10) == 0);
+
+  /*Checking padding */
+  fail_unless (memcmp (info.data + 100, arr, 10) == 0);
+
+
+  gst_memory_unmap (mem, &info);
+  gst_memory_unref (mem);
+}
+
+GST_END_TEST;
+
+GST_START_TEST (test_lock)
+{
+  GstMemory *mem;
+
+  mem = gst_allocator_alloc (NULL, 10, NULL);
+  fail_unless (mem != NULL);
+
+  /* test exclusivity */
+  fail_unless (gst_memory_lock (mem,
+          GST_LOCK_FLAG_WRITE | GST_LOCK_FLAG_EXCLUSIVE));
+  fail_if (gst_memory_lock (mem, GST_LOCK_FLAG_EXCLUSIVE));
+  fail_unless (gst_memory_lock (mem, GST_LOCK_FLAG_WRITE));
+  gst_memory_unlock (mem, GST_LOCK_FLAG_WRITE | GST_LOCK_FLAG_EXCLUSIVE);
+  gst_memory_unlock (mem, GST_LOCK_FLAG_WRITE);
+
+  /* no lock here */
+
+  fail_unless (gst_memory_lock (mem,
+          GST_LOCK_FLAG_READ | GST_LOCK_FLAG_EXCLUSIVE));
+  fail_unless (gst_memory_lock (mem,
+          GST_LOCK_FLAG_READ | GST_LOCK_FLAG_EXCLUSIVE));
+  gst_memory_unlock (mem, GST_LOCK_FLAG_READ | GST_LOCK_FLAG_EXCLUSIVE);
+  gst_memory_unlock (mem, GST_LOCK_FLAG_READ | GST_LOCK_FLAG_EXCLUSIVE);
+
+  /* no lock here */
+
+  fail_unless (gst_memory_lock (mem,
+          GST_LOCK_FLAG_READWRITE | GST_LOCK_FLAG_EXCLUSIVE));
+  fail_unless (gst_memory_lock (mem, GST_LOCK_FLAG_READ));
+  fail_if (gst_memory_lock (mem, GST_LOCK_FLAG_READ | GST_LOCK_FLAG_EXCLUSIVE));
+  fail_if (gst_memory_lock (mem, GST_LOCK_FLAG_EXCLUSIVE));
+  fail_unless (gst_memory_lock (mem, GST_LOCK_FLAG_WRITE));
+  gst_memory_unlock (mem, GST_LOCK_FLAG_WRITE);
+  gst_memory_unlock (mem, GST_LOCK_FLAG_READ);
+  gst_memory_unlock (mem, GST_LOCK_FLAG_READWRITE | GST_LOCK_FLAG_EXCLUSIVE);
+
+  gst_memory_unref (mem);
+}
+
+GST_END_TEST;
 
 static Suite *
 gst_memory_suite (void)
@@ -526,6 +595,8 @@ gst_memory_suite (void)
   tcase_add_test (tc_chain, test_map);
   tcase_add_test (tc_chain, test_map_nested);
   tcase_add_test (tc_chain, test_map_resize);
+  tcase_add_test (tc_chain, test_alloc_params);
+  tcase_add_test (tc_chain, test_lock);
 
   return s;
 }

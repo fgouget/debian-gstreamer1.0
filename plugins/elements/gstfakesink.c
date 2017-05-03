@@ -28,7 +28,7 @@
  * <refsect2>
  * <title>Example launch line</title>
  * |[
- * gst-launch audiotestsrc num-buffers=1000 ! fakesink sync=false
+ * gst-launch-1.0 audiotestsrc num-buffers=1000 ! fakesink sync=false
  * ]| Render 1000 audio buffers (of default size) as fast as possible.
  * </refsect2>
  */
@@ -168,10 +168,12 @@ gst_fake_sink_class_init (GstFakeSinkClass * klass)
   g_object_class_install_property (gobject_class, PROP_SILENT,
       g_param_spec_boolean ("silent", "Silent",
           "Don't produce last_message events", DEFAULT_SILENT,
-          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+          G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
+          G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class, PROP_DUMP,
       g_param_spec_boolean ("dump", "Dump", "Dump buffer contents to stdout",
-          DEFAULT_DUMP, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+          DEFAULT_DUMP, G_PARAM_READWRITE | GST_PARAM_MUTABLE_PLAYING |
+          G_PARAM_STATIC_STRINGS));
   g_object_class_install_property (gobject_class,
       PROP_CAN_ACTIVATE_PUSH,
       g_param_spec_boolean ("can-activate-push", "Can activate push",
@@ -222,8 +224,8 @@ gst_fake_sink_class_init (GstFakeSinkClass * klass)
       "Erik Walthinsen <omega@cse.ogi.edu>, "
       "Wim Taymans <wim@fluendo.com>, "
       "Mr. 'frag-me-more' Vanderwingo <wingo@fluendo.com>");
-  gst_element_class_add_pad_template (gstelement_class,
-      gst_static_pad_template_get (&sinktemplate));
+
+  gst_element_class_add_static_pad_template (gstelement_class, &sinktemplate);
 
   gstelement_class->change_state =
       GST_DEBUG_FUNCPTR (gst_fake_sink_change_state);
@@ -477,9 +479,10 @@ gst_fake_sink_render (GstBaseSink * bsink, GstBuffer * buf)
   if (sink->dump) {
     GstMapInfo info;
 
-    gst_buffer_map (buf, &info, GST_MAP_READ);
-    gst_util_dump_mem (info.data, info.size);
-    gst_buffer_unmap (buf, &info);
+    if (gst_buffer_map (buf, &info, GST_MAP_READ)) {
+      gst_util_dump_mem (info.data, info.size);
+      gst_buffer_unmap (buf, &info);
+    }
   }
   if (sink->num_buffers_left == 0)
     goto eos;
