@@ -29,6 +29,8 @@ gst_lib=$(gst_lib_prefix)-0
 gst_lib_dev=$(gst_lib_prefix)-dev
 # gstreamer shlibs
 gst_shlibs_dep="$(gst_lib) (>= $(gst_version))"
+# gstreamer debhelper add-on
+dh_gst=dh-$(gst_pkgname)
 
 # debug package
 DEB_DH_STRIP_ARGS := --dbg-package=$(gst_lib)-dbg
@@ -48,9 +50,10 @@ PKGFILES=\
 	debian/$(gst_lib).install \
 	debian/$(gst_lib).symbols \
 	debian/$(gst_lib).postinst \
-	debian/$(gst_lib_dev).install \
-	debian/$(gst_lib_dev).preinst \
-	debian/$(gst_lib_dev).postrm \
+	debian/$(gst_lib_dev).postinst \
+	debian/$(dh_gst).install \
+	debian/$(dh_gst).preinst \
+	debian/$(dh_gst).postrm \
 	debian/$(gst_pkgname)-doc.install \
 	debian/$(gst_pkgname)-doc.links \
 	debian/$(gst_pkgname)-tools.install \
@@ -82,7 +85,8 @@ debian/control:: debian/control.in debian/rules
 		sed 's/@GST_ABI@/$(gst_abi)/g' | \
 		sed 's/@GST_LIB_PREFIX@/$(gst_lib_prefix)/g' | \
 		sed 's/@GST_LIB@/$(gst_lib)/g' | \
-		sed 's/@GST_LIB_DEV@/$(gst_lib_dev)/g' \
+		sed 's/@GST_LIB_DEV@/$(gst_lib_dev)/g' | \
+		sed 's/@DH_GST@/$(dh_gst)/g' \
 		> $@
 
 debian/$(gst_lib).dirs: debian/libgstreamer.dirs debian/rules
@@ -116,24 +120,30 @@ debian/gir1.2-gstreamer-$(gst_abi).install: debian/gir1.2-gstreamer.install debi
 	rm -f $@
 	cp -v $< $@
 
-debian/$(gst_lib_dev).install: debian/libgstreamer-dev.install debian/rules
+debian/$(gst_lib_dev).postinst: debian/libgstreamer-dev.postinst debian/rules
 	rm -f $@
 	cat $< | \
-		sed 's/@GST_ABI@/$(gst_abi)/g' | \
-		sed 's/@GST_PKGNAME@/$(gst_pkgname)/g' | \
-		sed 's/@GST_LIB_PREFIX@/$(gst_lib_prefix)/g' \
-		> $@
-
-debian/$(gst_lib_dev).preinst: debian/libgstreamer-dev.preinst debian/rules
-	rm -f $@
-	cat $< | \
+		sed 's/@DH_GST@/$(dh_gst)/g' | \
 		sed 's/@GST_LIB_DEV@/$(gst_lib_dev)/g' \
 		> $@
 
-debian/$(gst_lib_dev).postrm: debian/libgstreamer-dev.postrm debian/rules
+debian/$(dh_gst).install: debian/dh-gstreamer.install debian/rules
 	rm -f $@
 	cat $< | \
+		sed 's/@GST_ABI@/$(gst_abi)/g' \
+		> $@
+
+debian/$(dh_gst).preinst: debian/dh-gstreamer.preinst debian/rules
+	rm -f $@
+	cat $< | \
+		sed 's/@DH_GST@/$(dh_gst)/g' | \
 		sed 's/@GST_LIB_DEV@/$(gst_lib_dev)/g' \
+		> $@
+
+debian/$(dh_gst).postrm: debian/dh-gstreamer.postrm debian/rules
+	rm -f $@
+	cat $< | \
+		sed 's/@DH_GST@/$(dh_gst)/g' \
 		> $@
 
 debian/$(gst_pkgname)-doc.install: debian/gstreamer-doc.install debian/rules
@@ -219,7 +229,7 @@ DEB_DH_MAKESHLIBS_ARGS_$(gst_lib) += -X "/usr/lib/$(DEB_HOST_MULTIARCH)/gstreame
 DEB_INSTALL_DOCS_ALL += debian/README.Debian NEWS
 DEB_SHLIBDEPS_INCLUDE += debian/$(gst_lib)/usr/lib/$(DEB_HOST_MULTIARCH)
 
-install/$(gst_lib_dev)::
+install/$(dh_gst)::
 	gcc -o debian/tmp/usr/bin/gst-codec-info-1.0 debian/gst-codec-info.c $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) `pkg-config --libs --cflags glib-2.0 gthread-2.0 gmodule-no-export-2.0 gobject-2.0` debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/libgstreamer-1.0.so -Idebian/tmp/usr/include/gstreamer-1.0 -Idebian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/gstreamer-1.0/include
 	perldoc -o man debian/dh_gstscancodecs > debian/tmp/usr/share/man/man1/dh_gstscancodecs.1
 
