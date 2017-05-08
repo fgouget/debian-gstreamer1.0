@@ -94,7 +94,7 @@ Depends: @GST_LIB@ (= ${binary:Version}),
          ${shlibs:Depends},
          ${misc:Depends},
          gir1.2-gstreamer-@GST_ABI@ (= ${binary:Version})
-Recommends: debhelper
+Recommends: @DH_GST@
 Suggests: @GST_PKGNAME@-doc
 Description: GStreamer core development files
  GStreamer is a streaming media framework, based on graphs of filters
@@ -106,6 +106,35 @@ Description: GStreamer core development files
  .
  This package contains development files for the core library and
  elements.
+
+Package: @DH_GST@
+Architecture: any
+Section: libdevel
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         @GST_LIB_DEV@ (= ${binary:Version})
+# FIXME The official @GST_LIB_DEV@ packages still divert the same binaries as
+#       which makes them incompatible with it.
+#       So the above dependency is there to ensure @DH_GST@ will only be
+#       installed with versions of @GST_LIB_DEV@ that will not break the divert,
+#       and to ensure smooth upgrades and downgrades.
+#       Eventually @GST_LIB_DEV@ will no longer have the divert and then the
+#       dependency can be replaced by the breaks+replaces below. Or the divert
+#       could be dropped entirely once compatibility with the old GStreamer 0.10
+#       packages no longer matters.
+#Breaks: @GST_LIB_DEV@ (<< ${binary:Version})
+#Replaces: @GST_LIB_DEV@ (<< ${binary:Version})
+Description: GStreamer 1.0 Debhelper add-on
+ GStreamer is a streaming media framework, based on graphs of filters
+ which operate on media data.  Applications using this library can do
+ anything from real-time sound processing to playing videos, and just
+ about anything else media-related.  Its plugin-based architecture means
+ that new data types or processing capabilities can be added simply by
+ installing new plug-ins.
+ .
+ This package installs the dh_gstscancodecs Debhelper command which
+ analyzes GStreamer 1.0 plugins to provide substitution variables for
+ debian/control.
 
 Package: @GST_PKGNAME@-doc
 Architecture: all

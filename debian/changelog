@@ -4,6 +4,12 @@ gstreamer1.0 (1.10.4-1+ma1) unstable; urgency=medium
   * Improve packaging for cross-compiling.
     - Move the typelib files to architecture-specific directories
       and mark gir1.2-gstreamer-1.0 as M-A:same.
+    - Move the dh_gstscancodecs Debhelper add-on to a separate package,
+      dh-gstreamer1.0. Recommend this package from libgstreamer1.0-dev
+      for backward compatibility.
+    - Note that dh-gstreamer1.0 is not yet compatible with multiarch
+      development because it depends on a binary that can only analyze
+      GStreamer plugins of the same architecture.
 
  -- Francois Gouget <fgouget@codeweavers.com>  Tue, 09 May 2017 03:14:15 +0100
 
