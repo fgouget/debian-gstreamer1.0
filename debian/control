@@ -92,7 +92,7 @@ Depends: libgstreamer1.0-0 (= ${binary:Version}),
          ${shlibs:Depends},
          ${misc:Depends},
          gir1.2-gstreamer-1.0 (= ${binary:Version})
-Recommends: debhelper
+Recommends: dh-gstreamer1.0
 Suggests: gstreamer1.0-doc
 Description: GStreamer core development files
  GStreamer is a streaming media framework, based on graphs of filters
@@ -104,6 +104,35 @@ Description: GStreamer core development files
  .
  This package contains development files for the core library and
  elements.
+
+Package: dh-gstreamer1.0
+Architecture: any
+Section: libdevel
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         libgstreamer1.0-dev (= ${binary:Version})
+# FIXME The official libgstreamer1.0-dev packages still divert the same binaries as
+#       which makes them incompatible with it.
+#       So the above dependency is there to ensure dh-gstreamer1.0 will only be
+#       installed with versions of libgstreamer1.0-dev that will not break the divert,
+#       and to ensure smooth upgrades and downgrades.
+#       Eventually libgstreamer1.0-dev will no longer have the divert and then the
+#       dependency can be replaced by the breaks+replaces below. Or the divert
+#       could be dropped entirely once compatibility with the old GStreamer 0.10
+#       packages no longer matters.
+#Breaks: libgstreamer1.0-dev (<< ${binary:Version})
+#Replaces: libgstreamer1.0-dev (<< ${binary:Version})
+Description: GStreamer 1.0 Debhelper add-on
+ GStreamer is a streaming media framework, based on graphs of filters
+ which operate on media data.  Applications using this library can do
+ anything from real-time sound processing to playing videos, and just
+ about anything else media-related.  Its plugin-based architecture means
+ that new data types or processing capabilities can be added simply by
+ installing new plug-ins.
+ .
+ This package installs the dh_gstscancodecs Debhelper command which
+ analyzes GStreamer 1.0 plugins to provide substitution variables for
+ debian/control.
 
 Package: gstreamer1.0-doc
 Architecture: all

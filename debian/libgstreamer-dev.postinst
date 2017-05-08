@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+rm_diversion() {
+  package=`dpkg-divert --listpackage "$1"`
+  if [ "$package" = "@GST_LIB_DEV@" ]
+  then
+    # @DH_GST@ has not (yet) taken over our divert
+    # so remove it since it is no longer needed.
+    dpkg-divert --package "$old_package" --rename --remove "$1"
+  fi
+}
+
+# This divert has been moved to @DH_GST@.
+rm_diversion /usr/bin/dh_gstscancodecs
+rm_diversion /usr/share/man/man1/dh_gstscancodecs.1.gz
+
+#DEBHELPER#
+
+exit 0
