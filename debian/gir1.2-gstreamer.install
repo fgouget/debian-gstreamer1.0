@@ -1,1 +1,5 @@
-debian/tmp/usr/lib/*/girepository-* usr/lib
+usr/lib/*/girepository-1.0/Gst-1.0.typelib
+usr/lib/*/girepository-1.0/GstBase-1.0.typelib
+usr/lib/*/girepository-1.0/GstCheck-1.0.typelib
+usr/lib/*/girepository-1.0/GstController-1.0.typelib
+usr/lib/*/girepository-1.0/GstNet-1.0.typelib
