@@ -86,6 +86,7 @@ Description: Core GStreamer libraries and elements
 
 Package: libgstreamer1.0-dev
 Architecture: any
+Multi-Arch: same
 Section: libdevel
 Depends: libgstreamer1.0-0 (= ${binary:Version}),
          libc6-dev | libc-dev,
