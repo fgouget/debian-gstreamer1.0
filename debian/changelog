@@ -1,7 +1,7 @@
 gstreamer1.0 (1.4.4-2+ma1) jessie; urgency=medium
 
   [ Francois Gouget ]
-  * Improve packaging for cross-compiling.
+  * Improve packaging for cross-compiling. (Closes: #823307)
     - Move the typelib files to architecture-specific directories
       and mark gir1.2-gstreamer-1.0 as M-A:same.
     - Move the dh_gstscancodecs Debhelper add-on to a separate package,
@@ -10,6 +10,7 @@ gstreamer1.0 (1.4.4-2+ma1) jessie; urgency=medium
     - Note that dh-gstreamer1.0 is not yet compatible with multiarch
       development because it depends on a binary that can only analyze
       GStreamer plugins of the same architecture.
+    - With the above changes libgstreamer1.0-dev can be marked M-A:same.
 
  -- Francois Gouget <fgouget@codeweavers.com>  Tue, 09 May 2017 03:14:15 +0100
 
